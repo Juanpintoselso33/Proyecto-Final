@@ -1,17 +1,36 @@
-  
-import os
 from flask_admin import Admin
-from .models import db, User
+from flask_admin.form import rules
+from flask_admin.contrib.sqla.fields import InlineModelFormList
 from flask_admin.contrib.sqla import ModelView
+from .models import db, User, Product, Order, OrderProduct
 
-def setup_admin(app):
-    app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
-    app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-    admin = Admin(app, name='4Geeks Admin', template_mode='bootstrap3')
+class OrderProductView(ModelView):
+    form_excluded_columns = ['order_id']
+    column_list = ('id', 'product_id', 'order_id', 'quantity')
 
-    
-    # Add your models here, for example this is how we add a the User model to the admin
-    admin.add_view(ModelView(User, db.session))
+class OrderView(ModelView):
+    form_excluded_columns = ['total_cost']
+    column_list = ('id', 'total_cost', 'timestamp')
 
-    # You can duplicate that line to add mew models
-    # admin.add_view(ModelView(YourModelName, db.session))
+    def on_model_change(self, form, model, is_created):
+        model.calculate_total_cost()
+        db.session.commit()
+
+        if is_created:
+            for item in model.items:
+                item.order_id = model.id
+            db.session.commit()
+
+class UserView(ModelView):
+    column_list = ('id', 'email', 'is_active')
+
+class ProductView(ModelView):
+    column_list = ('id', 'cost', 'name', 'description', 'stars', 'img_url')
+
+def setup_admin(app):    
+    admin = Admin(app, name='Admin', template_mode='bootstrap3')
+
+    admin.add_view(UserView(User, db.session))
+    admin.add_view(ProductView(Product, db.session))
+    admin.add_view(OrderProductView(OrderProduct, db.session))
+    admin.add_view(OrderView(Order, db.session))
