@@ -2,6 +2,7 @@ from flask_admin import Admin
 from flask_admin.form import rules
 from flask_admin.contrib.sqla.fields import InlineModelFormList
 from flask_admin.contrib.sqla import ModelView
+from flask import Markup
 from .models import db, User, Product, Order, OrderProduct
 
 class OrderProductView(ModelView):
@@ -10,7 +11,22 @@ class OrderProductView(ModelView):
 
 class OrderView(ModelView):
     form_excluded_columns = ['total_cost']
-    column_list = ('id', 'total_cost', 'timestamp')
+    column_list = ('id', 'total_cost', 'timestamp', 'items')
+    
+    def _list_items(view, context, model, name):
+        if not model.items:
+            return ""
+        
+        item_strings = []
+        for item in model.items:
+            product = Product.query.get(item.product_id)
+            item_strings.append(f"{product.name} (Cantidad: {item.quantity})")
+        
+        return Markup("<br>".join(item_strings))
+
+    column_formatters = {
+        'items': _list_items
+    }
 
     def on_model_change(self, form, model, is_created):
         model.calculate_total_cost()
