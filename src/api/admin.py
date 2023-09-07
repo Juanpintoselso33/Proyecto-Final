@@ -6,13 +6,14 @@ from flask import Markup
 from .models import db, User, Product, Order, OrderProduct
 
 class OrderProductView(ModelView):
-    form_excluded_columns = ['order_id']
-    column_list = ('id', 'product_id', 'order_id', 'quantity')
+    column_list = ('id', 'product_id', 'order_id', 'quantity', 'cost')  # Agregamos 'cost' aquí
+    form_excluded_columns = ['order']
+
 
 class OrderView(ModelView):
     form_excluded_columns = ['total_cost']
     column_list = ('id', 'total_cost', 'timestamp', 'items')
-    
+
     def _list_items(view, context, model, name):
         if not model.items:
             return ""
@@ -38,14 +39,15 @@ class OrderView(ModelView):
             db.session.commit()
 
 class UserView(ModelView):
-    column_list = ('id', 'email', 'is_active')
+    column_list = ('id', 'email','is_active', 'role')  # Agregamos 'role' aquí
 
 class ProductView(ModelView):
     column_list = ('id', 'cost', 'name', 'description', 'stars', 'img_url')
+    form_excluded_columns = ['order_products']
 
 def setup_admin(app):    
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
-
+    
     admin.add_view(UserView(User, db.session))
     admin.add_view(ProductView(Product, db.session))
     admin.add_view(OrderProductView(OrderProduct, db.session))
