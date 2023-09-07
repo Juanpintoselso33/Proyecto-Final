@@ -12,7 +12,7 @@ class OrderProductView(ModelView):
 
 class OrderView(ModelView):
     form_excluded_columns = ['total_cost']
-    column_list = ('id', 'total_cost', 'timestamp', 'items')
+    column_list = ('id', 'total_cost', 'timestamp', 'items', 'user')
 
     def _list_items(view, context, model, name):
         if not model.items:
@@ -40,10 +40,11 @@ class OrderView(ModelView):
 
 class UserView(ModelView):
     column_list = ('id', 'email','is_active', 'role')  # Agregamos 'role' aquí
+    form_excluded_columns = ['order_products']
 
 class ProductView(ModelView):
     column_list = ('id', 'cost', 'name', 'description', 'stars', 'img_url')
-    form_excluded_columns = ['order_products']
+    
 
 def setup_admin(app):    
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
