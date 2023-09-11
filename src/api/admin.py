@@ -5,6 +5,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask import Markup
 from .models import db, User, Product, Order, OrderProduct
 
+
 class OrderProductView(ModelView):
     column_list = ('id', 'product_id', 'order_id', 'quantity', 'cost')  # Agregamos 'cost' aquí
     form_excluded_columns = ['order']
