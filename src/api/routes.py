@@ -33,3 +33,41 @@ def handle_get_product_by_id(product_id):
         return jsonify({'error': 'Product not found'}), 404
 
     return jsonify(product.serialize()), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
