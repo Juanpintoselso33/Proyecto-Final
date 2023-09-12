@@ -59,10 +59,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					let response = await fetch("https://cautious-space-waffle-v6vw5vw54j73w7q6-3001.app.github.dev/api/products");
 					let data = await response.json();  
-					setStore({ productos: data.results }); 
-
-
-				} catch (error) {
+					setStore({ productos: data }); 	
+					
+				} 
+				
+				catch (error) {
 					console.log(error);
 
 				}

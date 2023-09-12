@@ -4,16 +4,16 @@ import Product from "./Product.jsx";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
-import { array } from "prop-types";
 
 
 
 
 
-export const CardMultiple = () => {
+
+export const CardPescado = () => {
     const { store, actions } = useContext(Context);
-    const [arrayHambur, setArrayHambur] = useState([])
-    const [arrayMilane, setArrayMilane] = useState([])
+    const [arrayPescado, setArrayPescado] = useState([])
+
 
 
     const responsive = {
@@ -43,23 +43,14 @@ export const CardMultiple = () => {
 
     //guardo solo los productos con categoria "H" => hamburguesas
     for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
-            arrayHambur.push(store.productos[i])
+        if (store.productos[i].category === "M") {
+            arrayPescado.push(store.productos[i])
         }
 
 
     }
 
-    const productHambur = arrayHambur.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
-
-    const productMila = arrayMilane.map((item, index) => (
+    const productPescado = arrayPescado.map((item, index) => (
         <Product key={index}
             name={item.name}
             url={item.img_url}
@@ -71,28 +62,17 @@ export const CardMultiple = () => {
 
 
     return (
-        <div className="Demo">
 
-            <div className="home">
-                <div className="App" >
-                    <h1>Hamburguesas</h1>
-                    <Carousel responsive={responsive}>
-                        {productHambur}
-                    </Carousel>
-                </div>
+        <div className="home">
+            <div className="App" >
+                <h1>Milanesas</h1>
+                <Carousel responsive={responsive}>
+                    {productPescado}
+                </Carousel>
             </div>
-
-            <div className="home">
-                <div className="App" >
-                    <h1>Milanesas</h1>
-                    <Carousel responsive={responsive}>
-                        {productMila}
-                    </Carousel>
-                </div>
-            </div>
-
-
         </div>
+
+
 
 
     );

@@ -17,9 +17,9 @@ export default function Product(props) {
 
 
 Product.propTypes = {
-    url: PropTypes.string,
+    img_url: PropTypes.string,
     name: PropTypes.string,
-    price: PropTypes.string,
+    cost: PropTypes.string,
     description: PropTypes.string,
 
 };
