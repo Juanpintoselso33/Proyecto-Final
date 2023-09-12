@@ -97,8 +97,8 @@ export const CardMultiple = () => {
         },
     ]
 
-    const product = Data.map((item) => (
-        <Product
+    const product = Data.map((item, index) => (
+        <Product key={index}
             name={item.name}
             url={item.imageurl}
             price={item.price}
