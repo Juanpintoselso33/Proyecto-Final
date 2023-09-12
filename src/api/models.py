@@ -1,16 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
 
-# Definición de la tabla OrderProduct
+
 class OrderProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer, nullable=False)
     cost = db.Column(db.Float, nullable=True)
-    its_promo = db.Column(db.Boolean(), unique=False, nullable=False)
+    its_promo = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
 
     product = db.relationship('Product', back_populates='order_products')
     order = db.relationship('Order', back_populates='items')
@@ -19,6 +20,19 @@ class OrderProduct(db.Model):
         promo_prefix = "PROMO: " if self.its_promo else ""
         return f"{promo_prefix}{self.product.name} x {self.quantity} = {self.cost}"
 
+    @validates('cost')
+    def validate_cost(self, key, cost):
+        if self.product is None:
+            raise ValueError("Product must be set before validating the cost.")
+
+        if self.its_promo is False:
+            return self.product.cost * self.quantity
+        elif self.its_promo is True and cost is not None:
+            return cost
+        else:
+            raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
+
+   
 
 # Definición de la clase User
 
@@ -82,8 +96,10 @@ class Order(db.Model):
     def calculate_total_cost(self):
         self.total_cost = 0
         for item in self.items:
-            if item.cost is None:
+            if item.its_promo is False:
                 item.cost = item.product.cost * item.quantity
+            elif item.its_promo is True and item.cost is None:
+                raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
             self.total_cost += item.cost
         db.session.commit()
 
