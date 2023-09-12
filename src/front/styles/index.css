@@ -1,3 +1,51 @@
 /* 
     General Styles used on every website (Don't Repeat Yourself)
 */
+.navbar-header{
+    width: 100;
+    background: #454040;
+    color: white;
+    text-align: center;
+    padding: 5px;
+
+}
+
+.logo{
+    border-radius: 2cm;
+    width: 80px;
+    height: 80px;
+    margin-left: 3em;
+    margin-right: 1em;
+    margin-top: 0.5em;
+    
+}
+
+.iconos{
+    margin-right: 2em;
+}
+.nav-item{
+    text-decoration: none;
+    margin-inline-end: 2em;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    text-decoration: none;
+    border-right: 3px solid #581e1e;
+    margin-right: 15px; 
+  
+}
+
+.nav-link.comentarios {
+    border-right: none;
+}
+.icono-login{
+   text-decoration: none;
+}
+
+
+
+
+  
