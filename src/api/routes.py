@@ -242,3 +242,33 @@ if __name__ == '__main__':
 
 
 # -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
+# -------------------------- ENDPOINTS ORDER ----------------------------------
+
+@api.route('/user/<int:user_id>/add_order', methods=['POST'])
+def add_order(user_id):
+    try:
+        data = request.json
+        
+        # Crear una nueva instancia de Order con la ID del usuario proporcionada
+        new_order = Order(user_id=user_id)
+        
+        # Añadir los productos al pedido
+        for item_data in data['order_products']:
+            new_item = OrderProduct(
+                product_id=item_data['product_id'],
+                quantity=item_data['quantity'],
+                its_promo=item_data.get('its_promo', False)  # Si 'its_promo' no se encuentra, se asume False
+            )
+            new_order.items.append(new_item)
+        
+        # Calcular el costo total del pedido
+        new_order.calculate_total_cost()
+        
+        # Añadir el nuevo pedido a la base de datos
+        db.session.add(new_order)
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Order created", "order": new_order.serialize()}), 201
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400

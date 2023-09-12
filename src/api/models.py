@@ -4,7 +4,6 @@ from datetime import datetime
 db = SQLAlchemy()
 
 # Definición de la tabla OrderProduct
-
 class OrderProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
@@ -19,6 +18,7 @@ class OrderProduct(db.Model):
     def __repr__(self):
         promo_prefix = "PROMO: " if self.its_promo else ""
         return f"{promo_prefix}{self.product.name} x {self.quantity} = {self.cost}"
+
 
 # Definición de la clase User
 
