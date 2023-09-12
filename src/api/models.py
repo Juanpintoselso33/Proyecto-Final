@@ -65,20 +65,22 @@ class Product(db.Model):
     description = db.Column(db.String(120), nullable=False)
     stars = db.Column(db.Integer)
     img_url = db.Column(db.String(120), nullable=False)
+    category = db.Column(db.String(40), nullable=True)  # Nueva columna agregada
 
-    order_products = db.relationship('OrderProduct', back_populates='product')  # Esto es lo que faltaba
+    order_products = db.relationship('OrderProduct', back_populates='product')
 
     def __repr__(self):
         return f'Id-{self.id}: {self.name}'
 
-    def serialize(self): 
+    def serialize(self):
         return {
             'id': self.id,
             'cost': self.cost,
             'name': self.name,
             'description': self.description,
             'stars': self.stars,
-            'img_url': self.img_url
+            'img_url': self.img_url,
+            'category': self.category  # Nueva propiedad agregada
         }
 
 # Definición de la clase Order
