@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product  
+from api.models import db, User, Product, Order, OrderProduct  
 from api.utils import generate_sitemap, APIException  
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
@@ -174,13 +174,6 @@ def handle_get_product_by_id(product_id):
     return jsonify(product.serialize()), 200
 
 
-app.register_blueprint(api, url_prefix='/api')
-
-if __name__ == '__main__':
-    app.run()
-
-
-
 
 
 
@@ -242,3 +235,84 @@ if __name__ == '__main__':
 
 
 # -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
+# -------------------------- ENDPOINTS ORDER ----------------------------------
+
+@api.route('/orders', methods=['GET'])
+def get_all_orders():
+    try:
+        # Busca todas las órdenes en la base de datos
+        all_orders = Order.query.all()
+
+        # Serializa cada orden a formato JSON
+        serialized_orders = [order.serialize() for order in all_orders]
+
+        return jsonify({"success": True, "orders": serialized_orders}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+@api.route('/user/<int:user_id>/orders', methods=['GET'])
+def get_user_orders(user_id):
+    try:
+        # Buscar todas las órdenes para el user_id proporcionado
+        user_orders = Order.query.filter_by(user_id=user_id).all()
+
+        # Si no hay órdenes, devolver un mensaje indicándolo
+        if not user_orders:
+            return jsonify({"success": True, "message": "No orders found for this user.", "orders": []}), 200
+
+        # Serializar las órdenes a formato JSON
+        serialized_orders = [order.serialize() for order in user_orders]
+
+        return jsonify({"success": True, "orders": serialized_orders}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+
+
+@api.route('/user/<int:user_id>/add_order', methods=['POST'])
+def add_order(user_id):
+    try:
+        data = request.json
+        
+        # Crear una nueva instancia de Order con la ID del usuario proporcionada
+        new_order = Order(user_id=user_id)
+        
+        # Añadir los productos al pedido
+        for item_data in data['items']:  # Cambio de 'order_products' a 'items' para alinearlo con tu JSON de entrada
+            # Busca el producto en la base de datos
+            product = Product.query.get(item_data['product_id'])
+            if product is None:
+                return jsonify({"success": False, "message": "Product not found"}), 400
+            
+            # Crea un nuevo OrderProduct y añádelo al pedido
+            new_item = OrderProduct(
+                product=product,
+                product_id=item_data['product_id'],
+                quantity=item_data['quantity'],
+                its_promo=item_data.get('its_promo', False)
+            )
+            new_order.items.append(new_item)
+        
+        # Calcular el costo total del pedido
+        new_order.calculate_total_cost()
+        
+        # Añadir el nuevo pedido a la base de datos
+        db.session.add(new_order)
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Order created", "order": new_order.serialize()}), 201
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+
+
+
+
+app.register_blueprint(api, url_prefix='/api')
+
+if __name__ == '__main__':
+    app.run()
+
+
+
