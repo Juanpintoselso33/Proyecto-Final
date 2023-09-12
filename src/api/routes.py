@@ -2,15 +2,15 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product  # Asumiendo que estos están definidos en api.models
-from api.utils import generate_sitemap, APIException  # Asumiendo que estos están definidos en api.utils
+from api.models import db, User, Product  
+from api.utils import generate_sitemap, APIException  
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
 api = Blueprint('api', __name__)
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'tu_clave_secreta'
-jwt = JWTManager(app)  # Inicializa JWTManager con la aplicación Flask
+jwt = JWTManager(app) 
 
 
 @api.route('/hello', methods=['POST', 'GET'])
@@ -87,7 +87,7 @@ def edit_user(user_id):
     if 'email' in data:
         user.email = data['email']
     if 'password' in data:
-        user.password = data['password']  # Deberías hashear la contraseña, pero como prefieres no hacerlo, la almacenamos directamente
+        user.password = data['password']  
     if 'role' in data:
         user.role = data['role']
 
@@ -178,6 +178,32 @@ app.register_blueprint(api, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
