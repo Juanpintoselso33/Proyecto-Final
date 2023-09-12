@@ -37,7 +37,8 @@ class User(db.Model):
     def serialize(self):
         return {
             "email": self.email,
-            "role": self.role
+            "role": self.role,
+            "id" : self.id
         }
 
 # Definición de la clase Product
