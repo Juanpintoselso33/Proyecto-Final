@@ -7,12 +7,12 @@ import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
-
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import {CardMultiple} from "./component/CardMultipleSLider.jsx"
 import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
 import {CardMilanesas} from "./component/SecMilanesa.jsx"
+
 
 
 
@@ -30,7 +30,7 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
+                  
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
@@ -43,6 +43,7 @@ const Layout = () => {
                      
                         
                     </Routes>
+                   
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>

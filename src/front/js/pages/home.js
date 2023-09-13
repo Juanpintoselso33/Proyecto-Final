@@ -10,12 +10,14 @@ import {CardPlato} from "../component/SecPlato.jsx"
 import {CardVianda} from "../component/SecVianda.jsx"
 import {CardBebida} from "../component/SecBebidas.jsx"
 import {CardEspecial} from "../component/SecEspecial.jsx"
+import { Navbar} from "../component/navbar.js"
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
 		<div className="text-center mt-5">
+			<Navbar />
 			<CardHamburguesas/>
 			<CardMilanesas/>
 			<CardPescado/>
