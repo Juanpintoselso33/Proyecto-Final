@@ -1,7 +1,12 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+
+			productos: [],
 			message: null,
+
+			planetas: [],
+			
 			demo: [
 				{
 					title: "FIRST",
@@ -69,7 +74,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+
+
+			/* Productos */
+			obtenerAllProducts: async function () {
+				try {
+					let response = await fetch("https://cautious-space-waffle-v6vw5vw54j73w7q6-3001.app.github.dev/api/products");
+					let data = await response.json();  
+					setStore({ productos: data }); 	
+					
+				} 
+				
+				catch (error) {
+					console.log(error);
+
+				}
+			},
+
+			
+
+
 		}
 	};
 };
