@@ -38,7 +38,7 @@ export const Navbar = () => {
             <Link to="/login" className="login">
             <img src={login} alt="login" className="icono-login" width={30} />Login
               </Link>
-            
+        
            
             <img src={cart} alt="login" className="border-dark ms-2" width={30} />
           </div>
