@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Context } from '../store/appContext'
 
 const RegisterModal = () => {
+  const { actions } = useContext(Context); // Obtén las acciones del store
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,12 +19,26 @@ const RegisterModal = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!emailPattern.test(formData.email)) {
+      alert('Por favor, introduce un correo electrónico válido.');
+      return;
+    }
+
+    if (!formData.password || formData.password.trim() === '') {
+      alert('La contraseña no puede estar vacía.');
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       alert('Las contraseñas no coinciden');
       return;
     }
-    // Aquí puedes manejar la lógica para enviar los datos del formulario
-    console.log('Form data submitted:', formData);
+    
+    // Utiliza la acción del store para registrar al usuario
+    actions.registerUser(formData);
   };
 
   return (
