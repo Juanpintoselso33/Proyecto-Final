@@ -68,31 +68,31 @@ export const CarruselInicio = () => {
         />
     ));
 
-    const Fila_1 = { filter: "blur(5px)", transition: "filter .5s ease" }
+    const Fila_1 = { filter: "blur(1px)", transition: "filter .5s ease" }
     // const Fila_1 = { backgroundImage: 'url("https://st.depositphotos.com/2576363/4639/i/950/depositphotos_46392373-stock-photo-italian-food-background.jpg")', backgroundSize: "Cover" }
 
 
     return (
 
 
-        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="false">
+            <div className="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://thumbs.dreamstime.com/b/droge-deegwaren-met-tomaten-kruiden-en-kruiden-voor-tomatensaus-op-houten-achtergrond-hoogste-mening-82668112.jpg" style={Fila_1} class="d-block w-100" alt="..." />
-                    <div class="carousel-caption d-none d-md-block contenedor ">
+            <div className="carousel-inner">
+                <div className="carousel-item active">
+                    <img src="https://thumbs.dreamstime.com/b/droge-deegwaren-met-tomaten-kruiden-en-kruiden-voor-tomatensaus-op-houten-achtergrond-hoogste-mening-82668112.jpg" style={Fila_1} className="d-block w-100" alt="..." />
+                    <div className="carousel-caption d-none d-md-block contenedor ">
 
                         <div className="papa1">
                             <div className=" carousel-inner img_producto">
-                                <img src="https://th.bing.com/th/id/R.d8114ad8d46914dd87614f78a63cf652?rik=C8xbyv%2f1PmDxgg&riu=http%3a%2f%2ffrescados.files.wordpress.com%2f2012%2f05%2fhamburguesa-de-res.jpg&ehk=XHZfIVmSjX2uBGugX%2b2j7v%2bFkz7MfKs9AOagUHBScbw%3d&risl=1&pid=ImgRaw&r=0" class="" alt="..." />
+                                <img src="https://th.bing.com/th/id/R.d8114ad8d46914dd87614f78a63cf652?rik=C8xbyv%2f1PmDxgg&riu=http%3a%2f%2ffrescados.files.wordpress.com%2f2012%2f05%2fhamburguesa-de-res.jpg&ehk=XHZfIVmSjX2uBGugX%2b2j7v%2bFkz7MfKs9AOagUHBScbw%3d&risl=1&pid=ImgRaw&r=0" className="" alt="..." />
                             </div>
 
                             <div className=" carousel-inner detalle_Producto">
-                                <div>chorizo al pan</div>
+                                <div className="titulo1"><strong>Chorizo al pan</strong></div>
                                 <div>$140</div>
                                 <div>
                                     -lechiga <br />
@@ -103,28 +103,28 @@ export const CarruselInicio = () => {
 
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <img src="https://thumbs.dreamstime.com/b/comida-italiana-e-ingredientes-crudos-en-fondo-de-madera-visi%C3%B3n-superior-104633027.jpg" class="d-block w-100" alt="..." />
-                    <div class="carousel-caption d-none d-md-block mb-5">
+                <div className="carousel-item">
+                    <img src="https://thumbs.dreamstime.com/b/comida-italiana-e-ingredientes-crudos-en-fondo-de-madera-visi%C3%B3n-superior-104633027.jpg" className="d-block w-100" alt="..." />
+                    <div className="carousel-caption d-none d-md-block mb-5">
                         <h5>Second slide label</h5>
                         <p>Some representative placeholder content for the second slide.</p>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <img src="https://st.depositphotos.com/2576363/4639/i/950/depositphotos_46392373-stock-photo-italian-food-background.jpg" class="d-block w-100" alt="..." />
-                    <div class="carousel-caption d-none d-md-block">
+                <div className="carousel-item">
+                    <img src="https://st.depositphotos.com/2576363/4639/i/950/depositphotos_46392373-stock-photo-italian-food-background.jpg" className="d-block w-100" alt="..." />
+                    <div className="carousel-caption d-none d-md-block">
                         <h5>Third slide label</h5>
                         <p>Some representative placeholder content for the third slide.</p>
                     </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Next</span>
             </button>
         </div>
 

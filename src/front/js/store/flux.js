@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -117,40 +118,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Funcion para dar de alta registros
 			registerUser: async (formData) => {
 				try {
-				  const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/register', formData);
-			  
-				  if (response.status === 200 || response.status === 201) {
-					console.log('Registro exitoso:', response.data);
-					// Aquí puedes actualizar el estado o hacer otras acciones
-				  } else {
-					console.log('Error en el registro:', response);
-					console.log('Estado de la respuesta:', response.status);
-					console.log('Cuerpo de la respuesta:', response.data);
-			  
-					if (response.data.error) {
-					  alert(response.data.error); // Mostrar el mensaje de error al usuario
+					const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/register', formData);
+
+					if (response.status === 200 || response.status === 201) {
+						console.log('Registro exitoso:', response.data);
+						// Aquí puedes actualizar el estado o hacer otras acciones
+					} else {
+						console.log('Error en el registro:', response);
+						console.log('Estado de la respuesta:', response.status);
+						console.log('Cuerpo de la respuesta:', response.data);
+
+						if (response.data.error) {
+							alert(response.data.error); // Mostrar el mensaje de error al usuario
+						}
 					}
-				  }
 				} catch (error) {
-				  console.error('Hubo un problema con la petición:', error);
-				  if (error.response && error.response.data && error.response.data.error) {
-					alert(error.response.data.error); // Mostrar el mensaje de error al usuario
-				  }
+					console.error('Hubo un problema con la petición:', error);
+					if (error.response && error.response.data && error.response.data.error) {
+						alert(error.response.data.error); // Mostrar el mensaje de error al usuario
+					}
 				}
-			  },
-			  
-			  addProduct: async (productData) => {
+			},
+
+			addProduct: async (productData) => {
 				try {
-				  const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/products', productData);
-				  if (response.status === 200 || response.status === 201) {
-					console.log('Producto agregado exitosamente:', response.data);					
-				  } else {
-					console.log('Error al agregar el producto:', response);
-				  }
+					const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/products', productData);
+					if (response.status === 200 || response.status === 201) {
+						console.log('Producto agregado exitosamente:', response.data);
+					} else {
+						console.log('Error al agregar el producto:', response);
+					}
 				} catch (error) {
-				  console.error('Hubo un problema con la petición:', error);
+					console.error('Hubo un problema con la petición:', error);
 				}
-			  }
+			}
 
 
 
