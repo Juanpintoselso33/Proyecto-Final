@@ -33,7 +33,6 @@
     align-items: center;
     padding-right: 25px;
     text-decoration: none;
-    border-right: 3px solid #581e1e;
     margin-right: 15px; 
   
 }
@@ -44,7 +43,9 @@
 .icono-login{
    text-decoration: none;
 }
-
+.login{
+    text-decoration: none;   
+}
 
 
 
