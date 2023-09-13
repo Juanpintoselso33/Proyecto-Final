@@ -1,3 +1,5 @@
+import axios from "axios"
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -47,7 +49,7 @@ productos: [],
 			login: async (email, password)=> {
 				console.log("fnciona")
 			 	try {
-			 		let data = await axios.post('https://fantastic-couscous-97994xr7px55hjvp-3000.app.github.dev/login',{
+			 		let data = await axios.post(process.env.BACKEND_URL + '/api/login',{
 			 				"email":email,
 			 				"password":password
 			 			})
@@ -59,9 +61,10 @@ productos: [],
 					return true;
 			 		}
 			 		catch(error){
-			 			if (error.response.status === 404){
-							alert(error.response.data.msg)
-						}
+			 			// //if (error.response.status === 404){
+						// 	alert(error.response.data.msg)
+						// }
+						console.log(error)
 						
 			 		}
 			
