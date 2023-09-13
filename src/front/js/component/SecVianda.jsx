@@ -8,8 +8,6 @@ import "../../styles/Stylecard.css";
 
 
 
-
-
 export const CardVianda = () => {
     const { store, actions } = useContext(Context);
     const [arrayVianda, setArrayvianda] = useState([])
