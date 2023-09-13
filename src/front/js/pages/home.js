@@ -7,7 +7,9 @@ import {CardPescado} from "../component/SecPescado.jsx"
 import { CardPancho } from "../component/SecPancho.jsx";
 import {CardChivito} from "../component/SecChivito.jsx"
 import {CardPlato} from "../component/SecPlato.jsx"
-import {CardVianda}from "../component/SecVianda.jsx"
+import {CardVianda} from "../component/SecVianda.jsx"
+import {CardBebida} from "../component/SecBebidas.jsx"
+import {CardEspecial} from "../component/SecEspecial.jsx"
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -20,6 +22,9 @@ export const Home = () => {
 			<CardPancho/>
 			<CardChivito/>
 			<CardVianda/>
+			<CardPlato/>
+			<CardBebida/>
+			<CardEspecial/>
 		</div>
 	);
 };
