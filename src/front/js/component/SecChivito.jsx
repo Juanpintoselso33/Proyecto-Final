@@ -10,9 +10,9 @@ import "../../styles/Stylecard.css";
 
 
 
-export const CardPescado = () => {
+export const CardChivito = () => {
     const { store, actions } = useContext(Context);
-    const [arrayPescado, setArrayPescado] = useState([])
+    const [arrayChivitos, setArrayChivitos] = useState([])
 
 
 
@@ -44,13 +44,13 @@ export const CardPescado = () => {
     //guardo solo los productos con categoria "H" => hamburguesas
     for (let i = 0; i < store.productos.length; i++) {
         if (store.productos[i].category === "M") {
-            arrayPescado.push(store.productos[i])
+            arrayChivitos.push(store.productos[i])
         }
 
 
     }
 
-    const productPescado = arrayPescado.map((item, index) => (
+    const productChivitos = arrayChivitos.map((item, index) => (
         <Product key={index}
             name={item.name}
             url={item.img_url}
@@ -65,9 +65,9 @@ export const CardPescado = () => {
 
         <div className="home">
             <div className="App" >
-                <h1>Pescado</h1>
+                <h1>Chivitos</h1>
                 <Carousel responsive={responsive}>
-                    {productPescado}
+                    {productChivitos}
                 </Carousel>
             </div>
         </div>
