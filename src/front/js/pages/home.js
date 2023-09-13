@@ -1,28 +1,32 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
-import RegisterModal from '../component/register'; // Asegúrate de importar correctamente
+import {CardHamburguesas} from "../component/SecHamburguesa.jsx"
+import {CardMilanesas} from "../component/SecMilanesa.jsx"
+import {CardPescado} from "../component/SecPescado.jsx"
+import { CardPancho } from "../component/SecPancho.jsx";
+import {CardChivito} from "../component/SecChivito.jsx"
+import {CardPlato} from "../component/SecPlato.jsx"
+import {CardVianda} from "../component/SecVianda.jsx"
+import {CardBebida} from "../component/SecBebidas.jsx"
+import {CardEspecial} from "../component/SecEspecial.jsx"
+import { Navbar} from "../component/navbar.js"
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
 		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
-			</div>
-			<RegisterModal /> {/* Aquí insertas el componente */}
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://start.4geeksacademy.com/starters/react-flask">
-					Read documentation
-				</a>
-			</p>
+			<Navbar />
+			<CardHamburguesas/>
+			<CardMilanesas/>
+			<CardPescado/>
+			<CardPancho/>
+			<CardChivito/>
+			<CardVianda/>
+			<CardPlato/>
+			<CardBebida/>
+			<CardEspecial/>
 		</div>
 	);
 };

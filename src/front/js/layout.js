@@ -8,10 +8,16 @@ import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 
 import injectContext from "./store/appContext";
-
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
-import { Login } from "./component/login";
+import {CardMultiple} from "./component/CardMultipleSLider.jsx"
+import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
+import {CardMilanesas} from "./component/SecMilanesa.jsx"
+
+
+
+
+
 
 //create your first component
 const Layout = () => {
@@ -25,14 +31,21 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
+                  
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<h1>Not found!</h1>} />
+                        <Route element={<CardMultiple />} path="/prueba1"/>
+                        <Route element={<CardHamburguesas />} path="/prueba2"/>
+                        <Route element={<CardMilanesas />} path="/prueba2"/>
+                        
+                     
+                        
                     </Routes>
+                   
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>

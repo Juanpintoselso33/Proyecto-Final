@@ -1,20 +1,26 @@
-import React, { useState, useContext } from "react";
-import { Context } from "../store/appContext";
+import React, { useState } from 'react';
 
-export const Login = () => {
-  const { actions } = useContext(Context);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LoginModal = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const logged = await actions.login(email, password);
-
-    if (logged) {
-      // Puedes redirigir al usuario a una página de bienvenida aquí si el inicio de sesión es exitoso
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Aquí puedes manejar la lógica para iniciar sesión con los datos del formulario
+    console.log('Login data submitted:', formData);
+  };
+
+  const { email, password } = formData;
 
   return (
     <form style={{ width: "23rem" }} onSubmit={handleSubmit}>
@@ -26,9 +32,10 @@ export const Login = () => {
         <input
           type="email"
           id="form2Example18"
+          name="email"
           className="form-control form-control-lg"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChange}
         />
         <label className="form-label" htmlFor="form2Example18">
           Email address
@@ -39,9 +46,10 @@ export const Login = () => {
         <input
           type="password"
           id="form2Example28"
+          name="password"
           className="form-control form-control-lg"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChange}
         />
         <label className="form-label" htmlFor="form2Example28">
           Password
@@ -65,3 +73,5 @@ export const Login = () => {
     </form>
   );
 };
+
+export default LoginModal;
