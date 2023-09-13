@@ -18,7 +18,7 @@ export const Home = () => {
 
 	return (
 		
-		<div className="text-center mt-5">
+		<div className="text-center mt-5">s
 			<Navbar />
 			<div className="div1">
 				<CarruselInicio/>
