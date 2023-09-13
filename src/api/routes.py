@@ -120,7 +120,6 @@ def protected():
 
 
 
-
 #------------------------------- FIN ENDPOINTS USER -----------------------------------------------------------------
 
 # ----------------------------- ENDPOINTS PRODUCTOS------------------------------------------------------------------
@@ -141,6 +140,81 @@ def handle_get_product_by_id(product_id):
         return jsonify({'error': 'Product not found'}), 404
 
     return jsonify(product.serialize()), 200
+
+@api.route('/products', methods=['POST'])
+def add_product():
+    try:
+        data = request.json  # Recibir los datos en formato JSON
+        
+        # Crear una nueva instancia de Product con los datos recibidos
+        new_product = Product(
+            cost=data['cost'],
+            name=data['name'],
+            description=data['description'],
+            stars=data.get('stars', None),  # Si 'stars' no se encuentra, se asume None
+            img_url=data['img_url'],
+            category=data.get('category', None)  # Si 'category' no se encuentra, se asume None
+        )
+        
+        # Añadir el nuevo producto a la base de datos
+        db.session.add(new_product)
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Product added", "product": new_product.serialize()}), 201
+    
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+@api.route('/product/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    try:
+        data = request.json
+        product = Product.query.get(product_id)
+        
+        if product is None:
+            return jsonify({"success": False, "message": "Product not found"}), 404
+
+        # Actualizar los campos
+        if 'cost' in data:
+            product.cost = data['cost']
+        if 'name' in data:
+            product.name = data['name']
+        if 'description' in data:
+            product.description = data['description']
+        if 'stars' in data:
+            product.stars = data['stars']
+        if 'img_url' in data:
+            product.img_url = data['img_url']
+        if 'category' in data:
+            product.category = data['category']
+
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Product updated", "product": product.serialize()}), 200
+    
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+@api.route('/product/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    try:
+        product = Product.query.get(product_id)
+
+        if product is None:
+            return jsonify({"success": False, "message": "Product not found"}), 404
+
+        db.session.delete(product)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Product deleted"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+
+
+
+
 
 
 
