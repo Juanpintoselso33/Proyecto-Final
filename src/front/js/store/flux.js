@@ -50,27 +50,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			login: async (email, password) => {
 				console.log("fnciona")
-			 	try {
-			 		let data = await axios.post(process.env.BACKEND_URL + '/api/login',{
-			 				"email":email,
-			 				"password":password
-			 			})
-			 		console.log(data);
+				try {
+					let data = await axios.post(process.env.BACKEND_URL + '/api/login', {
+						"email": email,
+						"password": password
+					})
+					console.log(data);
 					//Guardar en el navegador el token
 					localStorage.setItem("token", data.data.access_token);
 					setStore({ isAuthenticated: true }); // Actualiza el estado a true
 
 					return true;
-			 		}
-			 		catch(error){
-			 			// //if (error.response.status === 404){
-						// 	alert(error.response.data.msg)
-						// }
-						console.log(error)
-						
-			 		}
-			
-				},
+				}
+				catch (error) {
+					// //if (error.response.status === 404){
+					// 	alert(error.response.data.msg)
+					// }
+					console.log(error)
+
+				}
+
+			},
 
 
 			getMessage: async () => {
@@ -104,7 +104,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* -----------------Productos-----------------*/
 			obtenerAllProducts: async function () {
 				try {
-					let response = await fetch(process.env.BACKEND_URL+ "/api/products");
+					let response = await fetch("https://cautious-space-waffle-v6vw5vw54j73w7q6-3001.app.github.dev/api/products");
 					let data = await response.json();
 					setStore({ productos: data });
 
@@ -120,40 +120,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Funcion para dar de alta registros
 			registerUser: async (formData) => {
 				try {
-				  const response = await axios.post(process.env.BACKEND_URL + '/api/register', formData);
-			  
-				  if (response.status === 200 || response.status === 201) {
-					console.log('Registro exitoso:', response.data);
-					// Aquí puedes actualizar el estado o hacer otras acciones
-				  } else {
-					console.log('Error en el registro:', response);
-					console.log('Estado de la respuesta:', response.status);
-					console.log('Cuerpo de la respuesta:', response.data);
-			  
-					if (response.data.error) {
-					  alert(response.data.error); // Mostrar el mensaje de error al usuario
+					const response = await axios.post(process.env.BACKEND_URL + '/api/register', formData);
+
+					if (response.status === 200 || response.status === 201) {
+						console.log('Registro exitoso:', response.data);
+						// Aquí puedes actualizar el estado o hacer otras acciones
+					} else {
+						console.log('Error en el registro:', response);
+						console.log('Estado de la respuesta:', response.status);
+						console.log('Cuerpo de la respuesta:', response.data);
+
+						if (response.data.error) {
+							alert(response.data.error); // Mostrar el mensaje de error al usuario
+						}
 					}
-				  }
 				} catch (error) {
-				  console.error('Hubo un problema con la petición:', error);
-				  if (error.response && error.response.data && error.response.data.error) {
-					alert(error.response.data.error); // Mostrar el mensaje de error al usuario
-				  }
+					console.error('Hubo un problema con la petición:', error);
+					if (error.response && error.response.data && error.response.data.error) {
+						alert(error.response.data.error); // Mostrar el mensaje de error al usuario
+					}
 				}
-			  },
-			  
-			  addProduct: async (productData) => {
+			},
+
+			addProduct: async (productData) => {
 				try {
-				  const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
-				  if (response.status === 200 || response.status === 201) {
-					console.log('Producto agregado exitosamente:', response.data);					
-				  } else {
-					console.log('Error al agregar el producto:', response);
-				  }
+					const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
+					if (response.status === 200 || response.status === 201) {
+						console.log('Producto agregado exitosamente:', response.data);
+					} else {
+						console.log('Error al agregar el producto:', response);
+					}
 				} catch (error) {
-				  console.error('Hubo un problema con la petición:', error);
+					console.error('Hubo un problema con la petición:', error);
 				}
-			  }
+			}
 
 
 
