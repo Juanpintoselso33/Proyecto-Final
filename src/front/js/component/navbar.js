@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../img/carrito.jpg";
@@ -12,7 +12,6 @@ import RegisterModal from './register';
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   let navigate = useNavigate();
@@ -20,6 +19,10 @@ export const Navbar = () => {
     email: "",
     password: ""
   });
+
+  useEffect(() => {
+    actions.initializeAuth();
+  }, [store.isAuthenticated, store.email]);
 
   const { email, password } = formData;
 
@@ -30,24 +33,6 @@ export const Navbar = () => {
       [name]: value
     });
   };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    let logged = await actions.login(email, password);
-    if (logged === true) {
-      setSuccessMessage("Login exitoso, cerrando ventana...");
-      setIsLoggedIn(true);
-      setTimeout(() => {
-        navigate('/');
-        handleCloseModal();
-        setSuccessMessage("");
-      }, 2000);
-    }
-  }
 
   const handleShowModal = () => {
     setShowModal(true);
@@ -65,7 +50,24 @@ export const Navbar = () => {
     setShowRegisterModal(false);
   };
 
-  const welcomeMessage = email.split("@")[0];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let logged = await actions.login(email, password);
+    if (logged) {
+      setSuccessMessage("Login exitoso, cerrando ventana...");
+      setTimeout(() => {
+        navigate('/');
+        handleCloseModal();
+        setSuccessMessage("");
+      }, 2000);
+    }
+  };
+
+  const handleLogout = () => {
+    actions.logout();
+  };
+
+  const welcomeMessage = store.email ? store.email.split("@")[0] : "";
 
   return (
     <>
@@ -88,20 +90,21 @@ export const Navbar = () => {
               />
             </div>
             <div className="iconos">
-              {isLoggedIn && <span>Bienvenido/a, {email.split('@')[0]}</span>}
+              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}
               <img src={Favorito} alt="Favoritos" className="decora" width={30} />
-              <Button variant="link" className="login" onClick={isLoggedIn ? handleLogout : handleShowModal}>
+              <Button variant="link" className="login" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
                 <img src={login} alt="login" className="icono-login" width={30} />
-                {isLoggedIn ? "Cerrar sesión" : "Login"}
+                {store.isAuthenticated ? "Cerrar sesión" : "Login"}
               </Button>
-              {!isLoggedIn && <Button variant="link" className="register" onClick={handleShowRegisterModal}>
+              {!store.isAuthenticated && <Button variant="link" className="register" onClick={handleShowRegisterModal}>
                 Register
               </Button>}
-              {isLoggedIn && <Button variant="link" onClick={() => navigate('/add_product')}>Agregar Producto</Button>}
-              {isLoggedIn && <Button variant="link" onClick={() => navigate('/cart')}>
+              {store.isAuthenticated && <Button variant="link" onClick={() => navigate('/add_product')}>Agregar Producto</Button>}
+              {store.isAuthenticated && <Button variant="link" onClick={() => navigate('/cart')}>
                 <img src={cart} alt="cart" className="border-dark ms-2" width={30} />
               </Button>}
             </div>
+
           </div>
           <button
             className="navbar-toggler"
@@ -140,6 +143,7 @@ export const Navbar = () => {
           </div>
         </div>
       </nav>
+
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
@@ -191,4 +195,5 @@ export const Navbar = () => {
       <RegisterModal show={showRegisterModal} onHide={handleCloseRegisterModal} />
     </>
   );
+
 };

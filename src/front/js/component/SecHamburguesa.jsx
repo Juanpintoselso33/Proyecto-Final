@@ -5,20 +5,12 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 
-
-
-
-
-
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
-    const [arrayHambur, setArrayHambur] = useState([])
-
-
+    const [arrayHambur, setArrayHambur] = useState([]);
 
     const responsive = {
         superLargeDesktop: {
-            // the naming can be any, depends on you.
             breakpoint: { max: 5000, min: 4000 },
             items: 5
         },
@@ -37,21 +29,17 @@ export const CardHamburguesas = () => {
     };
 
     useEffect(() => {
-        actions.obtenerAllProducts()
+        actions.obtenerAllProducts();
+    }, []);
 
-    }, [])
-
-    //guardo solo los productos con categoria "H" => hamburguesas
-    for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
-            arrayHambur.push(store.productos[i])
-        }
-
-
-    }
+    useEffect(() => {
+        const hamburguesas = store.productos.filter((producto) => producto.category === "H");
+        setArrayHambur(hamburguesas);
+    }, [store.productos]);
 
     const productHambur = arrayHambur.map((item, index) => (
         <Product key={index}
+            id={item.id}
             name={item.name}
             url={item.img_url}
             price={item.cost}
@@ -59,24 +47,14 @@ export const CardHamburguesas = () => {
         />
     ));
 
-
-
     return (
-
         <div className="home">
-            <div className="App" >
+            <div className="App">
                 <h1>Hamburguesas</h1>
                 <Carousel responsive={responsive}>
                     {productHambur}
                 </Carousel>
             </div>
         </div>
-
-
-
-
     );
-
-
-
 };

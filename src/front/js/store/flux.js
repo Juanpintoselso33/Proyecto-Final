@@ -11,6 +11,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			productos: [],
+			carrito: [],
+			isAuthenticated: false,
+			token: null,
 
 
 
@@ -48,31 +51,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
-			login: async (email, password) => {
-				console.log("fnciona")
-				try {
-					let data = await axios.post(process.env.BACKEND_URL + '/api/login', {
-						"email": email,
-						"password": password
-					})
-					console.log(data);
-					//Guardar en el navegador el token
-					localStorage.setItem("token", data.data.access_token);
-					setStore({ isAuthenticated: true }); // Actualiza el estado a true
-
-					return true;
-				}
-				catch (error) {
-					// //if (error.response.status === 404){
-					// 	alert(error.response.data.msg)
-					// }
-					console.log(error)
-
-				}
-
-			},
-
-
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
@@ -104,10 +82,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* -----------------Productos-----------------*/
 			obtenerAllProducts: async function () {
 				try {
-					let response = await fetch("https://cautious-space-waffle-v6vw5vw54j73w7q6-3001.app.github.dev/api/products");
+					let response = await fetch(process.env.BACKEND_URL + "/api/products");
 					let data = await response.json();
 					setStore({ productos: data });
-
 				}
 
 				catch (error) {
@@ -153,7 +130,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error('Hubo un problema con la petición:', error);
 				}
-			}
+			},
+
+			agregarAlCarrito: (producto) => {
+				const store = getStore();
+				const productoExistente = store.carrito.find(item => item.id === producto.id);
+				if (productoExistente) {
+				  productoExistente.cantidad += 1;
+				} else {
+				  producto.cantidad = 1;
+				  setStore({ carrito: [...store.carrito, producto] });
+				}
+			  },
+			  
+			  eliminarDelCarrito: (productoId) => {
+				const store = getStore();
+				const nuevoCarrito = store.carrito.filter(item => item.id !== productoId);
+				setStore({ carrito: nuevoCarrito });
+			  },
+
+
+			initializeAuth: () => {
+				const token = localStorage.getItem("token");
+				const email = localStorage.getItem("email");
+				if (token && email) {
+					setStore({ isAuthenticated: true, token, email });
+				}
+			},
+			login: async (email, password) => {
+				try {
+					let data = await axios.post(process.env.BACKEND_URL + '/api/login', {
+						"email": email,
+						"password": password
+					});
+					localStorage.setItem("token", data.data.access_token);
+					localStorage.setItem("email", email);  // Guarda el correo en el localStorage
+					setStore({ isAuthenticated: true, token: data.data.access_token, email }); // Guarda el correo en el store
+					return true;
+				} catch (error) {
+					console.log(error);
+					return false;
+				}
+			},
+			logout: () => {
+				localStorage.removeItem("token");
+				localStorage.removeItem("email");  // Elimina el correo del localStorage
+				setStore({ isAuthenticated: false, token: null, email: null });  // Elimina el correo del store
+			},
+
 
 
 
