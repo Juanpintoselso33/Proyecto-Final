@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import Logo from "../../img/carrito.jpg";
+import Cerrar from "../../img/cerrar.png";
 
 
 
@@ -126,12 +127,20 @@ export const CartView = () => {
                   background: "white"
                 }}
               >
-                  <button
-                  className="btn btn-secondary"
+                  <div
+                  className=""
+                  
                   onClick={() => navigate('/')} 
                 >
-                 Seguir comprando 
-                </button>
+                 <img src={Cerrar} alt="Logo" className="logo"  style={{
+                  
+                   top: '10px',
+                   right: '10px',
+                   cursor: 'pointer',
+                   width: '30px',
+                   height: '30px',
+                  }} />
+                </div>
                 
                 <h2 className="text-uppercase text-center mb-5">Mi Carrito</h2>
                 <table className="table">
