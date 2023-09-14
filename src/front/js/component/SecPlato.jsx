@@ -52,10 +52,10 @@ export const CardPlato = () => {
 
     const productPlato = arrayPlato.map((item, index) => (
         <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
+        name={item.name}
+        img_url={item.img_url}
+        cost={item.cost}
+        description={item.description}
         />
     ));
 

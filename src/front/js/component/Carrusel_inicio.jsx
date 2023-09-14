@@ -5,6 +5,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 import { array } from "prop-types";
+import ItemCarrusel from "./ItemCarrusel_inicio.jsx"
 
 
 
@@ -12,65 +13,77 @@ import { array } from "prop-types";
 
 export const CarruselInicio = () => {
     const { store, actions } = useContext(Context);
-    const [arrayHambur, setArrayHambur] = useState([])
-    const [arrayMilane, setArrayMilane] = useState([])
+    const [arrayItemsCarrusel, setArrayItemsCarrusel] = useState([])
 
 
-    const responsive = {
-        superLargeDesktop: {
-            // the naming can be any, depends on you.
-            breakpoint: { max: 5000, min: 4000 },
-            items: 5
-        },
-        desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 3
-        },
-        tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 2
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1
-        }
-    };
+
+
 
     useEffect(() => {
         actions.obtenerAllProducts()
 
+
     }, [])
+
+
+
+
+
+    const Fila_1 = { filter: "blur(1px)", transition: "filter .5s ease" }
+
+
+
+    // function getRandomInt(min, max) {
+    //     min = Math.ceil(min);
+    //     max = Math.floor(max);
+    //     return Math.floor(Math.random() * (max - min) + min);
+    // }
+
+    const largo = store.productos.length
 
     //guardo solo los productos con categoria "H" => hamburguesas
     for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
-            arrayHambur.push(store.productos[i])
+        if ((store.productos[i].category === "M") | (store.productos[i].category === "H")) {
+            arrayItemsCarrusel.push(store.productos[i])
         }
 
 
     }
 
-    const productHambur = arrayHambur.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
+    // function cargarlistaPr() {
+
+
+
+    //     for (const i = 0; i < arrayMilane.length; i++) {
+    //         let pr = false
+    //         const random = getRandomInt(1, largo)
+    //         if (random === arrayMilane[i]) {
+    //             random = getRandomInt(1, largo)
+
+    //         } else {
+    //             arrayMilane.push(random)
+
+
+    //         }
+
+    //         console.log(pr)
+    //         console.log(arrayMilane)
+    //     }
+
+    // }
+
+
+
+
+
+    const ItemsdelCarrusel = arrayItemsCarrusel.map((item, index) => (
+        <ItemCarrusel key={index}
+            namei={item.name}
+            img_urli={item.img_url}
+            costi={item.cost}
+            descriptioni={item.description}
         />
     ));
-
-    const productMila = arrayMilane.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
-
-    const Fila_1 = { filter: "blur(1px)", transition: "filter .5s ease" }
-    // const Fila_1 = { backgroundImage: 'url("https://st.depositphotos.com/2576363/4639/i/950/depositphotos_46392373-stock-photo-italian-food-background.jpg")', backgroundSize: "Cover" }
-
 
     return (
 

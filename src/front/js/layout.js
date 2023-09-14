@@ -9,11 +9,12 @@ import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 
 import { Footer } from "./component/footer";
-import {CardMultiple} from "./component/CardMultipleSLider.jsx"
-import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
-import {CardMilanesas} from "./component/SecMilanesa.jsx"
+import { CardMultiple } from "./component/CardMultipleSLider.jsx"
+import { CardHamburguesas } from "./component/SecHamburguesa.jsx"
+import { CardMilanesas } from "./component/SecMilanesa.jsx"
 import { AddProduct } from "./pages/addProduct"
 import { CartView } from "./pages/cart"
+import { ItemCarrusel } from "./component/ItemCarrusel_inicio.jsx"
 
 
 
@@ -26,26 +27,29 @@ const Layout = () => {
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
     return (
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                  
+
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
-                        <Route element={<CardMultiple />} path="/prueba1"/>
-                        <Route element={<CardHamburguesas />} path="/prueba2"/>
-                        <Route element={<CardMilanesas />} path="/prueba3"/>
-                        <Route element={<AddProduct />} path="/add_product"/>
-                        <Route element={<CartView />} path="/cart"/>
-                        
+                        <Route element={<CardMultiple />} path="/prueba1" />
+                        <Route element={<CardHamburguesas />} path="/prueba2" />
+                        <Route element={<CardMilanesas />} path="/prueba3" />
+                        <Route element={<AddProduct />} path="/add_product" />
+                        <Route element={<CartView />} path="/cart" />
+                        <Route element={<ItemCarrusel />} path="/prueba4" />
+
+
+
                     </Routes>
-                   
+
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>

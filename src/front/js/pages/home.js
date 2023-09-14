@@ -13,6 +13,7 @@ import {CardEspecial} from "../component/SecEspecial.jsx"
 import { Navbar} from "../component/navbar.js"
 import {CarruselInicio} from "../component/Carrusel_inicio.jsx"
 
+
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 
