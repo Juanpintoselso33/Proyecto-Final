@@ -29,7 +29,7 @@ export default function ItemCarrusel(props) {
     return (
 
 
-        <div className="carousel-item ">
+        <div className={"carousel-item " + props.activei}>
             <img src={props.img_urli} style={Fila_1} className="d-block w-100" alt="..." />
             <div className="carousel-caption d-none d-md-block contenedor ">
 
@@ -60,6 +60,7 @@ export default function ItemCarrusel(props) {
 };
 
 ItemCarrusel.propTypes = {
+    activei: PropTypes.string,
     img_urli: PropTypes.string,
     namei: PropTypes.string,
     costi: PropTypes.number,

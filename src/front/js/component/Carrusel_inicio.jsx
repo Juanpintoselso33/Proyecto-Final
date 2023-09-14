@@ -84,6 +84,7 @@ export const CarruselInicio = () => {
             descriptioni={item.description}
         />
     ));
+    console.log(ItemsdelCarrusel)
 
     return (
 
