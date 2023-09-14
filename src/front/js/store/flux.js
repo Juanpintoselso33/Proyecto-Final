@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -49,26 +50,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			login: async (email, password) => {
 				console.log("fnciona")
-				try {
-					let data = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/login', {
-						"email": email,
-						"password": password
-					})
-					console.log(data);
+			 	try {
+			 		let data = await axios.post(process.env.BACKEND_URL + '/api/login',{
+			 				"email":email,
+			 				"password":password
+			 			})
+			 		console.log(data);
 					//Guardar en el navegador el token
 					localStorage.setItem("token", data.data.access_token);
 					setStore({ isAuthenticated: true }); // Actualiza el estado a true
 
 					return true;
-				}
-				catch (error) {
-					if (error.response.status === 404) {
-						alert(error.response.data.msg)
-					}
+			 		}
+			 		catch(error){
+			 			// //if (error.response.status === 404){
+						// 	alert(error.response.data.msg)
+						// }
+						console.log(error)
+						
+			 		}
+			
+				},
 
-				}
-
-			},
 
 			getMessage: async () => {
 				try {

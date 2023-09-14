@@ -6,14 +6,17 @@ import { BackendURL } from "./component/backendURL";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
+
 import injectContext from "./store/appContext";
-import { Navbar } from "./component/navbar";
+// import { Navbar } from "./component/navbar";
+
 import { Footer } from "./component/footer";
 import {CardMultiple} from "./component/CardMultipleSLider.jsx"
 import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
 import {CardMilanesas} from "./component/SecMilanesa.jsx"
 import { AddProduct } from "./pages/addProduct"
 import { CartView } from "./pages/cart"
+
 
 
 
@@ -36,7 +39,9 @@ const Layout = () => {
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
+                       
                         <Route element={<Single />} path="/single/:theid" />
+            
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<CardMultiple />} path="/prueba1"/>
                         <Route element={<CardHamburguesas />} path="/prueba2"/>
