@@ -187,10 +187,13 @@ export const Navbar = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+     
+      <RegisterModal show={showRegisterModal} onHide={handleCloseRegisterModal} />
 
-      <Modal show={showRegisterModal} onHide={handleCloseRegisterModal}>
-        <RegisterModal />
-      </Modal>
+  
+
+
+     
     </>
   );
 };
