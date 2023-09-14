@@ -104,7 +104,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* -----------------Productos-----------------*/
 			obtenerAllProducts: async function () {
 				try {
-					let response = await fetch("https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/products");
+					let response = await fetch(process.env.BACKEND_URL+ "/api/products");
 					let data = await response.json();
 					setStore({ productos: data });
 
@@ -120,7 +120,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Funcion para dar de alta registros
 			registerUser: async (formData) => {
 				try {
-				  const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/register', formData);
+				  const response = await axios.post(process.env.BACKEND_URL + '/api/register', formData);
 			  
 				  if (response.status === 200 || response.status === 201) {
 					console.log('Registro exitoso:', response.data);
@@ -144,7 +144,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  
 			  addProduct: async (productData) => {
 				try {
-				  const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/products', productData);
+				  const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
 				  if (response.status === 200 || response.status === 201) {
 					console.log('Producto agregado exitosamente:', response.data);					
 				  } else {
