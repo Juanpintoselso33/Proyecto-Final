@@ -1,5 +1,5 @@
 import React from 'react';
-import {CartStore} from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
 import PropTypes from 'prop-types';
 
 export const Product = (props) => {
@@ -15,15 +15,27 @@ export const Product = (props) => {
   };
 
   return (
-    <div className="card">
+
+    <div type="button" className=" card" data-bs-toggle="modal" data-bs-target="#exampleModal">
       <img className="product--image" src={props.url} alt="product image" />
       <h2>{props.name}</h2>
       <p className="price">{props.price}</p>
       <p>{props.description}</p>
       <p>
-        <button onClick={handleAddToCart}>Add to Cart</button>
+        {/* <button onClick={handleAddToCart}>Add to Cart</button> */}
       </p>
+      <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="id">
+        Launch demo modal
+      </button>
+
     </div>
+
+
+
+
+
+
+
   );
 };
 

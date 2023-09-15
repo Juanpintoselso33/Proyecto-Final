@@ -4,8 +4,9 @@ import Product from "./Product.jsx";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
+import PropTypes from 'prop-types';
 
-export const CardHamburguesas = () => {
+export const CardHamburguesas = (props) => {
     const { store, actions } = useContext(Context);
     const [arrayHambur, setArrayHambur] = useState([]);
 
@@ -48,13 +49,41 @@ export const CardHamburguesas = () => {
     ));
 
     return (
-        <div className="home">
-            <div className="App">
-                <h1>Hamburguesas</h1>
-                <Carousel responsive={responsive}>
-                    {productHambur}
-                </Carousel>
+        <div>
+
+            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="" aria-hidden="true" >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            ...
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            < div className="home" >
+                <div className="App">
+                    <h1>Hamburguesas</h1>
+                    <Carousel responsive={responsive}>
+                        {productHambur}
+                    </Carousel>
+                </div>
+            </div >
         </div>
     );
+};
+CardHamburguesas.propTypes = {
+    id: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
 };

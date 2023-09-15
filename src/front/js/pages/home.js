@@ -17,14 +17,14 @@ export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="text-center mt-5">s
+		<div className="text-center ">
 			<Navbar />
 			<div className="div1">
-				<CarruselInicio/>
+				<CarruselInicio />
 			</div>
 			<div className="div2">
-				<CardHamburguesas/>
-				<CardMilanesas/>
+				<CardHamburguesas />
+				<CardMilanesas />
 				{/* <CardPescado/>
 				<CardPancho/>
 				<CardChivito/>
