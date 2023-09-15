@@ -84,3 +84,9 @@ margin-top: 40px;
 max-height: 10vh;
 
 }
+
+.elementoProducto:active {
+
+color: red;
+
+}

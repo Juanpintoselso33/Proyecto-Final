@@ -54,6 +54,7 @@ export default function ItemCarrusel(props) {
         // </div>
 
         <div className="carousel-item" style={Fila_2}>
+
             <img src={props.img_urli} style={Fila_1} className="d-block w-100" alt="..." />
             <div className="carousel-caption d-none d-md-block contenedor2 ">
 
@@ -68,9 +69,11 @@ export default function ItemCarrusel(props) {
                         <div>
                             {props.descriptioni}
                         </div>
-                    </div>
-                </div>
 
+                    </div>
+
+
+                </div>
             </div>
         </div>
 
