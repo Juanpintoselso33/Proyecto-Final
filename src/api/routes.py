@@ -34,9 +34,10 @@ def login():
 
     if user and user.password == password:
         access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token), 200
+        return jsonify(access_token=access_token, id=user.id), 200  # Añadir user_id al JSON de respuesta
     else:
         return jsonify({'error': 'Invalid email or password'}), 401
+
 
 @api.route('/users', methods=['GET'])
 def get_all_users():

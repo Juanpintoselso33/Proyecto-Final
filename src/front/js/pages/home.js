@@ -25,13 +25,13 @@ export const Home = () => {
 			<div className="div2">
 				<CardHamburguesas/>
 				<CardMilanesas/>
-				<CardPescado/>
+				{/* <CardPescado/>
 				<CardPancho/>
 				<CardChivito/>
 				<CardVianda/>
 				<CardPlato/>
 				<CardBebida/>
-				<CardEspecial/>
+				<CardEspecial/> */}
 			</div>
 		</div>
 	);
