@@ -59,7 +59,7 @@ export const CardChivito = () => {
         />
     ));
 
-    console.log(store.productos)
+
 
 
 
