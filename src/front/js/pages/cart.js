@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from "../store/appContext";
 import { CartStore } from '../component/cartStore.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
@@ -7,30 +8,44 @@ import Cerrar from "../../img/cerrar.png";
 
 export const CartView = () => {
   const [cart, setCart] = useState([]);
+  const { actions } = useContext(Context);
   const navigate = useNavigate();
 
   useEffect(() => {
     const initialCart = CartStore.getCart();
     setCart(initialCart);
+
+    const handleStorageChange = () => {
+      const updatedCart = CartStore.getCart();
+      setCart(updatedCart);
+    };
+
+    
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const totalCost = cart.reduce((acc, item) => acc + item.cost, 0);
 
   // Función para eliminar un elemento del carrito
-  const removeFromCart = (productId) => {
-    CartStore.removeFromCart(productId);
+  const removeFromCart = (orderId) => {
+    CartStore.removeFromCart(orderId);
     const updatedCart = CartStore.getCart();
     setCart(updatedCart);
   };
 
   return (
-    <section className="vh-100 bg-image" style={{backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(10, 10, 10, 1)), url(${Logo})`, backgroundSize: 'cover', backgroundPosition: 'center center'}}>
+    <section className="vh-100 bg-image" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(10, 10, 10, 1)), url(${Logo})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
       <div className="mask d-flex align-items-center h-100 gradient-custom-3">
         <div className="container h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-              <div className="p-4" style={{border: '1px solid #ccc', borderRadius: '15px', background: 'white'}}>
-                <div onClick={() => navigate('/')} style={{cursor: 'pointer', textAlign: 'right'}}>
+              <div className="p-4" style={{ border: '1px solid #ccc', borderRadius: '15px', background: 'white' }}>
+                <div onClick={() => navigate('/')} style={{ cursor: 'pointer', textAlign: 'right' }}>
                   <img src={Cerrar} alt="Cerrar" style={{ width: '30px', height: '30px' }} />
                 </div>
 
@@ -80,9 +95,7 @@ export const CartView = () => {
                   <h2>Costo Total: ${totalCost}</h2>
                   <button
                     className="btn btn-success"
-                    onClick={() => {
-                      // Aquí puedes agregar la lógica para finalizar la compra
-                    }}
+                    onClick={() => actions.createOrder()}
                   >
                     Comprar
                   </button>

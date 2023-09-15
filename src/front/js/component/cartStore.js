@@ -11,7 +11,9 @@ export const CartStore = {
   },
 
   addToCart(id, quantity, price, name) {
+    const orderId = new Date().getTime(); // Crear un ID único para la orden basado en la marca de tiempo actual
     const product = {
+      order_id: orderId,
       product_id: id,
       quantity,
       cost: quantity * price,
@@ -22,10 +24,16 @@ export const CartStore = {
     localStorage.setItem("cart", JSON.stringify(this._cart)); // Guardar el estado en localStorage
   },
 
-  removeFromCart(productId) {
-    this._cart = this._cart.filter(item => item.product_id !== productId);
+  removeFromCart(orderId) {
+    this._cart = this._cart.filter(item => item.order_id !== orderId);
     localStorage.setItem("cart", JSON.stringify(this._cart)); // Guardar el estado en localStorage
   },
+
+  clearCart() {
+    console.log("Borrando todos los elementos del carrito");
+    this._cart = [];
+    localStorage.removeItem("cart");
+  }
 
   // Puedes agregar más métodos aquí si necesitas
 };
