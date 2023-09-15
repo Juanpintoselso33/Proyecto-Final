@@ -16,6 +16,7 @@ import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
 import {CardMilanesas} from "./component/SecMilanesa.jsx"
 import { AddProduct } from "./pages/addProduct"
 import { CartView } from "./pages/cart"
+import {PreloadComponent} from './component/preloadProducts';
 
 
 
@@ -35,7 +36,7 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                  
+                    <PreloadComponent />
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
