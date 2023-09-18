@@ -1,42 +1,65 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Context } from "../store/appContext";
-import { CartStore } from '../component/cartStore.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import Logo from "../../img/carrito.jpg";
 import Cerrar from "../../img/cerrar.png";
 
 export const CartView = () => {
-  const [cart, setCart] = useState([]);
   const { actions } = useContext(Context);
   const navigate = useNavigate();
+  const [cart, setCart] = useState({ items: [], totalCost: 0 });
 
   useEffect(() => {
-    const initialCart = CartStore.getCart();
-    setCart(initialCart);
-
-    const handleStorageChange = () => {
-      const updatedCart = CartStore.getCart();
-      setCart(updatedCart);
-    };
-
-    
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
+    setCart(storedCart);
   }, []);
 
-  const totalCost = cart.reduce((acc, item) => acc + item.cost, 0);
-
-  // Función para eliminar un elemento del carrito
-  const removeFromCart = (orderId) => {
-    CartStore.removeFromCart(orderId);
-    const updatedCart = CartStore.getCart();
-    setCart(updatedCart);
+  const updateCartInLocalStorage = (updatedCart) => {
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
+
+  const handleIncrement = (order_id) => {
+    const updatedCartItems = cart.items.map(item => {
+      if (item.order_id === order_id) {
+        const updatedItem = { ...item, quantity: item.quantity + 1 };
+        return updatedItem;
+      }
+      return item;
+    });
+
+    const updatedCart = { ...cart, items: updatedCartItems };
+    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
+    updatedCart.totalCost = total;
+    setCart(updatedCart);
+    updateCartInLocalStorage(updatedCart);
+  };
+
+  const handleDecrement = (order_id) => {
+    const updatedCartItems = cart.items.map(item => {
+      if (item.order_id === order_id && item.quantity > 1) {
+        const updatedItem = { ...item, quantity: item.quantity - 1 };
+        return updatedItem;
+      }
+      return item;
+    }).filter(item => item.quantity > 0);
+
+    const updatedCart = { ...cart, items: updatedCartItems };
+    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
+    updatedCart.totalCost = total;
+    setCart(updatedCart);
+    updateCartInLocalStorage(updatedCart);
+  };
+
+  const removeFromCart = (order_id) => {
+    const updatedCartItems = cart.items.filter(item => item.order_id !== order_id);
+    const updatedCart = { ...cart, items: updatedCartItems };
+    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
+    updatedCart.totalCost = total;
+    setCart(updatedCart);
+    updateCartInLocalStorage(updatedCart);
+  };
+
+  const totalCost = cart.totalCost || 0;
 
   return (
     <section className="vh-100 bg-image" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(10, 10, 10, 1)), url(${Logo})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
@@ -63,12 +86,26 @@ export const CartView = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.map((item, index) => (
-                      <tr key={index}>
+                    {cart.items.map((item, index) => (
+                      <tr key={item.order_id}>
                         <th scope="row">{index + 1}</th>
                         <td>{item.name}</td>
                         <td>${item.cost}</td>
-                        <td>{item.quantity}</td>
+                        <td>
+                          <button
+                            className="btn btn-success"
+                            onClick={() => handleIncrement(item.order_id)}
+                          >
+                            +
+                          </button>
+                          {item.quantity}
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => handleDecrement(item.order_id)}
+                          >
+                            -
+                          </button>
+                        </td>
                         <td>
                           <button
                             className="btn btn-danger"
@@ -108,5 +145,3 @@ export const CartView = () => {
     </section>
   );
 };
-
-export default CartView;

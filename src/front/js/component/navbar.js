@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../img/carrito.jpg";
 import Favorito from "../../img/favorito.png";
 import login from "../../img/login.png";
-import cart from "../../img/cart.png";
+import cartIcon from "../../img/cart.png";
 import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
+import "../../styles/cartDropdown.css";
 import RegisterModal from './register';
 
 export const Navbar = () => {
@@ -14,7 +15,20 @@ export const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+
+
   let navigate = useNavigate();
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [cart, setCart] = useState({ items: [], totalCost: 0 });
+  const [cartTotal, setCartTotal] = useState(0);
+
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
+    setCart(storedCart);
+  }, []);
+
+
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -69,6 +83,55 @@ export const Navbar = () => {
 
   const welcomeMessage = store.email ? store.email.split("@")[0] : "";
 
+  const handleMouseEnter = () => {
+    setShowCartDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowCartDropdown(false);
+  };
+
+
+  const handleIncrement = (order_id) => {
+    const updatedCartItems = cart.items.map(item => {
+      if (item.order_id === order_id) {
+        const updatedItem = { ...item, quantity: item.quantity + 1 };
+        console.log(`Incrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
+        return updatedItem;
+      }
+      return item;
+    });
+
+    // Calcula el precio total del carrito y actualiza el estado local
+    const updatedCart = { ...cart, items: updatedCartItems };
+    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
+    updatedCart.totalCost = total;
+    setCart(updatedCart);
+
+    // Actualiza el carrito en localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
+  const handleDecrement = (order_id) => {
+    const updatedCartItems = cart.items.map(item => {
+      if (item.order_id === order_id) {
+        const updatedItem = { ...item, quantity: item.quantity - 1 };
+        console.log(`Decrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
+        return updatedItem;
+      }
+      return item;
+    }).filter(item => item.quantity > 0);
+
+    // Calcula el precio total del carrito y actualiza el estado local
+    const updatedCart = { ...cart, items: updatedCartItems };
+    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
+    updatedCart.totalCost = total;
+    setCart(updatedCart);
+
+    // Actualiza el carrito en localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -89,7 +152,8 @@ export const Navbar = () => {
                 style={{ paddingLeft: '40px', backgroundImage: `url(${lupa})`, backgroundPosition: '10px center', backgroundRepeat: 'no-repeat' }}
               />
             </div>
-            <div className="iconos">
+
+            <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
               {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}
               <img src={Favorito} alt="Favoritos" className="decora" width={30} />
               <Button variant="link" className="login" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
@@ -99,12 +163,38 @@ export const Navbar = () => {
               {!store.isAuthenticated && <Button variant="link" className="register" onClick={handleShowRegisterModal}>
                 Register
               </Button>}
-              {store.isAuthenticated && <Button variant="link" onClick={() => navigate('/add_product')}>Agregar Producto</Button>}
-              {store.isAuthenticated && <Button variant="link" onClick={() => navigate('/cart')}>
-                <img src={cart} alt="cart" className="border-dark ms-2" width={30} />
-              </Button>}
+              {store.isAuthenticated &&
+                <div
+                  className="cart-container"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <Button variant="link" onClick={() => navigate('/cart')}>
+                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} /> {/* Icono de carrito restaurado */}
+                  </Button>
+                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    {cart && cart.items && cart.items.length > 0 ? (
+                      cart.items.map((item, index) => (
+                        <div className="cart-item" key={item.order_id}>
+                          <span className="item-name">{`${index + 1} - ${item.name}`}</span>
+                          <span className="item-quantity">
+                            {' x '}
+                            {item.quantity}
+                          </span>
+                          <button className="item-increment" onClick={() => handleIncrement(item.order_id)}>+</button>
+                          <button className="item-decrement" onClick={() => handleDecrement(item.order_id)}>-</button>
+                        </div>
+                      ))
+                    ) : null} 
+                    {cart && cart.items && cart.items.length > 0 && (
+                      <div className="cart-total">
+                        Total: ${cart.totalCost}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              }
             </div>
-
           </div>
           <button
             className="navbar-toggler"
@@ -191,7 +281,7 @@ export const Navbar = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-     
+
       <RegisterModal show={showRegisterModal} onHide={handleCloseRegisterModal} />
 
     </>

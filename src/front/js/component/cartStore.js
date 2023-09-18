@@ -1,13 +1,18 @@
 export const CartStore = {
-  _cart: JSON.parse(localStorage.getItem("cart")) || [], // Inicializar el estado interno del carrito desde localStorage
+  _cart: JSON.parse(localStorage.getItem("cart")) || { items: [], totalCost: 0 }, // Inicializar el estado interno del carrito desde localStorage
 
   getCart() {
-    return this._cart;
+    return this._cart.items;
   },
 
-  setCart(newCart) {
-    this._cart = newCart;
-    localStorage.setItem("cart", JSON.stringify(this._cart)); // Guardar el estado en localStorage
+  getTotalCost() {
+    return this._cart.totalCost;
+  },
+
+  setCart(newCart, newTotalCost) {
+    this._cart.items = newCart;
+    this._cart.totalCost = newTotalCost;
+    this._updateLocalStorage();
   },
 
   addToCart(id, quantity, price, name) {
@@ -20,20 +25,31 @@ export const CartStore = {
       name
     };
     console.log("Añadiendo al carrito:", product);
-    this._cart.push(product);
-    localStorage.setItem("cart", JSON.stringify(this._cart)); // Guardar el estado en localStorage
+    this._cart.items.push(product);
+    this._recalculateTotalCost();
   },
 
   removeFromCart(orderId) {
-    this._cart = this._cart.filter(item => item.order_id !== orderId);
-    localStorage.setItem("cart", JSON.stringify(this._cart)); // Guardar el estado en localStorage
+    this._cart.items = this._cart.items.filter(item => item.order_id !== orderId);
+    this._recalculateTotalCost();
   },
 
   clearCart() {
     console.log("Borrando todos los elementos del carrito");
-    this._cart = [];
+    this._cart = { items: [], totalCost: 0 };
     localStorage.removeItem("cart");
-  }
+  },
 
-  // Puedes agregar más métodos aquí si necesitas
+  _recalculateTotalCost() {
+    let newTotalCost = 0;
+    this._cart.items.forEach(item => {
+      newTotalCost += item.cost;
+    });
+    this._cart.totalCost = newTotalCost;
+    this._updateLocalStorage();
+  },
+
+  _updateLocalStorage() {
+    localStorage.setItem("cart", JSON.stringify(this._cart));
+  }
 };
