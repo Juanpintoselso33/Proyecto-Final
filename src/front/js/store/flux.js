@@ -161,7 +161,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			login: async (email, password) => {
 				try {
-					
+
 					const response = await axios.post(process.env.BACKEND_URL + '/api/login', {
 						email,
 						password
@@ -183,13 +183,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 						isAuthenticated: true,
 						token: userData.access_token,
 						email,
-						userId: userData.id 
+						userId: userData.id
 					});
 
-					return true; 
+					return true;
 				} catch (error) {
 					console.log("Error during login:", error);
-					return false; 
+					return false;
 				}
 			},
 
@@ -211,13 +211,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  
 				  const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
 			  
-				  if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
+				  if (!cartFromLocalStorage || cartFromLocalStorage.items.length === 0) {
 					console.log("El carrito está vacío. No se puede crear la orden.");
 					return;
-				  }			  
-				  const items = cartFromLocalStorage.map(product => ({
-					product_id: product.product_id,
-					quantity: product.quantity
+				  }
+			  
+				  const items = cartFromLocalStorage.items.map(item => ({
+					product_id: item.product_id, // Ajusta esto según la estructura del objeto item en tu carrito
+					quantity: item.quantity
 				  }));
 			  
 				  const payload = {
@@ -238,7 +239,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  
 				  if (data.success) {
 					console.log('Order created:', data.order);
-					localStorage.setItem("cart", JSON.stringify([]));
+					localStorage.setItem("cart", JSON.stringify({ items: [], totalCost: 0 })); // Limpia el carrito
 				  } else {
 					console.log('Order creation failed:', data.message);
 				  }
@@ -246,7 +247,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				  console.log('An error occurred:', error);
 				}
 			  },
-			  
+			
+
 
 
 

@@ -103,7 +103,12 @@ class Order(db.Model):
             elif item.its_promo is True and item.cost is None:
                 raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
             self.total_cost += item.cost
+
+        # Guarda el cambio en el costo total en la base de datos
         db.session.commit()
+
+        # Devuelve el costo total calculado
+        return self.total_cost
 
     def __repr__(self):
         return f"Orden Nro. {self.id}"
