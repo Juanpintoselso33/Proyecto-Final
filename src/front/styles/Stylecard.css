@@ -30,6 +30,8 @@ h1 {
   background: #ebebeb;
   border-radius: 10%;
   border: solid 1px #d68227;
+ 
+
 }
 .price {
   color: grey;
@@ -89,4 +91,142 @@ max-height: 10vh;
 
 color: red;
 
+}
+
+/* .apapa:hover{
+
+ 
+  transition: transform 0.3s ease-out;
+  transform: scale(1.1);
+} */
+
+.pruebasss{
+  height: 90vh;
+}
+
+.pepesq1{
+
+max-width: 100% !important;
+text-align: center !important;
+align-items: center;
+
+
+}
+
+.pruebahome{
+  width: 100% !important;
+ text-align: center !important;
+
+
+}
+
+.pruebaas{
+
+justify-content: center !important;
+}
+
+
+.contenedorImg_Data{
+
+  display: flex;
+  justify-content: space-between;
+
+}
+.c1{
+  display: flex;
+  width: 50%;
+  background: red;
+  margin-right: 10px;
+  margin: auto;
+}
+
+.c2{
+
+  width: 50%;
+  background: blue;
+  margin-left: 10px;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.imagenDetalle{
+  max-width: 100%;
+  align-items: center;
+}
+
+.c2_1{
+display: flex;
+height: 20%;
+background: greenyellow;
+flex-direction: column;
+gap: 20px;
+padding: calc(20px) calc(20px) 0px;
+width: 100%;
+}
+
+.c2_2{
+  height: 80%;
+  background: green;
+  flex-direction: column;
+  
+ 
+  
+}
+
+.c2_conjunto{
+  width: 100%;
+}
+
+.c2_1_1_Precio{
+background: violet;
+width: 100%;
+}
+
+.c2_1_1_Descripcion{
+  background: #d68227;
+
+
+}
+
+.DetallesAgregados{
+
+overflow-y: scroll;
+}
+
+.Salsas_title{
+
+  background-color: goldenrod;
+  height: 20%;
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  gap: 20px;
+  padding: calc(20px) calc(20px) 0px;
+  width: 100%;
+ 
+}
+
+.Sal_1{
+  width: 100%;
+}
+
+.Maxsal{
+  width: 100%;
+}
+.Lista_Agregados{
+
+  width: 100%;
+
+}
+
+.Bebidas_title{
+  background-color: goldenrod;
+  height: 20%;
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  gap: 20px;
+  padding: calc(20px) calc(20px) 0px;
+  width: 100%;
+  
 }

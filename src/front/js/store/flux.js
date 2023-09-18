@@ -10,7 +10,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
+			modalData: [
+				{
+					id: "",
+					url: "",
+					name: "",
+					price: "",
+					description: ""
+				},
 
+			],
 			productos: [],
 			carrito: [],
 			isAuthenticated: false,
@@ -161,7 +170,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			login: async (email, password) => {
 				try {
-					
+
 					const response = await axios.post(process.env.BACKEND_URL + '/api/login', {
 						email,
 						password
@@ -183,13 +192,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 						isAuthenticated: true,
 						token: userData.access_token,
 						email,
-						userId: userData.id 
+						userId: userData.id
 					});
 
-					return true; 
+					return true;
 				} catch (error) {
 					console.log("Error during login:", error);
-					return false; 
+					return false;
 				}
 			},
 
@@ -202,52 +211,83 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			createOrder: async () => {
 				try {
-				  const store = getStore();
-				  const userId = store.userId;
-			  
-				  if (!userId) {
-					throw new Error("User ID is undefined");
-				  }
-			  
-				  const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
-			  
-				  if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
-					console.log("El carrito está vacío. No se puede crear la orden.");
-					return;
-				  }			  
-				  const items = cartFromLocalStorage.map(product => ({
-					product_id: product.product_id,
-					quantity: product.quantity
-				  }));
-			  
-				  const payload = {
-					items,
-				  };
-			  
-				  const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
-				  console.log("Sending payload:", payload);
-				  console.log("URL de la solicitud POST:", url);
-			  
-				  const response = await axios.post(url, payload, {
-					headers: {
-					  'Content-Type': 'application/json',
-					}
-				  });
-			  
-				  const data = response.data;
-			  
-				  if (data.success) {
-					console.log('Order created:', data.order);
-					localStorage.setItem("cart", JSON.stringify([]));
-				  } else {
-					console.log('Order creation failed:', data.message);
-				  }
-				} catch (error) {
-				  console.log('An error occurred:', error);
-				}
-			  },
-			  
+					const store = getStore();
+					const userId = store.userId;
 
+					if (!userId) {
+						throw new Error("User ID is undefined");
+					}
+
+					const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
+
+					if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
+						console.log("El carrito está vacío. No se puede crear la orden.");
+						return;
+					}
+					const items = cartFromLocalStorage.map(product => ({
+						product_id: product.product_id,
+						quantity: product.quantity
+					}));
+
+					const payload = {
+						items,
+					};
+
+					const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
+					console.log("Sending payload:", payload);
+					console.log("URL de la solicitud POST:", url);
+
+					const response = await axios.post(url, payload, {
+						headers: {
+							'Content-Type': 'application/json',
+						}
+					});
+
+					const data = response.data;
+
+					if (data.success) {
+						console.log('Order created:', data.order);
+						localStorage.setItem("cart", JSON.stringify([]));
+					} else {
+						console.log('Order creation failed:', data.message);
+					}
+				} catch (error) {
+					console.log('An error occurred:', error);
+				}
+			},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			//Cargo datos para modal
+
+			DataModalDetalle: (data) => {
+				const store = getStore();
+				const datosModal = [{}]
+
+				setStore({
+					modalData: {
+						id: data.idx,
+						url: data.urlx,
+						name: data.namex,
+						price: data.pricex,
+						description: data.descriptionx
+					}
+				});
+				console.log(store.modalData)
+			},
 
 
 

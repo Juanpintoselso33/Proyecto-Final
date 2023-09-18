@@ -1,0 +1,7 @@
+
+.cartas:hover{
+
+    object-fit: cover;
+    transition: transform 0.3s ease-out;
+    transform: scale(1.1);
+  }
