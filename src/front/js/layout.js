@@ -9,6 +9,7 @@ import { Single } from "./pages/single";
 
 import injectContext from "./store/appContext";
 // import { Navbar } from "./component/navbar";
+import { Catalogo } from "./component/catalogo";
 
 import { Footer } from "./component/footer";
 import {CardMultiple} from "./component/CardMultipleSLider.jsx"
@@ -49,6 +50,7 @@ const Layout = () => {
                         <Route element={<CardMilanesas />} path="/prueba3"/>
                         <Route element={<AddProduct />} path="/add_product"/>
                         <Route element={<CartView />} path="/cart"/>
+                        <Route element={<Catalogo />} path="/catalogo"/>
                         
                     </Routes>
                    
