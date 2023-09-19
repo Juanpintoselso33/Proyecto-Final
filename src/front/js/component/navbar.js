@@ -9,6 +9,8 @@ import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
 import "../../styles/cartDropdown.css";
 import RegisterModal from './register';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -64,8 +66,8 @@ export const Navbar = () => {
     setShowRegisterModal(false);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async  (email, password) => {
+  //console.log(values.email, values.password)
     let logged = await actions.login(email, password);
     if (logged) {
       setSuccessMessage("Login exitoso, cerrando ventana...");
@@ -130,7 +132,26 @@ export const Navbar = () => {
 
     // Actualiza el carrito en localStorage
     localStorage.setItem('cart', JSON.stringify(updatedCart));
-  };
+  }
+
+  const SignupSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string().min(8, 'Must be 8 characters or more').required('Required')
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validationSchema: SignupSchema,
+    onSubmit: values => {
+      alert(values.email);
+      //navigate('/');
+      //handleCloseModal();
+      handleSubmit(values.email, values.password)
+    },
+  });
 
   return (
     <>
@@ -185,7 +206,7 @@ export const Navbar = () => {
                           <button className="item-decrement" onClick={() => handleDecrement(item.order_id)}>-</button>
                         </div>
                       ))
-                    ) : null} 
+                    ) : null}
                     {cart && cart.items && cart.items.length > 0 && (
                       <div className="cart-total">
                         Total: ${cart.totalCost}
@@ -240,30 +261,37 @@ export const Navbar = () => {
           <Modal.Title>Log in</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
             <div className="form-outline mb-4">
               <input
                 type="email"
-                id="form2Example18"
+                id="email"
                 name="email"
                 className="form-control form-control-lg"
-                value={email}
-                onChange={handleChange}
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                aria-activedescendant="emailHelp"
               />
-              <label className="form-label" htmlFor="form2Example18">
+              {formik.touched.email && formik.errors.email ? (
+                <div className="text-danger">{formik.errors.email}</div>
+              ) : null}
+              <label className="form-label" htmlFor="exampleInputEmail">
                 Email address
               </label>
             </div>
             <div className="form-outline mb-4">
               <input
                 type="password"
-                id="form2Example28"
+                id="password"
                 name="password"
                 className="form-control form-control-lg"
-                value={password}
-                onChange={handleChange}
+                value={formik.values.password}
+                onChange={formik.handleChange}
               />
-              <label className="form-label" htmlFor="form2Example28">
+              {formik.touched.password && formik.errors.password ? (
+                <div className="text-danger">{formik.errors.password}</div>
+              ) : null}
+              <label className="form-label" htmlFor="password">
                 Password
               </label>
             </div>
