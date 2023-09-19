@@ -6,12 +6,43 @@ import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 import PropTypes from "prop-types";
 import { productDataSalsas } from "./PruebaData.js"
+import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
 
 
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
     const [arrayHambur, setArrayHambur] = useState([]);
     const dataDetalle = store.modalData
+    const [cantidadP, setcantidadP] = useState();
+    let num = document.querySelector(".num");
+    let pepe = document.querySelector(".num");
+
+    let valor = 1
+
+
+    console.log(cantidadP)
+
+    function sumarPro() {
+
+        valor++;
+
+        valor = (valor < 10) ? "0" + valor : valor;
+        num.innerText = valor
+
+
+
+    }
+
+    function restarPro() {
+
+        if (valor > 1) {
+            valor--;
+            valor = (valor < 10) ? "0" + valor : valor;
+            num.innerText = valor
+
+        }
+    }
+
 
 
 
@@ -34,14 +65,24 @@ export const CardHamburguesas = () => {
         }
     };
 
+    const handleAddToCart = (num) => {
 
+        const inputQuantity = num;
+
+        if (!isNaN(inputQuantity) && inputQuantity > 0) {
+            console.log("Cantidad válida:", inputQuantity);  // Añadir console.log aquí
+            CartStore.addToCart(dataDetalle.id, inputQuantity, dataDetalle.price, dataDetalle.name);
+        } else {
+            console.log("Cantidad no válida:", inputQuantity);  // Añadir console.log aquí
+        }
+    };
 
     useEffect(() => {
         actions.obtenerAllProducts();
 
     }, []);
 
-    console.log()
+
 
     useEffect(() => {
         const hamburguesas = store.productos.filter((producto) => producto.category === "H");
@@ -64,7 +105,7 @@ export const CardHamburguesas = () => {
     const productSalsas = productDataSalsas.map((item, index) => (
         <div className="col" key={index}>{item.name}</div>
     ));
-    console.log(productSalsas)
+
 
 
     return (
@@ -127,8 +168,8 @@ export const CardHamburguesas = () => {
                                                                 </div>
 
 
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+                                                                <div className="form-check">
+                                                                    <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
 
                                                                 </div>
                                                             </div>
@@ -160,8 +201,8 @@ export const CardHamburguesas = () => {
                                                                 </div>
 
 
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+                                                                <div className="form-check">
+                                                                    <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
 
                                                                 </div>
                                                             </div>
@@ -172,40 +213,6 @@ export const CardHamburguesas = () => {
                                         </section>
 
                                     </div>
-                                    {/* <div className=" contenedor_Agregados">
-
-                                            <div className=" Tipos_Detalle ">
-                                                <div className="Salsas_title ">
-                                                    <div className="Sal_1">Salsas extra</div>
-                                                    <div className="Maxsal">maximo 2 salsas</div>
-                                                </div>
-
-                                                <ul className="Lista_Agregados  ">
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                </ul>
-                                            </div>
-
-                                            <div className="  Tipos_Detalle ">
-                                                <div className="Bebidas_title ">
-                                                    <div className="Sal_1">Salsas extra</div>
-                                                    <div className="Maxsal">maximo 2 salsas</div>
-                                                </div>
-
-                                                <ul className="Lista_Bebidas ">
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                </ul>
-
-
-                                            </div>
-                                        </div> */}
 
 
 
@@ -214,30 +221,17 @@ export const CardHamburguesas = () => {
                             </div>
 
 
-                            {/* <div className="c2">
 
-                                <div className="c2_1">
-                                    <div className="c2_conjunto">
-                                        <div className="c2_1_1_Precio">
-                                            hola
-                                        </div>
-
-                                        <div className="c2_1_1_Descripcion">
-                                            mundo
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className=" c2_2">
-                                    <div className=" contenedor_Agregados">
-
-                                    </div>
-
-                                </div>
-                            </div> */}
                         </div>
                         <div className="modal-footer pruebaas">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
+                            <div className="wrapper">
+                                <span className="minus" onClick={() => restarPro()}>-</span>
+                                <span className="num">01</span>
+                                <span className="plus" onClick={() => sumarPro()}>+</span>
+                            </div>
+                            {/* <button onClick={handleAddToCart()}>Add to Cart</button> */}
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+                            <button type="button" className="btn btn-primary" onClick={() => handleAddToCart(valor)} >Save changes</button>
                         </div>
                     </div>
                 </div>
