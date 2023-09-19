@@ -98,15 +98,57 @@ export const CardHamburguesas = () => {
                                         </div>
                                     </div>
                                     <div className=" c2_2">
-                                        <div class=" contenedor_Agregados">
 
-                                            <div className="container row-cols-2 ">
-                                                <div className="Salsas_title col-12">
+                                        <section class="layout">
+                                            <div className="bg-danger">
+                                                <div>chico_1</div>
+                                                <div>grande_1</div>
+
+                                            </div>
+                                            <div className="bg-primary">
+                                                <ul className="Lista_Agregados  ">
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                </ul>
+                                            </div>
+                                            <div className="bg-primary">
+                                                <ul className="Lista_Agregados  ">
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                </ul>
+                                            </div>
+                                        </section>
+                                        <section class="layout">
+                                            <div className="bg-danger">
+                                                <div>chico_1</div>
+                                                <div>grande_1</div>
+
+                                            </div>
+                                            <div className="bg-primary">
+                                                <ul className="Lista_Agregados  ">
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                    <div className="col">hola</div>
+                                                </ul>
+                                            </div>
+                                        </section>
+                                        {/* <div class=" contenedor_Agregados">
+
+                                            <div className=" Tipos_Detalle ">
+                                                <div className="Salsas_title ">
                                                     <div className="Sal_1">Salsas extra</div>
                                                     <div className="Maxsal">maximo 2 salsas</div>
                                                 </div>
 
-                                                <ul className="Lista_Agregados col-12">
+                                                <ul className="Lista_Agregados  ">
                                                     <div className="col">hola</div>
                                                     <div className="col">hola</div>
                                                     <div className="col">hola</div>
@@ -115,13 +157,13 @@ export const CardHamburguesas = () => {
                                                 </ul>
                                             </div>
 
-                                            <div className="container row-cols-2 ">
-                                                <div className="Bebidas_title col-12">
+                                            <div className="  Tipos_Detalle ">
+                                                <div className="Bebidas_title ">
                                                     <div className="Sal_1">Salsas extra</div>
                                                     <div className="Maxsal">maximo 2 salsas</div>
                                                 </div>
 
-                                                <ul className="Lista_Bebidas col-12 ">
+                                                <ul className="Lista_Bebidas ">
                                                     <div className="col">hola</div>
                                                     <div className="col">hola</div>
                                                     <div className="col">hola</div>
@@ -131,18 +173,10 @@ export const CardHamburguesas = () => {
 
 
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                     </div>
 
-                                    <div class="row row-cols-2">
-                                        <div class="col">
-                                            1 of 2
-                                        </div>
-                                        <div class="col">
-                                            2 of 2
-                                        </div>
-                                    </div>
 
 
                                 </div>
