@@ -10,7 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
-
+			modalData: [],
 			productos: [],
 			carrito: [],
 			isAuthenticated: false,
@@ -280,7 +280,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						description: data.descriptionx
 					}
 				});
-				console.log(store.modalData)
+				
 			},
 
 

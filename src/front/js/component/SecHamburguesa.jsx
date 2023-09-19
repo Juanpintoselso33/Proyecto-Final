@@ -10,6 +10,8 @@ import PropTypes from "prop-types";
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
     const [arrayHambur, setArrayHambur] = useState([]);
+    const dataDetalle = store.modalData
+
 
     const responsive = {
         superLargeDesktop: {
@@ -32,9 +34,10 @@ export const CardHamburguesas = () => {
 
     useEffect(() => {
         actions.obtenerAllProducts();
+
     }, []);
 
-
+    console.log(store.modalData)
 
     useEffect(() => {
         const hamburguesas = store.productos.filter((producto) => producto.category === "H");
@@ -54,12 +57,8 @@ export const CardHamburguesas = () => {
     //     />
     // ));
 
-    const addMensaje = (mensaje) => {
 
-        console.log(mensaje)
-    }
 
-    const pepe = store.modalData.id
 
     return (
         <div>
@@ -78,28 +77,28 @@ export const CardHamburguesas = () => {
 
                             </div> */}
 
-                            <div class="row">
-                                <div class="col">
+                            <div className="row">
+                                <div className="col">
                                     <img className="imagenDetalle" src="https://th.bing.com/th/id/R.b0413de9114bf291db0398ec898a8b47?rik=EpGjHxR4Kqr%2b5g&pid=ImgRaw&r=0" alt="" />
                                 </div>
-                                <div class="col DetallesAgregados">
+                                <div className="col DetallesAgregados">
 
 
 
                                     <div className="c2_1">
                                         <div className="c2_conjunto">
                                             <div className="c2_1_1_Precio">
-                                                hola
+                                                {dataDetalle.name}
                                             </div>
 
                                             <div className="c2_1_1_Descripcion">
-                                                mundo
+                                                {dataDetalle.description}
                                             </div>
                                         </div>
                                     </div>
                                     <div className=" c2_2">
 
-                                        <section class="layout">
+                                        <section className="layout">
                                             <div className="bg-danger">
                                                 <div>chico_1</div>
                                                 <div>grande_1</div>
@@ -124,7 +123,7 @@ export const CardHamburguesas = () => {
                                                 </ul>
                                             </div>
                                         </section>
-                                        <section class="layout">
+                                        <section className="layout">
                                             <div className="bg-danger">
                                                 <div>chico_1</div>
                                                 <div>grande_1</div>
@@ -140,7 +139,7 @@ export const CardHamburguesas = () => {
                                                 </ul>
                                             </div>
                                         </section>
-                                        {/* <div class=" contenedor_Agregados">
+                                        {/* <div className=" contenedor_Agregados">
 
                                             <div className=" Tipos_Detalle ">
                                                 <div className="Salsas_title ">
@@ -197,7 +196,7 @@ export const CardHamburguesas = () => {
                                     </div>
                                 </div>
                                 <div className=" c2_2">
-                                    <div class=" contenedor_Agregados">
+                                    <div className=" contenedor_Agregados">
 
                                     </div>
 
@@ -222,7 +221,7 @@ export const CardHamburguesas = () => {
                         {arrayHambur.map((item, index) => {
                             return (
 
-                                <Product addMensaje={addMensaje} key={index}
+                                <Product key={index}
                                     id={item.id}
                                     name={item.name}
                                     url={item.img_url}
