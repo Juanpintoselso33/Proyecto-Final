@@ -7,16 +7,16 @@ import { Context } from "../store/appContext";
 
 export const Product = (props, addMensaje) => {
   const { store, actions } = useContext(Context);
-  const handleAddToCart = () => {
-    const inputQuantity = parseInt(prompt("Ingrese la cantidad de unidades:", "1"), 10);
+  // const handleAddToCart = () => {
+  //   const inputQuantity = parseInt(prompt("Ingrese la cantidad de unidades:", "1"), 10);
 
-    if (!isNaN(inputQuantity) && inputQuantity > 0) {
-      console.log("Cantidad válida:", inputQuantity);  // Añadir console.log aquí
-      CartStore.addToCart(props.id, inputQuantity, props.price, props.name);
-    } else {
-      console.log("Cantidad no válida:", inputQuantity);  // Añadir console.log aquí
-    }
-  };
+  //   if (!isNaN(inputQuantity) && inputQuantity > 0) {
+  //     console.log("Cantidad válida:", inputQuantity);  // Añadir console.log aquí
+  //     CartStore.addToCart(props.id, inputQuantity, props.price, props.name);
+  //   } else {
+  //     console.log("Cantidad no válida:", inputQuantity);  // Añadir console.log aquí
+  //   }
+  // };
 
   const data = {
     idx: props.id,

@@ -128,10 +128,9 @@ justify-content: center !important;
 
 .contenedorImg_Data{
 
-  display: flex;
-  justify-content: space-between;
+ overflow: hidden;
 
-}
+} 
 .c1{
   display: flex;
   width: 50%;
@@ -156,21 +155,18 @@ justify-content: center !important;
 
 .c2_1{
 display: flex;
-height: 20%;
+height: 15vh;
 background: greenyellow;
 flex-direction: column;
 gap: 20px;
-padding: calc(20px) calc(20px) 0px;
+text-align: initial;
+
 width: 100%;
 }
 
 .c2_2{
-  height: 100%;
+  
   background: green;
-
-  
- 
-  
 }
 
 .c2_conjunto{
@@ -190,8 +186,9 @@ width: 100%;
 
 .DetallesAgregados{
 
-overflow-y: scroll;
-max-height: 100%;
+width: 100%;
+overflow: auto;
+height: 65vh;
 }
 
 .Salsas_title{
@@ -217,6 +214,9 @@ max-height: 100%;
 .Lista_Agregados{
 
   width: 100%;
+  margin: 0px;
+  padding: 0px
+  ;
 
 }
 
@@ -242,14 +242,43 @@ max-width: 100%;
 
 .layout {
   width: 100%;
- 
+  /* height: 100%; */
 
   display: flex;
-  /* grid-template-rows: 30% 70%;
-  grid-template-columns: 1fr;
-  gap: 20px 8px;
-  grid-auto-flow: column; */
+ flex-direction: column;
 
- 
+}
+
+.Elemento_del_UL{
+
+width: 50%;
+
+text-align: center;
+
+}
+
+.titulos_tipo{
+  width: 100%;
+  height: 15vh; 
+  display: flex;
   flex-direction: column;
+  align-items: baseline;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.envo{
+
+  width: 100%;
+  background: gray;
+}
+
+.div_img_comida{
+  height: 65vh;
+}
+
+.listas{
+  display: flex;
+  width: 100%;
+  height: 10vh;
 }

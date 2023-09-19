@@ -5,12 +5,14 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 import PropTypes from "prop-types";
+import { productDataSalsas } from "./PruebaData.js"
 
 
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
     const [arrayHambur, setArrayHambur] = useState([]);
     const dataDetalle = store.modalData
+
 
 
     const responsive = {
@@ -32,12 +34,14 @@ export const CardHamburguesas = () => {
         }
     };
 
+
+
     useEffect(() => {
         actions.obtenerAllProducts();
 
     }, []);
 
-    console.log(store.modalData)
+    console.log()
 
     useEffect(() => {
         const hamburguesas = store.productos.filter((producto) => producto.category === "H");
@@ -57,7 +61,10 @@ export const CardHamburguesas = () => {
     //     />
     // ));
 
-
+    const productSalsas = productDataSalsas.map((item, index) => (
+        <div className="col" key={index}>{item.name}</div>
+    ));
+    console.log(productSalsas)
 
 
     return (
@@ -78,7 +85,7 @@ export const CardHamburguesas = () => {
                             </div> */}
 
                             <div className="row">
-                                <div className="col">
+                                <div className="col div_img_comida">
                                     <img className="imagenDetalle" src="https://th.bing.com/th/id/R.b0413de9114bf291db0398ec898a8b47?rik=EpGjHxR4Kqr%2b5g&pid=ImgRaw&r=0" alt="" />
                                 </div>
                                 <div className="col DetallesAgregados">
@@ -88,7 +95,7 @@ export const CardHamburguesas = () => {
                                     <div className="c2_1">
                                         <div className="c2_conjunto">
                                             <div className="c2_1_1_Precio">
-                                                {dataDetalle.name}
+                                                <strong>{dataDetalle.name}</strong>
                                             </div>
 
                                             <div className="c2_1_1_Descripcion">
@@ -96,50 +103,76 @@ export const CardHamburguesas = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className=" c2_2">
+                                    <div className="envo">
 
-                                        <section className="layout">
-                                            <div className="bg-danger">
-                                                <div>chico_1</div>
-                                                <div>grande_1</div>
+
+                                        <section className="layout ">
+                                            <div className="bg-danger titulos_tipo">
+                                                <div><strong>Salsas extras</strong></div>
+                                                <div>Selecciones 2 maximo</div>
 
                                             </div>
                                             <div className="bg-primary">
                                                 <ul className="Lista_Agregados  ">
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
+
+
+
+                                                    {productDataSalsas.map((item, index) => {
+                                                        return (
+                                                            <div className="listas border-top" key={index}>
+                                                                <div className="col Elemento_del_UL" key={index}>
+                                                                    {item.name}
+                                                                    <br />
+                                                                    {item.price}
+                                                                </div>
+
+
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })}
                                                 </ul>
                                             </div>
+
+                                        </section>
+
+
+
+
+                                        <section className="layout ">
+                                            <div className="bg-danger titulos_tipo">
+                                                <div><strong>Bebida?</strong></div>
+                                                <div>Seleccione una bebida</div>
+
+                                            </div>
                                             <div className="bg-primary">
                                                 <ul className="Lista_Agregados  ">
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
+                                                    {productDataSalsas.map((item, index) => {
+                                                        return (
+                                                            <div className="listas border-top" key={index}>
+                                                                <div className="col Elemento_del_UL" key={index}>
+                                                                    {item.name}
+                                                                    <br />
+                                                                    {item.price}
+                                                                </div>
+
+
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })}
                                                 </ul>
                                             </div>
                                         </section>
-                                        <section className="layout">
-                                            <div className="bg-danger">
-                                                <div>chico_1</div>
-                                                <div>grande_1</div>
 
-                                            </div>
-                                            <div className="bg-primary">
-                                                <ul className="Lista_Agregados  ">
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                    <div className="col">hola</div>
-                                                </ul>
-                                            </div>
-                                        </section>
-                                        {/* <div className=" contenedor_Agregados">
+                                    </div>
+                                    {/* <div className=" contenedor_Agregados">
 
                                             <div className=" Tipos_Detalle ">
                                                 <div className="Salsas_title ">
@@ -174,7 +207,6 @@ export const CardHamburguesas = () => {
                                             </div>
                                         </div> */}
 
-                                    </div>
 
 
 
