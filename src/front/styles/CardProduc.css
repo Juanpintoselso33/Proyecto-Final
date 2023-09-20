@@ -1,115 +1,116 @@
 .cards-wrapper {
-    display: flex;
-    justify-content: center;
-    border-radius: 10%;
+  display: flex;
+  justify-content: center;
+  border-radius: 10%;
 
-  }
-  .card .p1 img {
-    width: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    height: 100%;
-    border-radius: 20%;
-
-    
-  }
-
-
-  .home {
-
-    display: flex;
-    width: 70%;
-    margin: auto;
-    padding: 100px;
-    background: #ebebeb;
-    border-radius: 10%;
-    border: solid 1px #d68227;
-    justify-content: center;
-    
-  }
-  
-
-
-  .card{
-    display: flex;
-    margin: 25px;
-    width: 30%;
-    flex-direction: column;
-    justify-content: space-around;
-    border-radius: 10%;
-
-    
-  }
-
-  .p1{
-    display: flex;
-    height: 50%;
-    align-items: center;
-    text-align: center;
-    border-radius: 20%;
-
-  }
-
-  .cards-wrapper{
-
-    border-radius: 10%;
-
-  }
-
-  .card-body{
-    display: flex;
-    height: 40%;
-    text-align: center;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: column;
-    font-size:20px;
-    border-radius: 20%;
- 
-  }
-
-  .card-text{
-
-    font-size: 30px;
-  }
-
-  .card-title{
-
-    font-size: 25px;
-
-  }
-
-
-
-  .cards-wrapper{
-    height: 50vb;
-
-    border-radius: 10%;
-    
-  }
-
-  .carousel-caption{
-
-    color: black;
-  }
-
-  .card {
-    margin: 0 0.5em;
-    box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
-    border: none;
-    border-radius: 0;
-  }
-  .carousel-inner {
-    padding: 1em;
-  }
-
-
-  .carousel-control-prev,
-.carousel-control-next {
-  background-color: #e1e1e1;
-  width: 5vh;
-  height: 5vh;
-  border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%);
 }
+.card .p1 img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  height: 100%;
+  border-radius: 20%;
+
+  
+}
+
+
+.home {
+
+  display: flex;
+  width: 70%;
+  margin: auto;
+  padding: 100px;
+  background: #ebebeb;
+  border-radius: 10%;
+  border: solid 1px #d68227;
+  justify-content: center;
+  
+}
+
+
+
+.card{
+  display: flex;
+  margin: 25px;
+  width: 30%;
+  flex-direction: column;
+  justify-content: space-around;
+  border-radius: 10%;
+
+  
+}
+
+.p1{
+  display: flex;
+  height: 50%;
+  align-items: center;
+  text-align: center;
+  border-radius: 20%;
+
+}
+
+.cards-wrapper{
+
+  border-radius: 10%;
+
+}
+
+.card-body{
+  display: flex;
+  height: 40%;
+  text-align: center;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  font-size:20px;
+  border-radius: 20%;
+
+}
+
+.card-text{
+
+  font-size: 30px;
+}
+
+.card-title{
+
+  font-size: 25px;
+
+}
+
+
+
+.cards-wrapper{
+  height: 50vb;
+
+  border-radius: 10%;
+  
+}
+
+.carousel-caption{
+
+  color: black;
+}
+
+.card {
+  margin: 0 0.5em;
+  box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
+  border: none;
+  border-radius: 0;
+}
+.carousel-inner {
+  padding: 1em;
+}
+
+
+.carousel-control-prev,
+.carousel-control-next {
+background-color: #e1e1e1;
+width: 5vh;
+height: 5vh;
+border-radius: 50%;
+top: 50%;
+transform: translateY(-50%);
+}
+

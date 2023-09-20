@@ -5,20 +5,12 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 
-
-
-
-
-
-export const CardChivito = () => {
+export const CardPromos = () => {
     const { store, actions } = useContext(Context);
-    const [arrayChivitos, setArrayChivitos] = useState([])
-
-
+    const [arrayPromos, setArrayPromos] = useState([]);
 
     const responsive = {
         superLargeDesktop: {
-            // the naming can be any, depends on you.
             breakpoint: { max: 5000, min: 4000 },
             items: 5
         },
@@ -37,21 +29,18 @@ export const CardChivito = () => {
     };
 
     useEffect(() => {
-        actions.obtenerAllProducts()
+        actions.obtenerAllProducts();
+    }, []);
 
-    }, [])
+    useEffect(() => {
+        const promos = store.productos.filter((producto) => producto.promo === true);
 
-    //guardo solo los productos con categoria "H" => hamburguesas
-    for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "C") {
-            arrayChivitos.push(store.productos[i])
-        }
+        setArrayPromos(promos);
+    }, [store.productos]);
 
-
-    }
-
-    const productChivitos = arrayChivitos.map((item, index) => (
+    const productPromos = arrayPromos.map((item, index) => (
         <Product key={index}
+            id={item.id}
             name={item.name}
             url={item.img_url}
             price={item.cost}
@@ -59,26 +48,14 @@ export const CardChivito = () => {
         />
     ));
 
-
-
-
-
     return (
-
         <div className="home">
-            <div className="App" >
-                <h1>Chivitos</h1>
+            <div className="App">
+                <h1>Promociones</h1>
                 <Carousel responsive={responsive}>
-                    {productChivitos}
+                    {productPromos}
                 </Carousel>
             </div>
         </div>
-
-
-
-
     );
-
-
-
 };

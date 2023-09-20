@@ -6,3 +6,81 @@
     on that page only (the ones not reused in other pages).
 */
 
+.primal{
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    
+    
+    }
+    
+    .div1{
+    margin: 20px;
+    
+    }
+    .div2{
+        display: flex;
+        margin: 30px;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    
+    .contenedor2{
+    
+        width: 70%;
+        height: 70%;
+    
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 5%;
+        flex-direction: row;
+       
+    }
+    
+    
+    
+    .img_producto{
+      
+        display: flex;
+        width: 100%;
+        justify-content: end;
+       
+    
+    }
+    
+    .img_producto img{
+    width: 80%;
+    height: 70%;
+    max-width: 100%;
+    max-height: 80%;
+    border-radius: 20%;
+    
+    } 
+    
+    .detalle_Producto{
+    
+        display: flex;
+        width: 30%;
+        flex-direction: column;
+    }
+    
+    .papa1{
+    
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    
+    }
+    
+    
+    .titulo1{
+    
+        
+    font-size: Montserrat;
+    
+    }
+    
+    

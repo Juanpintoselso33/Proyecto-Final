@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import { CartStore } from '../component/cartStore.js';
+
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
@@ -7,9 +9,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* ----------<productos>--------------- */
 
 
-
-
+			datosPrueba: [],
+			modalData: [],
 			productos: [],
+			carrito: [],
+			isAuthenticated: false,
+			token: null,
 
 
 
@@ -47,29 +52,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
-			login: async (email, password) => {
-				console.log("fnciona")
-				try {
-					let data = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/login', {
-						"email": email,
-						"password": password
-					})
-					console.log(data);
-					//Guardar en el navegador el token
-					localStorage.setItem("token", data.data.access_token);
-					setStore({ isAuthenticated: true }); // Actualiza el estado a true
-
-					return true;
-				}
-				catch (error) {
-					if (error.response.status === 404) {
-						alert(error.response.data.msg)
-					}
-
-				}
-
-			},
-
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
@@ -101,10 +83,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* -----------------Productos-----------------*/
 			obtenerAllProducts: async function () {
 				try {
-					let response = await fetch("https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/products");
+					let response = await fetch(process.env.BACKEND_URL + "/api/products");
 					let data = await response.json();
 					setStore({ productos: data });
-
 				}
 
 				catch (error) {
@@ -117,45 +98,202 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Funcion para dar de alta registros
 			registerUser: async (formData) => {
 				try {
-				  const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/register', formData);
-			  
-				  if (response.status === 200 || response.status === 201) {
-					console.log('Registro exitoso:', response.data);
-					// Aquí puedes actualizar el estado o hacer otras acciones
-				  } else {
-					console.log('Error en el registro:', response);
-					console.log('Estado de la respuesta:', response.status);
-					console.log('Cuerpo de la respuesta:', response.data);
-			  
-					if (response.data.error) {
-					  alert(response.data.error); // Mostrar el mensaje de error al usuario
+					const response = await axios.post(process.env.BACKEND_URL + '/api/register', formData);
+
+					if (response.status === 200 || response.status === 201) {
+						console.log('Registro exitoso:', response.data);
+						// Aquí puedes actualizar el estado o hacer otras acciones
+					} else {
+						console.log('Error en el registro:', response);
+						console.log('Estado de la respuesta:', response.status);
+						console.log('Cuerpo de la respuesta:', response.data);
+
+						if (response.data.error) {
+							alert(response.data.error); // Mostrar el mensaje de error al usuario
+						}
 					}
-				  }
 				} catch (error) {
-				  console.error('Hubo un problema con la petición:', error);
-				  if (error.response && error.response.data && error.response.data.error) {
-					alert(error.response.data.error); // Mostrar el mensaje de error al usuario
-				  }
+					console.error('Hubo un problema con la petición:', error);
+					if (error.response && error.response.data && error.response.data.error) {
+						alert(error.response.data.error); // Mostrar el mensaje de error al usuario
+					}
 				}
-			  },
-			  
-			  addProduct: async (productData) => {
+			},
+
+			addProduct: async (productData) => {
 				try {
-				  const response = await axios.post('https://animated-telegram-54x4vxwwxq6hpgg9-3001.app.github.dev/api/products', productData);
-				  if (response.status === 200 || response.status === 201) {
-					console.log('Producto agregado exitosamente:', response.data);					
-				  } else {
-					console.log('Error al agregar el producto:', response);
-				  }
+					const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
+					if (response.status === 200 || response.status === 201) {
+						console.log('Producto agregado exitosamente:', response.data);
+					} else {
+						console.log('Error al agregar el producto:', response);
+					}
 				} catch (error) {
-				  console.error('Hubo un problema con la petición:', error);
+					console.error('Hubo un problema con la petición:', error);
 				}
-			  }
+			},
+
+			agregarAlCarrito: (producto) => {
+				const store = getStore();
+				const productoExistente = store.carrito.find(item => item.id === producto.id);
+				if (productoExistente) {
+					productoExistente.cantidad += 1;
+				} else {
+					producto.cantidad = 1;
+					setStore({ carrito: [...store.carrito, producto] });
+				}
+			},
+
+			eliminarDelCarrito: (productoId) => {
+				const store = getStore();
+				const nuevoCarrito = store.carrito.filter(item => item.id !== productoId);
+				setStore({ carrito: nuevoCarrito });
+			},
+
+			initializeAuth: () => {
+				const token = localStorage.getItem("token");
+				const email = localStorage.getItem("email");
+				const userId = localStorage.getItem("userId");  // Recuperar la ID del usuario
+
+				if (token && email && userId) {
+					setStore({ isAuthenticated: true, token, email, userId });  // Usar la ID del usuario
+				}
+			},
+			login: async (email, password) => {
+				try {
+
+					const response = await axios.post(process.env.BACKEND_URL + '/api/login', {
+						email,
+						password
+					});
+
+					const userData = response.data;
+
+					if (userData && userData.id) {
+						localStorage.setItem("userId", userData.id.toString());
+					} else {
+						throw new Error("User ID not found in the response");
+					}
+
+					localStorage.setItem("token", userData.access_token);
+					localStorage.setItem("email", email);
+
+					// Actualizar el estado global
+					setStore({
+						isAuthenticated: true,
+						token: userData.access_token,
+						email,
+						userId: userData.id
+					});
+
+					return true;
+				} catch (error) {
+					console.log("Error during login:", error);
+					return false;
+				}
+			},
+
+			logout: () => {
+				console.log("Ejecutando función logout");
+				localStorage.removeItem("token");
+				localStorage.removeItem("email");
+				setStore({ isAuthenticated: false, token: null, email: null });
+				CartStore.clearCart(); // Limpia el carrito
+			},
+			createOrder: async () => {
+				try {
+					const store = getStore();
+					const userId = store.userId;
+
+					if (!userId) {
+						throw new Error("User ID is undefined");
+					}
+
+					const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
+
+					if (!cartFromLocalStorage || cartFromLocalStorage.items.length === 0) {
+						console.log("El carrito está vacío. No se puede crear la orden.");
+						return;
+					}
+
+					const items = cartFromLocalStorage.items.map(item => ({
+						product_id: item.product_id, // Ajusta esto según la estructura del objeto item en tu carrito
+						quantity: item.quantity
+					}));
+
+					const payload = {
+						items,
+					};
+
+					const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
+					console.log("Sending payload:", payload);
+					console.log("URL de la solicitud POST:", url);
+
+					const response = await axios.post(url, payload, {
+						headers: {
+							'Content-Type': 'application/json',
+						}
+					});
+
+					const data = response.data;
+
+					if (data.success) {
+						console.log('Order created:', data.order);
+						localStorage.setItem("cart", JSON.stringify({ items: [], totalCost: 0 })); // Limpia el carrito
+					} else {
+						console.log('Order creation failed:', data.message);
+					}
+				} catch (error) {
+					console.log('An error occurred:', error);
+				}
+			},
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+			//Cargo datos para modal
+
+			DataModalDetalle: (data) => {
+				const store = getStore();
+				const datosModal = [{}]
+
+				setStore({
+					modalData: {
+						id: data.idx,
+						url: data.urlx,
+						name: data.namex,
+						price: data.pricex,
+						description: data.descriptionx,
+						categoria: data.categoriax
+
+					}
+				});
+
+			},
+
+
+
+			Prueba1: (data) => {
+				const store = getStore();
+				const datosModal = []
+
+				setStore({ datosPrueba: data });
+				console.log(store.datosPrueba)
+			},
 
 
 
@@ -252,5 +390,66 @@ const getState = ({ getStore, getActions, setStore }) => {
 		} //FIN DE ACTIONS
 	};
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//categoria- catalogo
+	obtenerProductosPorCategorias: async (categoria) => {
+		try {
+		  const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
+		  const productosFiltrados = response.data.filter(item => item.category === categoria);
+		  setStore({ productos: productosFiltrados });
+		} catch (error) {
+		  console.error('Error al obtener productos:', error);
+		}
+	  };
 
 export default getState;

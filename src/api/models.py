@@ -10,24 +10,24 @@ class OrderProduct(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer, nullable=False)
-    cost = db.Column(db.Float, nullable=True)
-    its_promo = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
+    cost = db.Column(db.Float, nullable=True)    
 
     product = db.relationship('Product', back_populates='order_products')
     order = db.relationship('Order', back_populates='items')
 
     def __repr__(self):
-        promo_prefix = "PROMO: " if self.its_promo else ""
+        promo_prefix = "PROMO: " if self.product.its_promo else ""
         return f"{promo_prefix}{self.product.name} x {self.quantity} = {self.cost}"
-
+    
     @validates('cost')
     def validate_cost(self, key, cost):
         if self.product is None:
             raise ValueError("Product must be set before validating the cost.")
-
-        if self.its_promo is False:
+        
+        # Aquí también, accedo a its_promo a través de self.product
+        if self.product.its_promo is False:
             return self.product.cost * self.quantity
-        elif self.its_promo is True and cost is not None:
+        elif self.product.its_promo is True and cost is not None:
             return cost
         else:
             raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
@@ -66,6 +66,7 @@ class Product(db.Model):
     stars = db.Column(db.Integer)
     img_url = db.Column(db.String(120), nullable=False)
     category = db.Column(db.String(40), nullable=True)  # Nueva columna agregada
+    its_promo = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
 
     order_products = db.relationship('OrderProduct', back_populates='product')
 
@@ -80,7 +81,8 @@ class Product(db.Model):
             'description': self.description,
             'stars': self.stars,
             'img_url': self.img_url,
-            'category': self.category  # Nueva propiedad agregada
+            'category': self.category,  # Nueva propiedad agregada
+            'promo':  self.its_promo
         }
 
 # Definición de la clase Order
@@ -103,7 +105,12 @@ class Order(db.Model):
             elif item.its_promo is True and item.cost is None:
                 raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
             self.total_cost += item.cost
+
+        # Guarda el cambio en el costo total en la base de datos
         db.session.commit()
+
+        # Devuelve el costo total calculado
+        return self.total_cost
 
     def __repr__(self):
         return f"Orden Nro. {self.id}"

@@ -6,14 +6,20 @@ import { BackendURL } from "./component/backendURL";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
+
 import injectContext from "./store/appContext";
-import { Navbar } from "./component/navbar";
+// import { Navbar } from "./component/navbar";
+import { Catalogo } from "./component/catalogo";
+
 import { Footer } from "./component/footer";
 import {CardMultiple} from "./component/CardMultipleSLider.jsx"
 import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
 import {CardMilanesas} from "./component/SecMilanesa.jsx"
+import {CardPromos} from "./component/SecPromos.jsx"
 import { AddProduct } from "./pages/addProduct"
 import { CartView } from "./pages/cart"
+import {PreloadComponent} from './component/preloadProducts';
+
 
 
 
@@ -32,17 +38,21 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                  
+                    <PreloadComponent />
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
+                       
                         <Route element={<Single />} path="/single/:theid" />
+            
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<CardMultiple />} path="/prueba1"/>
                         <Route element={<CardHamburguesas />} path="/prueba2"/>
                         <Route element={<CardMilanesas />} path="/prueba3"/>
+                        <Route element={<CardPromos />} path="/prueba4"/>
                         <Route element={<AddProduct />} path="/add_product"/>
                         <Route element={<CartView />} path="/cart"/>
+                        <Route element={<Catalogo />} path="/catalogo"/>
                         
                     </Routes>
                    

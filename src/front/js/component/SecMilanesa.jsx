@@ -5,20 +5,12 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 
-
-
-
-
-
 export const CardMilanesas = () => {
     const { store, actions } = useContext(Context);
-    const [arrayMila, setArrayMila] = useState([])
-
-
+    const [arrayMila, setArrayMila] = useState([]);
 
     const responsive = {
         superLargeDesktop: {
-            // the naming can be any, depends on you.
             breakpoint: { max: 5000, min: 4000 },
             items: 5
         },
@@ -36,47 +28,36 @@ export const CardMilanesas = () => {
         }
     };
 
+
     useEffect(() => {
-        actions.obtenerAllProducts()
-
-    }, [])
-
-    //guardo solo los productos con categoria "H" => hamburguesas
-    for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "M") {
-            arrayMila.push(store.productos[i])
-        }
-
-
-    }
-
-    const productMilanesa = arrayMila.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
+        const milanesas = store.productos.filter((producto) => producto.category === "M");
+        setArrayMila(milanesas);
+    }, [store.productos]);
 
 
 
     return (
-
         <div className="home">
-            <div className="App" >
+            <div className="App">
                 <h1>Milanesas</h1>
                 <Carousel responsive={responsive}>
-                    {productMilanesa}
+                    
+                    {arrayMila.map((item, index) => {
+                        return (
+
+                            <Product key={index}
+                                id={item.id}
+                                name={item.name}
+                                url={item.img_url}
+                                price={item.cost}
+                                description={item.description}
+                                categoria={item.category}
+                            />
+
+                        )
+                    })}
                 </Carousel>
             </div>
         </div>
-
-
-
-
     );
-
-
-
 };

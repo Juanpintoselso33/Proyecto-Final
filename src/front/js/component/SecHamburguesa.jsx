@@ -4,21 +4,22 @@ import Product from "./Product.jsx";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
-
-
-
-
+import PropTypes from "prop-types";
+import { productDataSalsas } from "./PruebaData.js"
+import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { useNavigate } from "react-router-dom";
 
 
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
-    const [arrayHambur, setArrayHambur] = useState([])
-
+    const navigate = useNavigate();
+    const [arrayHambur, setArrayHambur] = useState([]);
+    const dataDetalle = store.modalData
+    const Pruebas1122 = store.datosPrueba
 
 
     const responsive = {
         superLargeDesktop: {
-            // the naming can be any, depends on you.
             breakpoint: { max: 5000, min: 4000 },
             items: 5
         },
@@ -36,47 +37,39 @@ export const CardHamburguesas = () => {
         }
     };
 
+
     useEffect(() => {
-        actions.obtenerAllProducts()
-
-    }, [])
-
-    //guardo solo los productos con categoria "H" => hamburguesas
-    for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
-            arrayHambur.push(store.productos[i])
-        }
-
-
-    }
-
-    const productHambur = arrayHambur.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
+        const hamburguesas = store.productos.filter((producto) => producto.category === "H");
+        setArrayHambur(hamburguesas);
+    }, [store.productos]);
 
 
 
     return (
+        <div>
 
-        <div className="home">
-            <div className="App" >
-                <h1>Hamburguesas</h1>
-                <Carousel responsive={responsive}>
-                    {productHambur}
-                </Carousel>
-            </div>
-        </div>
+            < div className="home" >
+                <div className="App apapa">
+                    <h1>Hamburguesas</h1>
+                    <Carousel responsive={responsive}>
 
+                        {arrayHambur.map((item, index) => {
+                            return (
 
+                                <Product key={index}
+                                    id={item.id}
+                                    name={item.name}
+                                    url={item.img_url}
+                                    price={item.cost}
+                                    description={item.description}
+                                    categoria={item.category}
+                                />
 
-
+                            )
+                        })}
+                    </Carousel>
+                </div>
+            </div >
+        </div >
     );
-
-
-
 };
