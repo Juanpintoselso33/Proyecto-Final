@@ -7,10 +7,12 @@ import "../../styles/Stylecard.css";
 import PropTypes from "prop-types";
 import { productDataSalsas } from "./PruebaData.js"
 import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { useNavigate } from "react-router-dom";
 
 
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
     const [arrayHambur, setArrayHambur] = useState([]);
     const dataDetalle = store.modalData
     const [cantidadP, setcantidadP] = useState();
@@ -104,7 +106,9 @@ export const CardHamburguesas = () => {
         <div className="col" key={index}>{item.name}</div>
     ));
 
-
+    function mover_carrito() {
+        navigate("/cart")
+    }
 
     return (
         <div>
@@ -228,8 +232,9 @@ export const CardHamburguesas = () => {
                                 <span className="plus" onClick={() => sumarPro()}>+</span>
                             </div>
                             {/* <button onClick={handleAddToCart()}>Add to Cart</button> */}
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
-                            <button type="button" className="btn btn-primary" onClick={() => handleAddToCart(valor)} >Save changes</button>
+
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(valor)}> Agregar y seguir comprando</button>
+                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(valor), mover_carrito() }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
                         </div>
                     </div>
                 </div>
