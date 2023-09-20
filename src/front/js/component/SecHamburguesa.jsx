@@ -26,7 +26,6 @@ export const CardHamburguesas = () => {
 
         valor++;
 
-        valor = (valor < 10) ? "0" + valor : valor;
         num.innerText = valor
 
 
@@ -37,7 +36,6 @@ export const CardHamburguesas = () => {
 
         if (valor > 1) {
             valor--;
-            valor = (valor < 10) ? "0" + valor : valor;
             num.innerText = valor
 
         }
@@ -116,7 +114,7 @@ export const CardHamburguesas = () => {
                 <div className="modal-dialog pepesq1">
                     <div className="modal-content pruebasss">
                         <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <h1 className="modal-title fs-5" id="exampleModalLabel"> <strong> {dataDetalle.name}</strong></h1>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body contenedorImg_Data">
@@ -136,7 +134,7 @@ export const CardHamburguesas = () => {
                                     <div className="c2_1">
                                         <div className="c2_conjunto">
                                             <div className="c2_1_1_Precio">
-                                                <strong>{dataDetalle.name}</strong>
+                                                <strong>{"$" + dataDetalle.price}</strong>
                                             </div>
 
                                             <div className="c2_1_1_Descripcion">
@@ -148,12 +146,12 @@ export const CardHamburguesas = () => {
 
 
                                         <section className="layout ">
-                                            <div className="bg-danger titulos_tipo">
+                                            <div className=" titulos_tipo">
                                                 <div><strong>Salsas extras</strong></div>
                                                 <div>Selecciones 2 maximo</div>
 
                                             </div>
-                                            <div className="bg-primary">
+                                            <div className="">
                                                 <ul className="Lista_Agregados  ">
 
 
@@ -184,12 +182,12 @@ export const CardHamburguesas = () => {
 
 
                                         <section className="layout ">
-                                            <div className="bg-danger titulos_tipo">
+                                            <div className=" titulos_tipo">
                                                 <div><strong>Bebida?</strong></div>
                                                 <div>Seleccione una bebida</div>
 
                                             </div>
-                                            <div className="bg-primary">
+                                            <div className="">
                                                 <ul className="Lista_Agregados  ">
                                                     {productDataSalsas.map((item, index) => {
                                                         return (
@@ -226,7 +224,7 @@ export const CardHamburguesas = () => {
                         <div className="modal-footer pruebaas">
                             <div className="wrapper">
                                 <span className="minus" onClick={() => restarPro()}>-</span>
-                                <span className="num">01</span>
+                                <span className="num">1</span>
                                 <span className="plus" onClick={() => sumarPro()}>+</span>
                             </div>
                             {/* <button onClick={handleAddToCart()}>Add to Cart</button> */}

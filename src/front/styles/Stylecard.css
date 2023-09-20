@@ -134,7 +134,7 @@ justify-content: center !important;
 .c1{
   display: flex;
   width: 50%;
-  background: red;
+  /* background: red; */
   margin-right: 10px;
   margin: auto;
 }
@@ -142,7 +142,7 @@ justify-content: center !important;
 .c2{
 
   width: 50%;
-  background: blue;
+  /* background: blue; */
   margin-left: 10px;
   overflow-y: scroll;
   height: 100%;
@@ -156,7 +156,7 @@ justify-content: center !important;
 .c2_1{
 display: flex;
 height: 15vh;
-background: greenyellow;
+/* background: greenyellow; */
 flex-direction: column;
 gap: 20px;
 text-align: initial;
@@ -164,22 +164,22 @@ text-align: initial;
 width: 100%;
 }
 
-.c2_2{
+/* .c2_2{
   
   background: green;
-}
+} */
 
 .c2_conjunto{
   width: 100%;
 }
 
 .c2_1_1_Precio{
-background: violet;
+/* background: violet; */
 width: 100%;
 }
 
 .c2_1_1_Descripcion{
-  background: #d68227;
+  /* background: #d68227; */
 
 
 }
@@ -193,7 +193,7 @@ height: 65vh;
 
 .Salsas_title{
 
-  background-color: goldenrod;
+  /* background-color: goldenrod; */
   height: 20%;
   display: flex;
   height: 20%;
@@ -221,7 +221,7 @@ height: 65vh;
 }
 
 .Bebidas_title{
-  background-color: goldenrod;
+  /* background-color: goldenrod; */
   height: 20%;
   display: flex;
   height: 20%;
@@ -246,35 +246,42 @@ max-width: 100%;
 
   display: flex;
  flex-direction: column;
-
+border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .Elemento_del_UL{
 
 width: 50%;
-
-text-align: center;
+margin-left: 10px;
+text-align: initial;
 
 }
 
 .titulos_tipo{
   width: 100%;
-  height: 15vh; 
+  height: 7vh; 
   display: flex;
   flex-direction: column;
   align-items: baseline;
   margin-top: 20px;
   margin-bottom: 20px;
+  margin-left: 10px;
 }
 
 .envo{
 
   width: 100%;
-  background: gray;
+  /* background: gray; */
 }
 
 .div_img_comida{
   height: 65vh;
+}
+
+.div_img_comida img{
+  height: 65vh;
+  max-width: 90%;
+  border-radius: 10%;
 }
 
 .listas{
