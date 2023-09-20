@@ -47,6 +47,26 @@
     text-decoration: none;   
 }
 
+.card {
+    position: relative;
+    width: 300px; 
+    padding: 10px;
+    
+  }
+  
+  .card-img {
+    width: 100%;
+    height: auto; 
+  }
+  
+  .card-text {
+    position: absolute;
+    top: 70%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white; 
+    z-index: 1; 
+  }
+
 
 
   

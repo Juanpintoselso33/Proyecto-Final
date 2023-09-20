@@ -391,4 +391,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 	};
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//categoria- catalogo
+	obtenerProductosPorCategorias: async (categoria) => {
+		try {
+		  const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
+		  const productosFiltrados = response.data.filter(item => item.category === categoria);
+		  setStore({ productos: productosFiltrados });
+		} catch (error) {
+		  console.error('Error al obtener productos:', error);
+		}
+	  };
+
 export default getState;

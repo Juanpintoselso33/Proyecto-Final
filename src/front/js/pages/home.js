@@ -10,9 +10,11 @@ import { CardPlato } from "../component/SecPlato.jsx"
 import { CardVianda } from "../component/SecVianda.jsx"
 import { CardBebida } from "../component/SecBebidas.jsx"
 import { CardEspecial } from "../component/SecEspecial.jsx"
+import { CardPromos } from "../component/SecPromos.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
+
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -24,7 +26,7 @@ export const Home = () => {
 	}, []);
 
 	return (
-		<div className="text-center mt-5">s
+		<div className="text-center mt-5">
 			<Navbar />
 			<Extras_prod />
 			<div className="div1">

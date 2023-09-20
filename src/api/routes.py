@@ -154,7 +154,8 @@ def add_product():
             description=data['description'],
             stars=data.get('stars', None),  # Si 'stars' no se encuentra, se asume None
             img_url=data['img_url'],
-            category=data.get('category', None)  # Si 'category' no se encuentra, se asume None
+            category=data.get('category', None),  # Si 'category' no se encuentra, se asume None
+            its_promo=data.get('its_promo', False)  # Si 'its_promo' no se encuentra, se asume False
         )
         
         # Añadir el nuevo producto a la base de datos
@@ -213,6 +214,18 @@ def delete_product(product_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 
+#ENDPOINT PARA TRAER PROMOS DEL BACK
+@app.route('/products', methods=['GET'])
+def get_promo_products():
+    # Consulta para encontrar todos los productos con "its_promo" como verdadero
+    promo_products = Product.query.filter_by(its_promo=True).all()
+
+    # Verificar si se encontraron productos en promoción
+    if not promo_products:
+        return jsonify({"error": "No se encontraron productos en promoción"}), 404
+
+    # Serializar los productos y devolverlos como una lista de diccionarios
+    return jsonify([product.serialize() for product in promo_products])
 
 
 
