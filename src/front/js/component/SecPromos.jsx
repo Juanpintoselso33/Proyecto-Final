@@ -33,7 +33,8 @@ export const CardPromos = () => {
     }, []);
 
     useEffect(() => {
-        const promos = store.productos.filter((producto) => producto.its_promo === true);
+        const promos = store.productos.filter((producto) => producto.promo === true);
+
         setArrayPromos(promos);
     }, [store.productos]);
 

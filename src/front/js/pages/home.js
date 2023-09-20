@@ -10,8 +10,10 @@ import { CardPlato } from "../component/SecPlato.jsx"
 import { CardVianda } from "../component/SecVianda.jsx"
 import { CardBebida } from "../component/SecBebidas.jsx"
 import { CardEspecial } from "../component/SecEspecial.jsx"
+import { CardPromos } from "../component/SecPromos.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
+
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -25,6 +27,7 @@ export const Home = () => {
 			<div className="div2">
 				<CardHamburguesas/>
 				<CardMilanesas/>
+				<CardPromos/>
 				{/* <CardPescado/>
 				<CardPancho/>
 				<CardChivito/>

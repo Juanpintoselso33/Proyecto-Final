@@ -37,7 +37,6 @@ export const AddProduct = () => {
       reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!productData.cost || !productData.name || !productData.description || !productData.category) {
@@ -50,11 +49,13 @@ export const AddProduct = () => {
       return;
     }
 
+    // Se asegura de que el estado actual de isPromo se añade al producto
     const finalProductData = {
       ...productData,
-      its_promo: isPromo  // Asegúrate de usar el mismo nombre que tienes en tu modelo de base de datos
+      its_promo: isPromo  // usa el mismo nombre que en la base de datos
     };
 
+    console.log(finalProductData);  // Añade esto para depuración
     actions.addProduct(finalProductData);
   };
 

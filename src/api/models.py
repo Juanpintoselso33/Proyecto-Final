@@ -81,7 +81,8 @@ class Product(db.Model):
             'description': self.description,
             'stars': self.stars,
             'img_url': self.img_url,
-            'category': self.category  # Nueva propiedad agregada
+            'category': self.category,  # Nueva propiedad agregada
+            'promo':  self.its_promo
         }
 
 # Definición de la clase Order
