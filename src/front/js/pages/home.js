@@ -14,6 +14,7 @@ import { CardPromos } from "../component/SecPromos.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
+import { Menu_del_dia } from "../component/Menu_del_dia.jsx"
 
 
 export const Home = () => {
@@ -27,22 +28,27 @@ export const Home = () => {
 
 	return (
 		<div className="text-center mt-5">
-			<Navbar />
-			<Extras_prod />
-			<div className="div1">
-				<CarruselInicio />
+			<div className="NANA">
+				<Navbar />
 			</div>
-			<div className="div2">
+			<Extras_prod />
+			<div className="contenido">
+				<div className="div1">
+					<CarruselInicio />
+				</div>
+				<div className="div2">
 
-				<CardHamburguesas />
-				<CardMilanesas />
-				<CardPescado />
-				<CardPancho />
-				<CardChivito />
-				<CardVianda />
-				<CardPlato />
-				<CardBebida />
-				<CardEspecial />
+					<CardHamburguesas />
+					<CardMilanesas />
+					<CardPescado />
+					<CardPancho />
+					<CardChivito />
+					<CardVianda />
+					<CardPlato />
+					<CardBebida />
+					<CardEspecial />
+					<Menu_del_dia />
+				</div>
 			</div>
 		</div>
 	);

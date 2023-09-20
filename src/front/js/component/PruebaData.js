@@ -154,48 +154,17 @@ export const Guarniciones = [
 
 
 
-export const CardHamburguesas1 = () => {
-    const { store, actions } = useContext(Context);
+export const Menu_dia = {
 
-    return (
-        store.modalData.categoria === "H" || "M" ?
-
-            <section className="layout">
-                <div className=" titulos_tipo">
-                    <div><strong>Salsas extras</strong></div>
-                    <div>Selecciones 2 maximo</div>
-
-                </div>
-                <div className="">
-                    <ul className="Lista_Agregados  ">
+    id: 1,
+    imageurl:
+        "https://th.bing.com/th/id/R.200c1ae163cedfa1abf87745c7f241fc?rik=82iHsUKvmHVa%2fQ&riu=http%3a%2f%2f4.bp.blogspot.com%2f-7SVOR467tNE%2fTbNmK114ufI%2fAAAAAAAAABQ%2fCKytVzQAoo0%2fs1600%2fDSC_0004.JPG&ehk=CguASGmuQc6Nnb0sVs%2fF1x3hElJ68a1y8FXRZOmM3XE%3d&risl=&pid=ImgRaw&r=0",
+    // name: "Grande",
+    price: "$100",
+    name: "Milanesa de pezcado al plato con ensalada rusa",
+    //   description: "Some text about the product..",
+}
 
 
-
-                        {productDataSalsas.map((item, index) => {
-                            return (
-                                <div className="listas border-top" key={index}>
-                                    <div className="col Elemento_del_UL" key={index}>
-                                        {item.name}
-                                        <br />
-                                        {item.price}
-                                    </div>
-
-
-                                    <div className="form-check">
-                                        <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </ul>
-                </div>
-
-            </section>
-
-            : <div>none</div>
-
-    )
-};
 
 

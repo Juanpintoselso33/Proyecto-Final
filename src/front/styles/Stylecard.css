@@ -178,10 +178,8 @@ width: 100%;
 width: 100%;
 }
 
-.c2_1_1_Descripcion{
-  /* background: #d68227; */
-
-
+.carrusel_Principal{
+  height: 90vh;
 }
 
 .DetallesAgregados{
@@ -314,4 +312,13 @@ border: 1px solid rgba(0, 0, 0, 0.2);
   border-right: 2px solid rgba(0, 0, 0, 0.2);
   border-left: 2px solid rgba(0, 0, 0, 0.2);
 
+}
+
+
+.Menu_dia img{
+  width: 100%;
+}
+
+.Menu_dia{
+  width: 100%;
 }

@@ -41,8 +41,6 @@ export const CardBebida = () => {
     }, [store.productos]);
 
 
-    console.log(store.productos)
-
 
     return (
 
