@@ -15,6 +15,7 @@ import { Footer } from "./component/footer";
 import {CardMultiple} from "./component/CardMultipleSLider.jsx"
 import {CardHamburguesas} from "./component/SecHamburguesa.jsx"
 import {CardMilanesas} from "./component/SecMilanesa.jsx"
+import {CardPromos} from "./component/SecPromos.jsx"
 import { AddProduct } from "./pages/addProduct"
 import { CartView } from "./pages/cart"
 import {PreloadComponent} from './component/preloadProducts';
@@ -48,6 +49,7 @@ const Layout = () => {
                         <Route element={<CardMultiple />} path="/prueba1"/>
                         <Route element={<CardHamburguesas />} path="/prueba2"/>
                         <Route element={<CardMilanesas />} path="/prueba3"/>
+                        <Route element={<CardPromos />} path="/prueba4"/>
                         <Route element={<AddProduct />} path="/add_product"/>
                         <Route element={<CartView />} path="/cart"/>
                         <Route element={<Catalogo />} path="/catalogo"/>
