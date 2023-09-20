@@ -15,6 +15,7 @@ export const CardHamburguesas = () => {
     const navigate = useNavigate();
     const [arrayHambur, setArrayHambur] = useState([]);
     const dataDetalle = store.modalData
+    const Pruebas1122 = store.datosPrueba
     const [cantidadP, setcantidadP] = useState();
     let num = document.querySelector(".num");
     let pepe = document.querySelector(".num");
@@ -22,7 +23,7 @@ export const CardHamburguesas = () => {
     let valor = 1
 
 
-    console.log(cantidadP)
+
 
     function sumarPro() {
 
@@ -65,6 +66,8 @@ export const CardHamburguesas = () => {
         }
     };
 
+
+
     const handleAddToCart = (num) => {
 
         const inputQuantity = num;
@@ -102,143 +105,19 @@ export const CardHamburguesas = () => {
     //     />
     // ));
 
-    const productSalsas = productDataSalsas.map((item, index) => (
-        <div className="col" key={index}>{item.name}</div>
-    ));
+    // const productSalsas = productDataSalsas.map((item, index) => (
+    //     <div className="col" key={index}>{item.name}</div>
+    // ));
 
     function mover_carrito() {
         navigate("/cart")
     }
 
+
     return (
         <div>
 
-            <div className="modal fade pruebahome" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-                <div className="modal-dialog pepesq1">
-                    <div className="modal-content pruebasss">
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="exampleModalLabel"> <strong> {dataDetalle.name}</strong></h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body contenedorImg_Data">
-                            {/* <div className="c1">
-                                <img className="imagenDetalle" src="https://th.bing.com/th/id/R.b0413de9114bf291db0398ec898a8b47?rik=EpGjHxR4Kqr%2b5g&pid=ImgRaw&r=0" alt="" />
-
-                            </div> */}
-
-                            <div className="row">
-                                <div className="col div_img_comida">
-                                    <img className="imagenDetalle" src="https://th.bing.com/th/id/R.b0413de9114bf291db0398ec898a8b47?rik=EpGjHxR4Kqr%2b5g&pid=ImgRaw&r=0" alt="" />
-                                </div>
-                                <div className="col DetallesAgregados">
-
-
-
-                                    <div className="c2_1">
-                                        <div className="c2_conjunto">
-                                            <div className="c2_1_1_Precio">
-                                                <strong>{"$" + dataDetalle.price}</strong>
-                                            </div>
-
-                                            <div className="c2_1_1_Descripcion">
-                                                {dataDetalle.description}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="envo">
-
-
-                                        <section className="layout ">
-                                            <div className=" titulos_tipo">
-                                                <div><strong>Salsas extras</strong></div>
-                                                <div>Selecciones 2 maximo</div>
-
-                                            </div>
-                                            <div className="">
-                                                <ul className="Lista_Agregados  ">
-
-
-
-                                                    {productDataSalsas.map((item, index) => {
-                                                        return (
-                                                            <div className="listas border-top" key={index}>
-                                                                <div className="col Elemento_del_UL" key={index}>
-                                                                    {item.name}
-                                                                    <br />
-                                                                    {item.price}
-                                                                </div>
-
-
-                                                                <div className="form-check">
-                                                                    <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    })}
-                                                </ul>
-                                            </div>
-
-                                        </section>
-
-
-
-
-                                        <section className="layout ">
-                                            <div className=" titulos_tipo">
-                                                <div><strong>Bebida?</strong></div>
-                                                <div>Seleccione una bebida</div>
-
-                                            </div>
-                                            <div className="">
-                                                <ul className="Lista_Agregados  ">
-                                                    {productDataSalsas.map((item, index) => {
-                                                        return (
-                                                            <div className="listas border-top" key={index}>
-                                                                <div className="col Elemento_del_UL" key={index}>
-                                                                    {item.name}
-                                                                    <br />
-                                                                    {item.price}
-                                                                </div>
-
-
-                                                                <div className="form-check">
-                                                                    <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    })}
-                                                </ul>
-                                            </div>
-                                        </section>
-
-                                    </div>
-
-
-
-
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                        <div className="modal-footer pruebaas">
-                            <div className="wrapper">
-                                <span className="minus" onClick={() => restarPro()}>-</span>
-                                <span className="num">1</span>
-                                <span className="plus" onClick={() => sumarPro()}>+</span>
-                            </div>
-                            {/* <button onClick={handleAddToCart()}>Add to Cart</button> */}
-
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(valor)}> Agregar y seguir comprando</button>
-                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(valor), mover_carrito() }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
 
 
 
@@ -256,6 +135,7 @@ export const CardHamburguesas = () => {
                                     url={item.img_url}
                                     price={item.cost}
                                     description={item.description}
+                                    categoria={item.category}
                                 />
 
                             )

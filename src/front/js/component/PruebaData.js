@@ -1,3 +1,6 @@
+import { Context } from "../store/appContext";
+import React, { useState, useEffect, useContext } from "react";
+
 export const responsive = {
     superLargeDesktop: {
         // the naming can be any, depends on you.
@@ -78,5 +81,52 @@ export const productDataSalsas = [
     },
 
 ];
+
+
+
+
+export const CardHamburguesas1 = () => {
+    const { store, actions } = useContext(Context);
+
+    return (
+        store.modalData.categoria === "H" || "M" ?
+
+            <section className="layout">
+                <div className=" titulos_tipo">
+                    <div><strong>Salsas extras</strong></div>
+                    <div>Selecciones 2 maximo</div>
+
+                </div>
+                <div className="">
+                    <ul className="Lista_Agregados  ">
+
+
+
+                        {productDataSalsas.map((item, index) => {
+                            return (
+                                <div className="listas border-top" key={index}>
+                                    <div className="col Elemento_del_UL" key={index}>
+                                        {item.name}
+                                        <br />
+                                        {item.price}
+                                    </div>
+
+
+                                    <div className="form-check">
+                                        <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </ul>
+                </div>
+
+            </section>
+
+            : <div>none</div>
+
+    )
+};
 
 

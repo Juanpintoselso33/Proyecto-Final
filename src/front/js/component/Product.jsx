@@ -23,7 +23,8 @@ export const Product = (props) => {
     urlx: props.url,
     namex: props.name,
     pricex: props.price,
-    descriptionx: props.description
+    descriptionx: props.description,
+    categoriax: props.categoria
   }
 
   const enviarMensaje = () => {
@@ -57,6 +58,7 @@ Product.propTypes = {
   name: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   description: PropTypes.string.isRequired,
+  categoria: PropTypes.string,
 };
 
 export default Product;

@@ -12,6 +12,7 @@ import { CardBebida } from "../component/SecBebidas.jsx"
 import { CardEspecial } from "../component/SecEspecial.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
+import { Extras_prod } from "../component/Extras_Productos.jsx"
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -19,19 +20,21 @@ export const Home = () => {
 	return (
 		<div className="text-center mt-5">s
 			<Navbar />
+			<Extras_prod />
 			<div className="div1">
-				<CarruselInicio/>
+				<CarruselInicio />
 			</div>
 			<div className="div2">
-				<CardHamburguesas/>
-				<CardMilanesas/>
-				{/* <CardPescado/>
-				<CardPancho/>
-				<CardChivito/>
-				<CardVianda/>
-				<CardPlato/>
-				<CardBebida/>
-				<CardEspecial/> */}
+
+				<CardHamburguesas />
+				<CardMilanesas />
+				<CardPescado />
+				<CardPancho />
+				<CardChivito />
+				<CardVianda />
+				<CardPlato />
+				<CardBebida />
+				<CardEspecial />
 			</div>
 		</div>
 	);

@@ -9,7 +9,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* ----------<productos>--------------- */
 
 
-
+			datosPrueba: [],
 			modalData: [],
 			productos: [],
 			carrito: [],
@@ -277,12 +277,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 						url: data.urlx,
 						name: data.namex,
 						price: data.pricex,
-						description: data.descriptionx
+						description: data.descriptionx,
+						categoria: data.categoriax
+
 					}
 				});
-				
+
 			},
 
+
+
+			Prueba1: (data) => {
+				const store = getStore();
+				const datosModal = []
+
+				setStore({ datosPrueba: data });
+				console.log(store.datosPrueba)
+			},
 
 
 
