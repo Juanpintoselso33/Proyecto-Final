@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { CardHamburguesas } from "../component/SecHamburguesa.jsx"
@@ -16,6 +16,12 @@ import { Extras_prod } from "../component/Extras_Productos.jsx"
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
+
+
+	useEffect(() => {
+		actions.obtenerAllProducts();
+
+	}, []);
 
 	return (
 		<div className="text-center mt-5">s

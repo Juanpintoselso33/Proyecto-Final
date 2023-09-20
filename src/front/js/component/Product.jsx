@@ -27,11 +27,12 @@ export const Product = (props) => {
     categoriax: props.categoria
   }
 
+
   const enviarMensaje = () => {
 
 
     actions.DataModalDetalle(data)
-
+    console.log(data)
   }
 
   return (

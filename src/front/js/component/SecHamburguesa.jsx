@@ -16,35 +16,6 @@ export const CardHamburguesas = () => {
     const [arrayHambur, setArrayHambur] = useState([]);
     const dataDetalle = store.modalData
     const Pruebas1122 = store.datosPrueba
-    const [cantidadP, setcantidadP] = useState();
-    let num = document.querySelector(".num");
-    let pepe = document.querySelector(".num");
-
-    let valor = 1
-
-
-
-
-    function sumarPro() {
-
-        valor++;
-
-        num.innerText = valor
-
-
-
-    }
-
-    function restarPro() {
-
-        if (valor > 1) {
-            valor--;
-            num.innerText = valor
-
-        }
-    }
-
-
 
 
     const responsive = {
@@ -67,59 +38,15 @@ export const CardHamburguesas = () => {
     };
 
 
-
-    const handleAddToCart = (num) => {
-
-        const inputQuantity = num;
-
-        if (!isNaN(inputQuantity) && inputQuantity > 0) {
-            console.log("Cantidad válida:", inputQuantity);  // Añadir console.log aquí
-            CartStore.addToCart(dataDetalle.id, inputQuantity, dataDetalle.price, dataDetalle.name);
-        } else {
-            console.log("Cantidad no válida:", inputQuantity);  // Añadir console.log aquí
-        }
-    };
-
-    useEffect(() => {
-        actions.obtenerAllProducts();
-
-    }, []);
-
-
-
     useEffect(() => {
         const hamburguesas = store.productos.filter((producto) => producto.category === "H");
         setArrayHambur(hamburguesas);
     }, [store.productos]);
 
 
-    // const productHambur = arrayHambur.map((item, index) => (
-    //     <Product key={index}
-    //         id={item.id}
-    //         name={item.name}
-    //         url={item.img_url}
-    //         price={item.cost}
-    //         description={item.description}
-    //         addmensaje={addmensaje}
-
-    //     />
-    // ));
-
-    // const productSalsas = productDataSalsas.map((item, index) => (
-    //     <div className="col" key={index}>{item.name}</div>
-    // ));
-
-    function mover_carrito() {
-        navigate("/cart")
-    }
-
 
     return (
         <div>
-
-           
-
-
 
             < div className="home" >
                 <div className="App apapa">

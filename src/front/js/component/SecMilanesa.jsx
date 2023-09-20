@@ -28,31 +28,34 @@ export const CardMilanesas = () => {
         }
     };
 
-    useEffect(() => {
-        actions.obtenerAllProducts();
-    }, []);
 
     useEffect(() => {
         const milanesas = store.productos.filter((producto) => producto.category === "M");
         setArrayMila(milanesas);
     }, [store.productos]);
 
-    const productMilanesa = arrayMila.map((item, index) => (
-        <Product key={index}
-            id={item.id}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
+
 
     return (
         <div className="home">
             <div className="App">
                 <h1>Milanesas</h1>
                 <Carousel responsive={responsive}>
-                    {productMilanesa}
+                    
+                    {arrayMila.map((item, index) => {
+                        return (
+
+                            <Product key={index}
+                                id={item.id}
+                                name={item.name}
+                                url={item.img_url}
+                                price={item.cost}
+                                description={item.description}
+                                categoria={item.category}
+                            />
+
+                        )
+                    })}
                 </Carousel>
             </div>
         </div>

@@ -4,16 +4,57 @@ import Product from "./Product.jsx";
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 import PropTypes from "prop-types";
-import { productDataSalsas } from "./PruebaData.js"
+import { productDataSalsas, Tamaño_bebida } from "./PruebaData.js"
+import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { useNavigate } from "react-router-dom";
 
-
-export const Extras_prod = (props) => {
+export const Extras_prod = () => {
     const { store, actions } = useContext(Context);
     const dataDetalle = store.modalData
+    const navigate = useNavigate();
+    let num = document.querySelector(".num");
+    let pepe = document.querySelector(".num");
+
+    let valor = 1
 
 
 
 
+    function sumarPro() {
+
+        valor++;
+
+        num.innerText = valor
+
+
+
+    }
+
+    function restarPro() {
+
+        if (valor > 1) {
+            valor--;
+            num.innerText = valor
+
+        }
+    }
+
+    const handleAddToCart = (num) => {
+
+        const inputQuantity = num;
+
+        if (!isNaN(inputQuantity) && inputQuantity > 0) {
+            console.log("Cantidad válida:", inputQuantity);  // Añadir console.log aquí
+            CartStore.addToCart(dataDetalle.id, inputQuantity, dataDetalle.price, dataDetalle.name);
+        } else {
+            console.log("Cantidad no válida:", inputQuantity);  // Añadir console.log aquí
+        }
+    };
+
+    function mover_carrito() {
+        navigate("/cart")
+    }
+    console.log(dataDetalle)
     return (
         <div>
 
@@ -54,7 +95,7 @@ export const Extras_prod = (props) => {
 
 
 
-                                        {store.modalData.categoria === "H" || "M" || "C" || "P" ?
+                                        {dataDetalle.categoria == "B" ?
                                             <div>
                                                 <section className="layout">
                                                     <div className=" titulos_tipo">
@@ -119,9 +160,39 @@ export const Extras_prod = (props) => {
                                                 </section>
                                             </div>
 
-                                            : store.modalData.categoria === "B" ?
-                                                <div>none</div> : <div>no se</div>
+                                            : dataDetalle.categoria == "H" || "M" || "C" || "P"
+                                                ? <section className="layout">
+                                                    <div className=" titulos_tipo">
+                                                        <div><strong>Tamaño</strong></div>
+                                                        <div>Tamaño de la bebida</div>
 
+                                                    </div>
+                                                    <div className="">
+                                                        <ul className="Lista_Agregados  ">
+
+
+
+                                                            {Tamaño_bebida.map((item, index) => {
+                                                                return (
+                                                                    <div className="listas border-top" key={index}>
+                                                                        <div className="col Elemento_del_UL" key={index}>
+                                                                            {item.name}
+                                                                            <br />
+                                                                            {item.price}
+                                                                        </div>
+
+
+                                                                        <div className="form-check">
+                                                                            <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            })}
+                                                        </ul>
+                                                    </div>
+
+                                                </section> : <div>no se</div>
                                         }
 
 
@@ -161,14 +232,7 @@ export const Extras_prod = (props) => {
 
 
 
-Extras_prod.propTypes = {
-    id: PropTypes.number.isRequired,
-    url: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    description: PropTypes.string.isRequired,
-    categoria: PropTypes.string,
-};
+
 
 export default Extras_prod;
 

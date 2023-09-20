@@ -41,7 +41,7 @@ export const CardVianda = () => {
 
     //guardo solo los productos con categoria "H" => hamburguesas
     for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
+        if (store.productos[i].category === "V") {
             arrayVianda.push(store.productos[i])
         }
 
