@@ -213,6 +213,18 @@ def delete_product(product_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 
+#ENDPOINT PARA TRAER PROMOS DEL BACK
+@app.route('/products', methods=['GET'])
+def get_promo_products():
+    # Consulta para encontrar todos los productos con "its_promo" como verdadero
+    promo_products = Product.query.filter_by(its_promo=True).all()
+
+    # Verificar si se encontraron productos en promoción
+    if not promo_products:
+        return jsonify({"error": "No se encontraron productos en promoción"}), 404
+
+    # Serializar los productos y devolverlos como una lista de diccionarios
+    return jsonify([product.serialize() for product in promo_products])
 
 
 
