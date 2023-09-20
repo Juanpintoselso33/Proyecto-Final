@@ -19,7 +19,7 @@ export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="text-center mt-5">s
+		<div className="text-center mt-5">
 			<Navbar />
 			<div className="div1">
 				<CarruselInicio/>
