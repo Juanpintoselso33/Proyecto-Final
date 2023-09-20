@@ -4,21 +4,18 @@ import Product from "./Product.jsx";
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
 import PropTypes from "prop-types";
-import { productDataSalsas, Tamaño_bebida } from "./PruebaData.js"
+import { productDataSalsas, Tamaño_bebida, Guarniciones } from "./PruebaData.js"
 import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
 import { useNavigate } from "react-router-dom";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 export const Extras_prod = () => {
     const { store, actions } = useContext(Context);
     const dataDetalle = store.modalData
     const navigate = useNavigate();
     let num = document.querySelector(".num");
-    let pepe = document.querySelector(".num");
-
+    const [arrayCardBebidas, setArrayCardBebidas] = useState([])
     let valor = 1
-
-
-
 
     function sumarPro() {
 
@@ -39,6 +36,13 @@ export const Extras_prod = () => {
         }
     }
 
+    useEffect(() => {
+        const bebidas = store.productos.filter((producto) => producto.category === "B");
+        setArrayCardBebidas(bebidas);
+    }, [store.productos]);
+
+
+
     const handleAddToCart = (num) => {
 
         const inputQuantity = num;
@@ -54,7 +58,7 @@ export const Extras_prod = () => {
     function mover_carrito() {
         navigate("/cart")
     }
-    console.log(dataDetalle)
+
     return (
         <div>
 
@@ -74,7 +78,7 @@ export const Extras_prod = () => {
 
                             <div className="row">
                                 <div className="col div_img_comida">
-                                    <img className="imagenDetalle" src="https://th.bing.com/th/id/R.b0413de9114bf291db0398ec898a8b47?rik=EpGjHxR4Kqr%2b5g&pid=ImgRaw&r=0" alt="" />
+                                    <img className="imagenDetalle" src={dataDetalle.url} alt="" />
                                 </div>
                                 <div className="col DetallesAgregados">
 
@@ -95,7 +99,7 @@ export const Extras_prod = () => {
 
 
 
-                                        {dataDetalle.categoria == "B" ?
+                                        {dataDetalle.categoria == "H" || dataDetalle.categoria == "M" || dataDetalle.categoria == "C" || dataDetalle.categoria == "P" ?
                                             <div>
                                                 <section className="layout">
                                                     <div className=" titulos_tipo">
@@ -130,6 +134,39 @@ export const Extras_prod = () => {
 
                                                 </section>
 
+                                                <section className="layout">
+                                                    <div className=" titulos_tipo">
+                                                        <div><strong>Guarniciones</strong></div>
+                                                        <div>Selecciones 5 opciones maximo</div>
+
+                                                    </div>
+                                                    <div className="">
+                                                        <ul className="Lista_Agregados  ">
+
+
+
+                                                            {Guarniciones.map((item, index) => {
+                                                                return (
+                                                                    <div className="listas border-top" key={index}>
+                                                                        <div className="col Elemento_del_UL" key={index}>
+                                                                            {item.name}
+                                                                            <br />
+                                                                            {item.price}
+                                                                        </div>
+
+
+                                                                        <div className="form-check">
+                                                                            <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
+
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            })}
+                                                        </ul>
+                                                    </div>
+
+                                                </section>
+
                                                 <section className="layout ">
                                                     <div className=" titulos_tipo">
                                                         <div><strong>Bebida?</strong></div>
@@ -138,7 +175,7 @@ export const Extras_prod = () => {
                                                     </div>
                                                     <div className="">
                                                         <ul className="Lista_Agregados  ">
-                                                            {productDataSalsas.map((item, index) => {
+                                                            {arrayCardBebidas.map((item, index) => {
                                                                 return (
                                                                     <div className="listas border-top" key={index}>
                                                                         <div className="col Elemento_del_UL" key={index}>
@@ -160,7 +197,7 @@ export const Extras_prod = () => {
                                                 </section>
                                             </div>
 
-                                            : dataDetalle.categoria == "H" || "M" || "C" || "P"
+                                            : dataDetalle.categoria == "B"
                                                 ? <section className="layout">
                                                     <div className=" titulos_tipo">
                                                         <div><strong>Tamaño</strong></div>
