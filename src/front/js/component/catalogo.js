@@ -10,20 +10,20 @@ export const Catalogo = () => {
   const { actions, store } = useContext(Context);
   const categorias = [
      {
-      nombreCategoria: "H",
+      nombreCategoria: "Hamburguesas",
       URL: "https://www.pequerecetas.com/wp-content/uploads/2013/07/hamburguesas-caseras-receta.jpg",
     },
     {
-      nombreCategoria: "M",
-      URL: "https://www.pequerecetas.com/wp-content/uploads/2013/07/hamburguesas-caseras-receta.jpg",
+      nombreCategoria: "Milanesas",
+      URL: "https://cdn0.recetasgratis.net/es/posts/4/9/8/milanesa_de_carne_11894_orig.jpg",
     },
     {
-      nombreCategoria: "B",
-      URL: "https://www.pequerecetas.com/wp-content/uploads/2013/07/hamburguesas-caseras-receta.jpg",
+      nombreCategoria: "Bebidas",
+      URL: "https://www.revistaneo.com/sites/default/files/2023-01/bebidasNAok.png",
     },
     {
-      nombreCategoria: "P",
-      URL: "https://www.pequerecetas.com/wp-content/uploads/2013/07/hamburguesas-caseras-receta.jpg",
+      nombreCategoria: "Postres",
+      URL: "https://www.clara.es/medio/2021/11/28/postres-navidenos_3f462fd7_1280x1115.jpg",
     },
     
   ];

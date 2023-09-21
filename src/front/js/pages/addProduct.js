@@ -43,33 +43,48 @@ export const AddProduct = () => {
       alert("Por favor, completa todos los campos requeridos.");
       return;
     }
-
+  
     if (!productData.img_url && !productData.img_file) {
       alert("Por favor, sube una imagen o proporciona una URL de imagen.");
       return;
     }
-
+  
     // Se asegura de que el estado actual de isPromo se añade al producto
     const finalProductData = {
       ...productData,
       its_promo: isPromo  // usa el mismo nombre que en la base de datos
     };
-
+  
     console.log(finalProductData);  // Añade esto para depuración
     actions.addProduct(finalProductData);
+  
+    // Mostrar mensaje de éxito
+    alert('Producto agregado exitosamente.');
+  
+    // Redireccionar hacia atrás
+    window.history.back();
   };
 
   return (
-    <section className="vh-100 bg-image" style={{ backgroundImage: "url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp')" }}>
+    <section className="vh-100 bg-image bg-light">
       <div className="mask d-flex align-items-center h-100 gradient-custom-3">
+
         <div className="container h-100">
+
+
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-12 col-md-9 col-lg-9 col-xl-6">
+
               <div style={{ borderRadius: '15px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                 <div className="p-5">
                   <h2 className="text-uppercase text-center mb-5">Add a Product</h2>
                   <form onSubmit={handleSubmit}>
+
                     <div className="form-outline mb-4">
+                      <Link to="/usuarioAdmin" style={{ position: 'absolute', top: '20px', left: '20px' }}>
+                        <button>Cerrar</button>
+                      </Link>
+
                       <input type="number" name="cost" placeholder="Cost" onChange={handleChange} required className="form-control form-control-lg" />
                       <label className="form-label">Cost</label>
                     </div>
