@@ -14,7 +14,7 @@ import { CardPromos } from "../component/SecPromos.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
-import { Menu_del_dia } from "../component/Menu_del_dia.jsx"
+
 
 
 export const Home = () => {
@@ -47,7 +47,7 @@ export const Home = () => {
 					<CardPlato />
 					<CardBebida />
 					<CardEspecial />
-					<Menu_del_dia />
+				
 				</div>
 			</div>
 		</div>
