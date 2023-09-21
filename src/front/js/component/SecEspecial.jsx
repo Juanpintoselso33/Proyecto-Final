@@ -43,7 +43,7 @@ export const CardEspecial = () => {
 
     //guardo solo los productos con categoria "H" => hamburguesas
     for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "M") {
+        if (store.productos[i].category === "E") {
             arrayEspeciales.push(store.productos[i])
         }
 

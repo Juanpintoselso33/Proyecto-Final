@@ -8,8 +8,6 @@ import "../../styles/Stylecard.css";
 
 
 
-
-
 export const CardBebida = () => {
     const { store, actions } = useContext(Context);
     const [arrayCardBebidas, setArrayCardBebidas] = useState([])
@@ -36,28 +34,11 @@ export const CardBebida = () => {
         }
     };
 
+
     useEffect(() => {
-        actions.obtenerAllProducts()
-
-    }, [])
-
-    //guardo solo los productos con categoria "H" => hamburguesas
-    for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
-            arrayCardBebidas.push(store.productos[i])
-        }
-
-
-    }
-
-    const productBebidas = arrayCardBebidas.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
+        const bebidas = store.productos.filter((producto) => producto.category === "B");
+        setArrayCardBebidas(bebidas);
+    }, [store.productos]);
 
 
 
@@ -67,7 +48,20 @@ export const CardBebida = () => {
             <div className="App" >
                 <h1>Bebidas</h1>
                 <Carousel responsive={responsive}>
-                    {productBebidas}
+                    {arrayCardBebidas.map((item, index) => {
+                        return (
+
+                            <Product key={index}
+                                id={item.id}
+                                name={item.name}
+                                url={item.img_url}
+                                price={item.cost}
+                                description={item.description}
+                                categoria={item.category}
+                            />
+
+                        )
+                    })}
                 </Carousel>
             </div>
         </div>

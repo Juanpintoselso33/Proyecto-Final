@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { useNavigate } from 'react-router-dom';
 import Logo from "../../img/carrito.jpg";
 import Cerrar from "../../img/cerrar.png";
+import { Card } from 'react-bootstrap';
 
 export const CartView = () => {
   const { actions } = useContext(Context);
@@ -33,6 +34,7 @@ export const CartView = () => {
     setCart(updatedCart);
     updateCartInLocalStorage(updatedCart);
   };
+
 
   const handleDecrement = (order_id) => {
     const updatedCartItems = cart.items.map(item => {

@@ -140,7 +140,7 @@ export const CarruselInicio = () => {
     return (
 
         <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div className="carousel-inner">
+            <div className="carousel-inner carrusel_Principal">
                 <div className="carousel-item active">
                     <img src="https://th.bing.com/th/id/R.d8114ad8d46914dd87614f78a63cf652?rik=C8xbyv%2f1PmDxgg&riu=http%3a%2f%2ffrescados.files.wordpress.com%2f2012%2f05%2fhamburguesa-de-res.jpg&ehk=XHZfIVmSjX2uBGugX%2b2j7v%2bFkz7MfKs9AOagUHBScbw%3d&risl=1&pid=ImgRaw&r=0" className="d-block w-100" alt="..." />
                 </div>

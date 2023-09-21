@@ -4,10 +4,19 @@ import Product from "./Product.jsx";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
+import PropTypes from "prop-types";
+import { productDataSalsas } from "./PruebaData.js"
+import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { useNavigate } from "react-router-dom";
+
 
 export const CardHamburguesas = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
     const [arrayHambur, setArrayHambur] = useState([]);
+    const dataDetalle = store.modalData
+    const Pruebas1122 = store.datosPrueba
+
 
     const responsive = {
         superLargeDesktop: {
@@ -28,54 +37,39 @@ export const CardHamburguesas = () => {
         }
     };
 
-    useEffect(() => {
-        actions.obtenerAllProducts();
-    }, []);
 
     useEffect(() => {
         const hamburguesas = store.productos.filter((producto) => producto.category === "H");
         setArrayHambur(hamburguesas);
     }, [store.productos]);
 
-    const productHambur = arrayHambur.map((item, index) => (
-        <Product key={index}
-            id={item.id}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
+
 
     return (
         <div>
 
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="" aria-hidden="true" >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            ...
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             < div className="home" >
-                <div className="App">
+                <div className="App apapa">
                     <h1>Hamburguesas</h1>
                     <Carousel responsive={responsive}>
-                        {productHambur}
+
+                        {arrayHambur.map((item, index) => {
+                            return (
+
+                                <Product key={index}
+                                    id={item.id}
+                                    name={item.name}
+                                    url={item.img_url}
+                                    price={item.cost}
+                                    description={item.description}
+                                    categoria={item.category}
+                                />
+
+                            )
+                        })}
                     </Carousel>
                 </div>
             </div >
-        </div>
+        </div >
     );
 };
