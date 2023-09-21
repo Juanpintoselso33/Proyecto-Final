@@ -176,51 +176,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			createOrder: async () => {
 				try {
-					const userId = localStorage.getItem("userId");
-
-					if (!userId) {
-						throw new Error("User ID is undefined");
+				  const userId = localStorage.getItem("userId");
+			  
+				  if (!userId) {
+					throw new Error("User ID is undefined");
+				  }
+			  
+				  CartStore.syncWithLocalStorage();  // Asegúrate de sincronizar antes de crear la orden
+				  const cartFromLocalStorage = CartStore.getCart(); // Usa el método getCart()
+			  
+				  console.log("Estado del carrito antes de crear la orden:", cartFromLocalStorage);
+			  
+				  if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
+					console.log("El carrito está vacío. No se puede crear la orden.");
+					return;
+				  }
+			  
+				  const items = cartFromLocalStorage.map(item => ({
+					product_id: item.product_id,
+					quantity: item.quantity,
+					extras: item.extras || []
+				  }));
+			  
+				  const payload = {
+					items,
+				  };
+			  
+				  const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
+				  console.log("Enviando payload:", payload);
+				  console.log("URL de la solicitud POST:", url);
+			  
+				  const response = await axios.post(url, payload, {
+					headers: {
+					  'Content-Type': 'application/json',
 					}
-
-					const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
-
-					if (!cartFromLocalStorage || cartFromLocalStorage.items.length === 0) {
-						console.log("El carrito está vacío. No se puede crear la orden.");
-						return;
-					}
-
-					const items = cartFromLocalStorage.items.map(item => ({
-						product_id: item.product_id, // Ajusta esto según la estructura del objeto item en tu carrito
-						quantity: item.quantity,
-						extras: item.extras || [] // Agregamos los extras aquí, si no existen, usamos un arreglo vacío
-					}));
-
-					const payload = {
-						items,
-					};
-
-					const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
-					console.log("Sending payload:", payload);
-					console.log("URL de la solicitud POST:", url);
-
-					const response = await axios.post(url, payload, {
-						headers: {
-							'Content-Type': 'application/json',
-						}
-					});
-
-					const data = response.data;
-
-					if (data.success) {
-						console.log('Order created:', data.order);
-						localStorage.setItem("cart", JSON.stringify({ items: [], totalCost: 0 })); // Limpia el carrito
-					} else {
-						console.log('Order creation failed:', data.message);
-					}
+				  });
+			  
+				  const data = response.data;
+			  
+				  if (data.success) {
+					console.log('Order created:', data.order);
+					CartStore.clearCart(); // Limpia el carrito usando el método de CartStore
+				  } else {
+					console.log('Order creation failed:', data.message);
+				  }
 				} catch (error) {
-					console.log('An error occurred:', error);
+				  console.log('An error occurred:', error);
 				}
-			},
+			  },
 
 
 			actualizarExtras: nuevosExtras => {

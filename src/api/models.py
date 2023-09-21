@@ -103,7 +103,7 @@ class Order(db.Model):
             # Añadir el costo de los extras, si los hay
             if item.extras is not None:
                 for extra in item.extras:
-                    item_cost += extra['price']
+                    item_cost += (extra['price'] * item.quantity)  # Multiplicar el precio del extra por la cantidad del item
 
             # Asignar el costo calculado al item
             item.cost = item_cost

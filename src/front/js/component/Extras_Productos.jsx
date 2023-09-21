@@ -11,21 +11,18 @@ import { propTypes } from "react-bootstrap/esm/Image";
 
 export const Extras_prod = () => {
     const { store, actions } = useContext(Context);
-    const dataDetalle = store.modalData
+    const dataDetalle = store.modalData;
     const navigate = useNavigate();
-    let num = document.querySelector(".num");
-    const [arrayCardBebidas, setArrayCardBebidas] = useState([])
-    let valor = 1
+    const [arrayCardBebidas, setArrayCardBebidas] = useState([]);
+    const [valor, setValor] = useState(1);  // Usamos el estado de React para manejar la cantidad
 
     function sumarPro() {
-        valor++;
-        num.innerText = valor
+        setValor(valor + 1);
     }
 
     function restarPro() {
         if (valor > 1) {
-            valor--;
-            num.innerText = valor
+            setValor(valor - 1);
         }
     }
 
@@ -34,30 +31,25 @@ export const Extras_prod = () => {
         setArrayCardBebidas(bebidas);
     }, [store.productos]);
 
-
-    const handleAddToCart = (num, extrasSeleccionados) => {
-        const inputQuantity = num;
-        if (!isNaN(inputQuantity) && inputQuantity > 0) {
-            console.log("Cantidad válida:", inputQuantity);  
-            // Agregamos el parámetro extrasSeleccionados para pasarlo al carrito
-            CartStore.addToCart(dataDetalle.id, inputQuantity, dataDetalle.price, dataDetalle.name, extrasSeleccionados);
+    const handleAddToCart = (extrasSeleccionados) => {
+        if (valor > 0) {
+            console.log("Precio mandado" + dataDetalle.price,)
+            CartStore.addToCart(dataDetalle.id, valor, dataDetalle.price, dataDetalle.name, extrasSeleccionados);
             actions.limpiarExtrasSeleccionados();
         } else {
-            console.log("Cantidad no válida:", inputQuantity);  
+            console.log("Cantidad no válida:", valor);
         }
     };
 
-    const manejarCambioExtra = (e, extra) => {       
-        let nuevosExtras = [...store.extrasSeleccionados]; // Hacemos una copia del estado actual    
+    const manejarCambioExtra = (e, extra) => {
+        let nuevosExtras = [...store.extrasSeleccionados];
         if (e.target.checked) {
-            nuevosExtras.push(extra); // Añadimos el extra al array
+            nuevosExtras.push(extra);
         } else {
-            nuevosExtras = nuevosExtras.filter(item => item.id !== extra.id); // Eliminamos el extra del array
-        }    
-        // Llamamos a la acción para actualizar el estado en el store
+            nuevosExtras = nuevosExtras.filter(item => item.id !== extra.id);
+        }
         actions.actualizarExtras(nuevosExtras);
     };
-
 
     function mover_carrito() {
         navigate("/cart")
@@ -109,10 +101,10 @@ export const Extras_prod = () => {
                                                                         <div className="col Elemento_del_UL" key={index}>
                                                                             {item.name}
                                                                             <br />
-                                                                            {item.price}
+                                                                            ${item.price}
                                                                         </div>
                                                                         <div className="form-check">
-                                                                            <input className="form-check-input border border-dark" onChange={(e) => manejarCambioExtra(e, productDataSalsas[item.id - 1])}  type="checkbox"  value="" id="flexCheckDefault" />
+                                                                            <input className="form-check-input border border-dark" onChange={(e) => manejarCambioExtra(e, productDataSalsas[item.id - 1])} type="checkbox" value="" id="flexCheckDefault" />
                                                                         </div>
                                                                     </div>)
                                                             })}
@@ -132,7 +124,7 @@ export const Extras_prod = () => {
                                                                         <div className="col Elemento_del_UL" key={index}>
                                                                             {item.name}
                                                                             <br />
-                                                                            {item.price}
+                                                                            ${item.price}
                                                                         </div>
                                                                         <div className="form-check">
                                                                             <input className="form-check-input border border-dark" onChange={(e) => manejarCambioExtra(e, Guarniciones[item.id - 1])} type="checkbox" value="" id="flexCheckDefault" />
@@ -156,7 +148,7 @@ export const Extras_prod = () => {
                                                                         <div className="col Elemento_del_UL" key={index}>
                                                                             {item.name}
                                                                             <br />
-                                                                            {item.price}
+                                                                            ${item.price}
                                                                         </div>
                                                                         <div className="form-check">
                                                                             <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
@@ -183,7 +175,7 @@ export const Extras_prod = () => {
                                                                         <div className="col Elemento_del_UL" key={index}>
                                                                             {item.name}
                                                                             <br />
-                                                                            {item.price}
+                                                                            ${item.price}
                                                                         </div>
                                                                         <div className="form-check">
                                                                             <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
@@ -201,13 +193,12 @@ export const Extras_prod = () => {
                         </div>
                         <div className="modal-footer pruebaas">
                             <div className="wrapper">
-                                <span className="minus" onClick={() => restarPro()}>-</span>
-                                <span className="num">1</span>
-                                <span className="plus" onClick={() => sumarPro()}>+</span>
+                                <span className="minus" onClick={restarPro}>-</span>
+                                <span className="num">{valor}</span> 
+                                <span className="plus" onClick={sumarPro}>+</span>
                             </div>
-                            {/* <button onClick={handleAddToCart()}>Add to Cart</button> */}
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(valor, store.extrasSeleccionados)}> Agregar y seguir comprando</button>
-                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(valor, store.extrasSeleccionados), mover_carrito() }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(store.extrasSeleccionados)}> Agregar y seguir comprando</button>
+                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(store.extrasSeleccionados); mover_carrito(); }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
                         </div>
                     </div>
                 </div>
