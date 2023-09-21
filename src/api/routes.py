@@ -346,7 +346,7 @@ def add_order(user_id):
                 product=product,
                 product_id=item_data['product_id'],
                 quantity=item_data['quantity'],
-                its_promo=item_data.get('its_promo', False)
+                extras=item_data['extras']
             )
             new_order.items.append(new_item)
         

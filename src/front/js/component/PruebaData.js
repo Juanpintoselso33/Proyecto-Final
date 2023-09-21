@@ -28,7 +28,7 @@ export const productDataSalsas = [
         //   imageurl:
         //     "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Kepchup",
-        price: "$19.99",
+        price: 19.99,
         //   description: "Some text about the product..",
     },
     {
@@ -36,7 +36,7 @@ export const productDataSalsas = [
         // imageurl:
         // "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
         name: "Mayonesa",
-        price: "$21.99",
+        price: 21.99,
         // description: "Some text about the product..",
     },
     {
@@ -44,7 +44,7 @@ export const productDataSalsas = [
         // imageurl:
         // "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjZ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Moztasa",
-        price: "$99.99",
+        price: 99.99,
         // description: "Some text about the product..",
     },
     {
@@ -52,7 +52,7 @@ export const productDataSalsas = [
         // imageurl:
         // "https://images.unsplash.com/photo-1610824352934-c10d87b700cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mjl8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Especialidad",
-        price: "$14.99",
+        price: 14.99,
         // description: "Some text about the product..",
     },
     {
@@ -60,7 +60,7 @@ export const productDataSalsas = [
         // imageurl:
         // "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzB8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Picantina",
-        price: "$38.99",
+        price: 38.99,
         // description: "Some text about the product..",
     },
     {
@@ -68,7 +68,7 @@ export const productDataSalsas = [
         // imageurl:
         // "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzB8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Picantina",
-        price: "$38.99",
+        price: 38.99,
         // description: "Some text about the product..",
     },
 
@@ -81,7 +81,7 @@ export const Tamaño_bebida = [
         //   imageurl:
         //     "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Grande",
-        price: "$100",
+        price: 100,
         //   description: "Some text about the product..",
     },
     {
@@ -89,7 +89,7 @@ export const Tamaño_bebida = [
         // imageurl:
         // "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
         name: "Mediana",
-        price: "$50",
+        price: 50,
         // description: "Some text about the product..",
     },
     {
@@ -97,7 +97,7 @@ export const Tamaño_bebida = [
         // imageurl:
         // "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjZ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Chica",
-        price: "$25",
+        price: 25,
         // description: "Some text about the product..",
     },
 
@@ -111,7 +111,7 @@ export const Guarniciones = [
         //   imageurl:
         //     "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Papas fritas grandes",
-        price: "$100",
+        price: 100,
         //   description: "Some text about the product..",
     },
     {
@@ -119,7 +119,7 @@ export const Guarniciones = [
         // imageurl:
         // "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
         name: "Papas fritas chicas",
-        price: "$50",
+        price: 50,
         // description: "Some text about the product..",
     },
 
@@ -128,7 +128,7 @@ export const Guarniciones = [
         // imageurl:
         // "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
         name: "Aros de cebolla grandes ",
-        price: "$150",
+        price: 150,
         // description: "Some text about the product..",
     },
     {
@@ -136,7 +136,7 @@ export const Guarniciones = [
         // imageurl:
         // "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
         name: "Aros de cebolla chicos",
-        price: "$100",
+        price: 100,
         // description: "Some text about the product..",
     },
     {
@@ -144,7 +144,7 @@ export const Guarniciones = [
         // imageurl:
         // "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjZ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
         name: "Pure de papas",
-        price: "$25",
+        price: 25,
         // description: "Some text about the product..",
     },
 

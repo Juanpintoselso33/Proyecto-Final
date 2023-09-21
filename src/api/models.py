@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import JSON
 from datetime import datetime
 from sqlalchemy.orm import validates
 
@@ -10,27 +11,23 @@ class OrderProduct(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer, nullable=False)
-    cost = db.Column(db.Float, nullable=True)    
+    cost = db.Column(db.Float, nullable=True) 
+    extras = db.Column(JSON, nullable=True)   
 
     product = db.relationship('Product', back_populates='order_products')
     order = db.relationship('Order', back_populates='items')
 
-    def __repr__(self):
-        promo_prefix = "PROMO: " if self.product.its_promo else ""
-        return f"{promo_prefix}{self.product.name} x {self.quantity} = {self.cost}"
+    def serialize(self):
+        return {
+            'id': self.id,
+            'order_id': self.order_id,
+            'product_id': self.product_id,
+            'quantity': self.quantity,
+            'cost': self.cost,
+            'extras': self.extras,
+            'product_name': self.product.name  # Agregamos el nombre del producto
+        }
     
-    @validates('cost')
-    def validate_cost(self, key, cost):
-        if self.product is None:
-            raise ValueError("Product must be set before validating the cost.")
-        
-        # Aquí también, accedo a its_promo a través de self.product
-        if self.product.its_promo is False:
-            return self.product.cost * self.quantity
-        elif self.product.its_promo is True and cost is not None:
-            return cost
-        else:
-            raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
 
    
 
@@ -100,26 +97,58 @@ class Order(db.Model):
     def calculate_total_cost(self):
         self.total_cost = 0
         for item in self.items:
-            if item.its_promo is False:
-                item.cost = item.product.cost * item.quantity
-            elif item.its_promo is True and item.cost is None:
-                raise ValueError("Si es una promoción, el costo debe ser proporcionado por el usuario.")
-            self.total_cost += item.cost
+            # Calcular el costo del item sin tener en cuenta si es una promoción o no
+            item_cost = item.product.cost * item.quantity
 
-        # Guarda el cambio en el costo total en la base de datos
+            # Añadir el costo de los extras, si los hay
+            if item.extras is not None:
+                for extra in item.extras:
+                    item_cost += (extra['price'] * item.quantity)  # Multiplicar el precio del extra por la cantidad del item
+
+            # Asignar el costo calculado al item
+            item.cost = item_cost
+
+            # Sumar el costo del item al costo total del pedido
+            self.total_cost += item_cost
+
+        # Guardar el cambio en el costo total en la base de datos
         db.session.commit()
 
-        # Devuelve el costo total calculado
+        # Devolver el costo total calculado
         return self.total_cost
 
     def __repr__(self):
         return f"Orden Nro. {self.id}"
 
     def serialize(self):
+        total_cost_with_extras = 0
+        total_cost_without_extras = 0
+
+        serialized_items = []
+
+        for item in self.items:
+            cost_with_extras = item.cost  # Costo individual con extras
+            cost_without_extras = item.product.cost * item.quantity  # Costo individual sin extras
+
+            total_cost_with_extras += cost_with_extras
+            total_cost_without_extras += cost_without_extras
+
+            serialized_item = {
+                "product_id": item.product_id,
+                "quantity": item.quantity,
+                "cost_with_extras": cost_with_extras,  # Costo individual con extras
+                "cost_without_extras": cost_without_extras,  # Costo individual sin extras
+                "extras": item.extras,
+                "product_name": item.product.name
+            }
+
+            serialized_items.append(serialized_item)
+
         return {
             "id": self.id,
-            "total_cost": self.total_cost,
+            "total_cost_with_extras": total_cost_with_extras,
+            "total_cost_without_extras": total_cost_without_extras,
             "timestamp": self.timestamp,
-            "user_id": self.user_id,  # Añadido el id del usuario
-            "items": [{"product_id": item.product_id, "quantity": item.quantity, "cost": item.cost} for item in self.items]
+            "user_id": self.user_id,
+            "items": serialized_items  # Lista de items serializados con costo individual
         }

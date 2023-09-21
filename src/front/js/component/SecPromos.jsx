@@ -4,6 +4,12 @@ import Product from "./Product.jsx";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
+import PropTypes from "prop-types";
+import { productDataSalsas } from "./PruebaData.js"
+import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { useNavigate } from "react-router-dom";
+
+
 
 export const CardPromos = () => {
     const { store, actions } = useContext(Context);
@@ -45,6 +51,7 @@ export const CardPromos = () => {
             url={item.img_url}
             price={item.cost}
             description={item.description}
+            categoria={item.category}
         />
     ));
 

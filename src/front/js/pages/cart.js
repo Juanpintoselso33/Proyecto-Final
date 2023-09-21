@@ -15,50 +15,50 @@ export const CartView = () => {
     setCart(storedCart);
   }, []);
 
-  const updateCartInLocalStorage = (updatedCart) => {
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const updateTotalCost = (items) => {
+    const total = items.reduce((acc, item) => acc + item.cost, 0);
+    return parseFloat(total.toFixed(2));
   };
 
   const handleIncrement = (order_id) => {
     const updatedCartItems = cart.items.map(item => {
       if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity + 1 };
-        return updatedItem;
+        item.quantity += 1;
+        item.cost = (item.cost / (item.quantity - 1)) * item.quantity;
       }
       return item;
     });
 
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-    updateCartInLocalStorage(updatedCart);
-  };
+    const updatedTotalCost = updateTotalCost(updatedCartItems);
 
+    const updatedCart = { ...cart, items: updatedCartItems, totalCost: updatedTotalCost };
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
 
   const handleDecrement = (order_id) => {
     const updatedCartItems = cart.items.map(item => {
       if (item.order_id === order_id && item.quantity > 1) {
-        const updatedItem = { ...item, quantity: item.quantity - 1 };
-        return updatedItem;
+        item.quantity -= 1;
+        item.cost = (item.cost / (item.quantity + 1)) * item.quantity;
       }
       return item;
     }).filter(item => item.quantity > 0);
 
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
+    const updatedTotalCost = updateTotalCost(updatedCartItems);
+
+    const updatedCart = { ...cart, items: updatedCartItems, totalCost: updatedTotalCost };
     setCart(updatedCart);
-    updateCartInLocalStorage(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const removeFromCart = (order_id) => {
     const updatedCartItems = cart.items.filter(item => item.order_id !== order_id);
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
+    const updatedTotalCost = updateTotalCost(updatedCartItems);
+
+    const updatedCart = { ...cart, items: updatedCartItems, totalCost: updatedTotalCost };
     setCart(updatedCart);
-    updateCartInLocalStorage(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const totalCost = cart.totalCost || 0;
@@ -92,7 +92,7 @@ export const CartView = () => {
                       <tr key={item.order_id}>
                         <th scope="row">{index + 1}</th>
                         <td>{item.name}</td>
-                        <td>${item.cost}</td>
+                        <td>${parseFloat(item.cost).toFixed(2)} (<span>${(item.cost / item.quantity).toFixed(2)} c/u</span>)</td>
                         <td>
                           <button
                             className="btn btn-success"
@@ -131,7 +131,7 @@ export const CartView = () => {
                   </tbody>
                 </table>
                 <div className="text-center">
-                  <h2>Costo Total: ${totalCost}</h2>
+                  <h2>Costo Total: ${totalCost.toFixed(2)}</h2>
                   <button
                     className="btn btn-success"
                     onClick={() => actions.createOrder()}

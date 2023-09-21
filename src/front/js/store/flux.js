@@ -12,7 +12,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			datosPrueba: [],
 			modalData: [],
 			productos: [],
-			carrito: [],
+			extrasSeleccionados: [],
 			isAuthenticated: false,
 			token: null,
 
@@ -21,18 +21,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			/* ----------</productos>--------------- */
 
-
-
-
-
-
-
-
-
-
 			message: null,
-
-			planetas: [],
 
 			demo: [
 				{
@@ -133,23 +122,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			agregarAlCarrito: (producto) => {
-				const store = getStore();
-				const productoExistente = store.carrito.find(item => item.id === producto.id);
-				if (productoExistente) {
-					productoExistente.cantidad += 1;
-				} else {
-					producto.cantidad = 1;
-					setStore({ carrito: [...store.carrito, producto] });
-				}
-			},
-
-			eliminarDelCarrito: (productoId) => {
-				const store = getStore();
-				const nuevoCarrito = store.carrito.filter(item => item.id !== productoId);
-				setStore({ carrito: nuevoCarrito });
-			},
-
 			initializeAuth: () => {
 				const token = localStorage.getItem("token");
 				const email = localStorage.getItem("email");
@@ -159,6 +131,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ isAuthenticated: true, token, email, userId });  // Usar la ID del usuario
 				}
 			},
+
 			login: async (email, password) => {
 				try {
 
@@ -200,52 +173,72 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ isAuthenticated: false, token: null, email: null });
 				CartStore.clearCart(); // Limpia el carrito
 			},
+
 			createOrder: async () => {
 				try {
-					const store = getStore();
-					const userId = store.userId;
-
-					if (!userId) {
-						throw new Error("User ID is undefined");
+				  const userId = localStorage.getItem("userId");
+			  
+				  if (!userId) {
+					throw new Error("User ID is undefined");
+				  }
+			  
+				  CartStore.syncWithLocalStorage();  // Asegúrate de sincronizar antes de crear la orden
+				  const cartFromLocalStorage = CartStore.getCart(); // Usa el método getCart()
+			  
+				  console.log("Estado del carrito antes de crear la orden:", cartFromLocalStorage);
+			  
+				  if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
+					console.log("El carrito está vacío. No se puede crear la orden.");
+					return;
+				  }
+			  
+				  const items = cartFromLocalStorage.map(item => ({
+					product_id: item.product_id,
+					quantity: item.quantity,
+					extras: item.extras || []
+				  }));
+			  
+				  const payload = {
+					items,
+				  };
+			  
+				  const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
+				  console.log("Enviando payload:", payload);
+				  console.log("URL de la solicitud POST:", url);
+			  
+				  const response = await axios.post(url, payload, {
+					headers: {
+					  'Content-Type': 'application/json',
 					}
-
-					const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
-
-					if (!cartFromLocalStorage || cartFromLocalStorage.items.length === 0) {
-						console.log("El carrito está vacío. No se puede crear la orden.");
-						return;
-					}
-
-					const items = cartFromLocalStorage.items.map(item => ({
-						product_id: item.product_id, // Ajusta esto según la estructura del objeto item en tu carrito
-						quantity: item.quantity
-					}));
-
-					const payload = {
-						items,
-					};
-
-					const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
-					console.log("Sending payload:", payload);
-					console.log("URL de la solicitud POST:", url);
-
-					const response = await axios.post(url, payload, {
-						headers: {
-							'Content-Type': 'application/json',
-						}
-					});
-
-					const data = response.data;
-
-					if (data.success) {
-						console.log('Order created:', data.order);
-						localStorage.setItem("cart", JSON.stringify({ items: [], totalCost: 0 })); // Limpia el carrito
-					} else {
-						console.log('Order creation failed:', data.message);
-					}
+				  });
+			  
+				  const data = response.data;
+			  
+				  if (data.success) {
+					console.log('Order created:', data.order);
+					CartStore.clearCart(); // Limpia el carrito usando el método de CartStore
+				  } else {
+					console.log('Order creation failed:', data.message);
+				  }
 				} catch (error) {
-					console.log('An error occurred:', error);
+				  console.log('An error occurred:', error);
 				}
+			  },
+
+
+			actualizarExtras: nuevosExtras => {
+				setStore({
+					extrasSeleccionados: [...nuevosExtras] // Simplemente copiamos el nuevo array de extras al estado del store
+				});
+				console.log("Extras actualizados:", nuevosExtras);
+			},
+
+
+			limpiarExtrasSeleccionados: () => {
+				setStore({
+					extrasSeleccionados: []
+				});
+				console.log("Arreglo de extras limpiado");
 			},
 
 
@@ -441,15 +434,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
-	//categoria- catalogo
-	obtenerProductosPorCategorias: async (categoria) => {
-		try {
-		  const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
-		  const productosFiltrados = response.data.filter(item => item.category === categoria);
-		  setStore({ productos: productosFiltrados });
-		} catch (error) {
-		  console.error('Error al obtener productos:', error);
-		}
-	  };
+//categoria- catalogo
+obtenerProductosPorCategorias: async (categoria) => {
+	try {
+		const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
+		const productosFiltrados = response.data.filter(item => item.category === categoria);
+		setStore({ productos: productosFiltrados });
+	} catch (error) {
+		console.error('Error al obtener productos:', error);
+	}
+};
 
 export default getState;
