@@ -37,7 +37,7 @@ export const Home = () => {
 					<CarruselInicio />
 				</div>
 				<div className="div2">
-
+					<CardPromos />
 					<CardHamburguesas />
 					<CardMilanesas />
 					<CardPescado />
@@ -45,9 +45,7 @@ export const Home = () => {
 					<CardChivito />
 					<CardVianda />
 					<CardPlato />
-					<CardBebida />
-					<CardEspecial />
-				
+					<CardBebida />	
 				</div>
 			</div>
 		</div>

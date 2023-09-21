@@ -47,15 +47,12 @@ export const CardHamburguesas = () => {
 
     return (
         <div>
-
             < div className="home" >
                 <div className="App apapa">
                     <h1>Hamburguesas</h1>
                     <Carousel responsive={responsive}>
-
                         {arrayHambur.map((item, index) => {
                             return (
-
                                 <Product key={index}
                                     id={item.id}
                                     name={item.name}
@@ -64,7 +61,6 @@ export const CardHamburguesas = () => {
                                     description={item.description}
                                     categoria={item.category}
                                 />
-
                             )
                         })}
                     </Carousel>

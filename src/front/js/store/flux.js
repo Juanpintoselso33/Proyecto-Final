@@ -12,7 +12,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			datosPrueba: [],
 			modalData: [],
 			productos: [],
-			carrito: [],
+			extrasSeleccionados: [],
 			isAuthenticated: false,
 			token: null,
 
@@ -21,18 +21,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			/* ----------</productos>--------------- */
 
-
-
-
-
-
-
-
-
-
 			message: null,
-
-			planetas: [],
 
 			demo: [
 				{
@@ -133,23 +122,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			agregarAlCarrito: (producto) => {
-				const store = getStore();
-				const productoExistente = store.carrito.find(item => item.id === producto.id);
-				if (productoExistente) {
-					productoExistente.cantidad += 1;
-				} else {
-					producto.cantidad = 1;
-					setStore({ carrito: [...store.carrito, producto] });
-				}
-			},
-
-			eliminarDelCarrito: (productoId) => {
-				const store = getStore();
-				const nuevoCarrito = store.carrito.filter(item => item.id !== productoId);
-				setStore({ carrito: nuevoCarrito });
-			},
-
 			initializeAuth: () => {
 				const token = localStorage.getItem("token");
 				const email = localStorage.getItem("email");
@@ -159,6 +131,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ isAuthenticated: true, token, email, userId });  // Usar la ID del usuario
 				}
 			},
+
 			login: async (email, password) => {
 				try {
 
@@ -200,10 +173,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ isAuthenticated: false, token: null, email: null });
 				CartStore.clearCart(); // Limpia el carrito
 			},
+
 			createOrder: async () => {
 				try {
-					const store = getStore();
-					const userId = store.userId;
+					const userId = localStorage.getItem("userId");
 
 					if (!userId) {
 						throw new Error("User ID is undefined");
@@ -218,7 +191,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const items = cartFromLocalStorage.items.map(item => ({
 						product_id: item.product_id, // Ajusta esto según la estructura del objeto item en tu carrito
-						quantity: item.quantity
+						quantity: item.quantity,
+						extras: item.extras || [] // Agregamos los extras aquí, si no existen, usamos un arreglo vacío
 					}));
 
 					const payload = {
@@ -246,6 +220,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.log('An error occurred:', error);
 				}
+			},
+
+
+			actualizarExtras: nuevosExtras => {
+				setStore({
+					extrasSeleccionados: [...nuevosExtras] // Simplemente copiamos el nuevo array de extras al estado del store
+				});
+				console.log("Extras actualizados:", nuevosExtras);
+			},
+
+
+			limpiarExtrasSeleccionados: () => {
+				setStore({
+					extrasSeleccionados: []
+				});
+				console.log("Arreglo de extras limpiado");
 			},
 
 
@@ -441,15 +431,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
-	//categoria- catalogo
-	obtenerProductosPorCategorias: async (categoria) => {
-		try {
-		  const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
-		  const productosFiltrados = response.data.filter(item => item.category === categoria);
-		  setStore({ productos: productosFiltrados });
-		} catch (error) {
-		  console.error('Error al obtener productos:', error);
-		}
-	  };
+//categoria- catalogo
+obtenerProductosPorCategorias: async (categoria) => {
+	try {
+		const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
+		const productosFiltrados = response.data.filter(item => item.category === categoria);
+		setStore({ productos: productosFiltrados });
+	} catch (error) {
+		console.error('Error al obtener productos:', error);
+	}
+};
 
 export default getState;

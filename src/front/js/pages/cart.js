@@ -32,7 +32,6 @@ export const CartView = () => {
     const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
     updatedCart.totalCost = total;
     setCart(updatedCart);
-    updateCartInLocalStorage(updatedCart);
   };
 
 

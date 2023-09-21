@@ -18,21 +18,14 @@ export const Extras_prod = () => {
     let valor = 1
 
     function sumarPro() {
-
         valor++;
-
         num.innerText = valor
-
-
-
     }
 
     function restarPro() {
-
         if (valor > 1) {
             valor--;
             num.innerText = valor
-
         }
     }
 
@@ -42,18 +35,29 @@ export const Extras_prod = () => {
     }, [store.productos]);
 
 
-
-    const handleAddToCart = (num) => {
-
+    const handleAddToCart = (num, extrasSeleccionados) => {
         const inputQuantity = num;
-
         if (!isNaN(inputQuantity) && inputQuantity > 0) {
-            console.log("Cantidad válida:", inputQuantity);  // Añadir console.log aquí
-            CartStore.addToCart(dataDetalle.id, inputQuantity, dataDetalle.price, dataDetalle.name);
+            console.log("Cantidad válida:", inputQuantity);  
+            // Agregamos el parámetro extrasSeleccionados para pasarlo al carrito
+            CartStore.addToCart(dataDetalle.id, inputQuantity, dataDetalle.price, dataDetalle.name, extrasSeleccionados);
+            actions.limpiarExtrasSeleccionados();
         } else {
-            console.log("Cantidad no válida:", inputQuantity);  // Añadir console.log aquí
+            console.log("Cantidad no válida:", inputQuantity);  
         }
     };
+
+    const manejarCambioExtra = (e, extra) => {       
+        let nuevosExtras = [...store.extrasSeleccionados]; // Hacemos una copia del estado actual    
+        if (e.target.checked) {
+            nuevosExtras.push(extra); // Añadimos el extra al array
+        } else {
+            nuevosExtras = nuevosExtras.filter(item => item.id !== extra.id); // Eliminamos el extra del array
+        }    
+        // Llamamos a la acción para actualizar el estado en el store
+        actions.actualizarExtras(nuevosExtras);
+    };
+
 
     function mover_carrito() {
         navigate("/cart")
@@ -61,9 +65,7 @@ export const Extras_prod = () => {
 
     return (
         <div>
-
             <div className="modal fade pruebahome" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
                 <div className="modal-dialog pepesq1">
                     <div className="modal-content pruebasss">
                         <div className="modal-header">
@@ -75,15 +77,11 @@ export const Extras_prod = () => {
                                 <img className="imagenDetalle" src="https://th.bing.com/th/id/R.b0413de9114bf291db0398ec898a8b47?rik=EpGjHxR4Kqr%2b5g&pid=ImgRaw&r=0" alt="" />
 
                             </div> */}
-
                             <div className="row">
                                 <div className="col div_img_comida">
                                     <img className="imagenDetalle" src={dataDetalle.url} alt="" />
                                 </div>
                                 <div className="col DetallesAgregados">
-
-
-
                                     <div className="c2_1">
                                         <div className="c2_conjunto">
                                             <div className="c2_1_1_Precio">
@@ -96,22 +94,15 @@ export const Extras_prod = () => {
                                         </div>
                                     </div>
                                     <div className="envo">
-
-
-
                                         {dataDetalle.categoria == "H" || dataDetalle.categoria == "M" || dataDetalle.categoria == "C" || dataDetalle.categoria == "P" ?
                                             <div>
                                                 <section className="layout">
                                                     <div className=" titulos_tipo">
                                                         <div><strong>Salsas extras</strong></div>
                                                         <div>Selecciones 2 maximo</div>
-
                                                     </div>
                                                     <div className="">
                                                         <ul className="Lista_Agregados  ">
-
-
-
                                                             {productDataSalsas.map((item, index) => {
                                                                 return (
                                                                     <div className="listas border-top" key={index}>
@@ -120,31 +111,21 @@ export const Extras_prod = () => {
                                                                             <br />
                                                                             {item.price}
                                                                         </div>
-
-
                                                                         <div className="form-check">
-                                                                            <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
+                                                                            <input className="form-check-input border border-dark" onChange={(e) => manejarCambioExtra(e, productDataSalsas[item.id - 1])}  type="checkbox"  value="" id="flexCheckDefault" />
                                                                         </div>
-                                                                    </div>
-                                                                )
+                                                                    </div>)
                                                             })}
                                                         </ul>
                                                     </div>
-
                                                 </section>
-
                                                 <section className="layout">
                                                     <div className=" titulos_tipo">
                                                         <div><strong>Guarniciones</strong></div>
                                                         <div>Selecciones 5 opciones maximo</div>
-
                                                     </div>
                                                     <div className="">
                                                         <ul className="Lista_Agregados  ">
-
-
-
                                                             {Guarniciones.map((item, index) => {
                                                                 return (
                                                                     <div className="listas border-top" key={index}>
@@ -153,25 +134,19 @@ export const Extras_prod = () => {
                                                                             <br />
                                                                             {item.price}
                                                                         </div>
-
-
                                                                         <div className="form-check">
-                                                                            <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
+                                                                            <input className="form-check-input border border-dark" onChange={(e) => manejarCambioExtra(e, Guarniciones[item.id - 1])} type="checkbox" value="" id="flexCheckDefault" />
                                                                         </div>
                                                                     </div>
                                                                 )
                                                             })}
                                                         </ul>
                                                     </div>
-
                                                 </section>
-
                                                 <section className="layout ">
                                                     <div className=" titulos_tipo">
                                                         <div><strong>Bebida?</strong></div>
                                                         <div>Seleccione una bebida</div>
-
                                                     </div>
                                                     <div className="">
                                                         <ul className="Lista_Agregados  ">
@@ -183,11 +158,8 @@ export const Extras_prod = () => {
                                                                             <br />
                                                                             {item.price}
                                                                         </div>
-
-
                                                                         <div className="form-check">
                                                                             <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
                                                                         </div>
                                                                     </div>
                                                                 )
@@ -202,13 +174,9 @@ export const Extras_prod = () => {
                                                     <div className=" titulos_tipo">
                                                         <div><strong>Tamaño</strong></div>
                                                         <div>Tamaño de la bebida</div>
-
                                                     </div>
                                                     <div className="">
                                                         <ul className="Lista_Agregados  ">
-
-
-
                                                             {Tamaño_bebida.map((item, index) => {
                                                                 return (
                                                                     <div className="listas border-top" key={index}>
@@ -217,36 +185,19 @@ export const Extras_prod = () => {
                                                                             <br />
                                                                             {item.price}
                                                                         </div>
-
-
                                                                         <div className="form-check">
                                                                             <input className="form-check-input border border-dark" type="checkbox" value="" id="flexCheckDefault" />
-
                                                                         </div>
                                                                     </div>
                                                                 )
                                                             })}
                                                         </ul>
                                                     </div>
-
-                                                </section> : <div>no se</div>
+                                                </section> : <div>ERROR: No se encuentran extras</div>
                                         }
-
-
-
-
-
-
                                     </div>
-
-
-
-
                                 </div>
                             </div>
-
-
-
                         </div>
                         <div className="modal-footer pruebaas">
                             <div className="wrapper">
@@ -255,9 +206,8 @@ export const Extras_prod = () => {
                                 <span className="plus" onClick={() => sumarPro()}>+</span>
                             </div>
                             {/* <button onClick={handleAddToCart()}>Add to Cart</button> */}
-
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(valor)}> Agregar y seguir comprando</button>
-                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(valor), mover_carrito() }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(valor, store.extrasSeleccionados)}> Agregar y seguir comprando</button>
+                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(valor, store.extrasSeleccionados), mover_carrito() }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
                         </div>
                     </div>
                 </div>
