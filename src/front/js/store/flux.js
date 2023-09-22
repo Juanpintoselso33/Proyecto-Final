@@ -8,7 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			/* ----------<productos>--------------- */
 
-
+			isAdmin: false,
 			datosPrueba: [],
 			modalData: [],
 			productos: [],
@@ -111,7 +111,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			addProduct: async (productData) => {
 				try {
+
+					console.log('Datos que se enviarán:', productData);
 					const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
+
+
 					if (response.status === 200 || response.status === 201) {
 						console.log('Producto agregado exitosamente:', response.data);
 					} else {
@@ -121,6 +125,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Hubo un problema con la petición:', error);
 				}
 			},
+
+
+
+
 
 			initializeAuth: () => {
 				const token = localStorage.getItem("token");
@@ -151,12 +159,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					localStorage.setItem("token", userData.access_token);
 					localStorage.setItem("email", email);
 
+					// Verifica si el usuario es administrador
+					const isAdmin = email === "admin@gmail.com" && password === "admin123";
+
 					// Actualizar el estado global
 					setStore({
 						isAuthenticated: true,
 						token: userData.access_token,
 						email,
-						userId: userData.id
+						userId: userData.id,
+						isAdmin
 					});
 
 					return true;
@@ -171,59 +183,60 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("token");
 				localStorage.removeItem("email");
 				setStore({ isAuthenticated: false, token: null, email: null });
+				setStore({ isAdmin: false });
 				CartStore.clearCart(); // Limpia el carrito
 			},
 
 			createOrder: async () => {
 				try {
-				  const userId = localStorage.getItem("userId");
-			  
-				  if (!userId) {
-					throw new Error("User ID is undefined");
-				  }
-			  
-				  CartStore.syncWithLocalStorage();  // Asegúrate de sincronizar antes de crear la orden
-				  const cartFromLocalStorage = CartStore.getCart(); // Usa el método getCart()
-			  
-				  console.log("Estado del carrito antes de crear la orden:", cartFromLocalStorage);
-			  
-				  if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
-					console.log("El carrito está vacío. No se puede crear la orden.");
-					return;
-				  }
-			  
-				  const items = cartFromLocalStorage.map(item => ({
-					product_id: item.product_id,
-					quantity: item.quantity,
-					extras: item.extras || []
-				  }));
-			  
-				  const payload = {
-					items,
-				  };
-			  
-				  const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
-				  console.log("Enviando payload:", payload);
-				  console.log("URL de la solicitud POST:", url);
-			  
-				  const response = await axios.post(url, payload, {
-					headers: {
-					  'Content-Type': 'application/json',
+					const userId = localStorage.getItem("userId");
+
+					if (!userId) {
+						throw new Error("User ID is undefined");
 					}
-				  });
-			  
-				  const data = response.data;
-			  
-				  if (data.success) {
-					console.log('Order created:', data.order);
-					CartStore.clearCart(); // Limpia el carrito usando el método de CartStore
-				  } else {
-					console.log('Order creation failed:', data.message);
-				  }
+
+					CartStore.syncWithLocalStorage();  // Asegúrate de sincronizar antes de crear la orden
+					const cartFromLocalStorage = CartStore.getCart(); // Usa el método getCart()
+
+					console.log("Estado del carrito antes de crear la orden:", cartFromLocalStorage);
+
+					if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
+						console.log("El carrito está vacío. No se puede crear la orden.");
+						return;
+					}
+
+					const items = cartFromLocalStorage.map(item => ({
+						product_id: item.product_id,
+						quantity: item.quantity,
+						extras: item.extras || []
+					}));
+
+					const payload = {
+						items,
+					};
+
+					const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
+					console.log("Enviando payload:", payload);
+					console.log("URL de la solicitud POST:", url);
+
+					const response = await axios.post(url, payload, {
+						headers: {
+							'Content-Type': 'application/json',
+						}
+					});
+
+					const data = response.data;
+
+					if (data.success) {
+						console.log('Order created:', data.order);
+						CartStore.clearCart(); // Limpia el carrito usando el método de CartStore
+					} else {
+						console.log('Order creation failed:', data.message);
+					}
 				} catch (error) {
-				  console.log('An error occurred:', error);
+					console.log('An error occurred:', error);
 				}
-			  },
+			},
 
 
 			actualizarExtras: nuevosExtras => {
@@ -287,6 +300,169 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ datosPrueba: data });
 				console.log(store.datosPrueba)
 			},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			obtenerUsuarios: async () => {
+				try {
+				  const response = await axios.get(`${process.env.BACKEND_URL}/api/users`);
+				  const usuarios = response.data;
+				  setStore({ usuarios }); // Actualiza el estado con los usuarios obtenidos
+				} catch (error) {
+				  console.error('Error al obtener usuarios:', error);
+				}
+			  },
+
+		
+
+			  eliminarUsuario: async (userId) => {
+				try {
+				  // Eliminar usuario en el backend
+				  await axios.delete(`${process.env.BACKEND_URL}/api/users/${userId}`);
+				  
+				  // Actualizar la lista de usuarios en el frontend
+				  const updatedUsuarios = store.usuarios.filter((usuario) => usuario.id !== userId);
+				  setStore({ usuarios: updatedUsuarios });
+			  
+				  console.log('Usuario eliminado exitosamente con ID:', userId);
+				} catch (error) {
+				  console.error('Error al eliminar el usuario:', error);
+				}
+			  },
+
+              eliminarProducto: async (productId) => {
+                try {
+                    await axios.delete(`${process.env.BACKEND_URL}/api/products/${productId}`);
+                    console.log('Producto eliminado exitosamente con ID:', productId);
+            
+                    // Actualiza la lista de productos en el frontend después de eliminar
+                    const store = getStore();
+                    const updatedProducts = store.productos.filter(producto => producto.id !== productId);
+                    setStore({ productos: updatedProducts });
+                } catch (error) {
+                    console.error('Error al eliminar el producto:', error);
+                }
+            },
+            
+		
+
 
 
 

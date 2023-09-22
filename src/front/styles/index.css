@@ -67,6 +67,144 @@
     z-index: 1; 
   }
 
+  .admin-menu {
+    display: flex;
+  }
+  
+  .menu {
+    padding: 10px;
+    background: #b5b3b3;
+    display: flex;
+    
+    flex-direction: column; /* Esto establece la disposición vertical */
+  }
+  
+  .menu button {
+    margin-bottom: 10px; /* Espacio entre cada botón */
+  }
+  
+  .info {
+    margin-left: 20px; /* Espacio entre el menú y la información */
+  }
+/* Estilos para la tabla */
+.table {
+    width: 80%; /* Ajusta el ancho de la tabla según tus preferencias */
+    margin: 0 auto; /* Agrega margen automático */
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .table th, .table td {
+    padding: 8px; /* Reduce el espaciado dentro de las celdas */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Estilos para la imagen en la tabla */
+  .table img {
+    width: 40px; /* Ajusta el tamaño de la imagen */
+    height: 40px;
+    object-fit: cover;
+  }
+  
+  /* Estilos para la tabla activa */
+  .tabla-categoria.active {
+   margin-bottom: 20px;
+    padding: 20px; 
+    margin-top: 20px;
+  }
 
+  .tabla-categoria {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .tabla-categoria h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .tabla-categoria table {
+    width: 100%;
+  }
+  
+  .tabla-categoria table th, .tabla-categoria table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .tabla-categoria table th {
+    font-weight: bold;
+  }
+  
+  /* Estilos para los botones de eliminar */
+  button {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  
+  /* Estilos para el menú de navegación */
+  .navbar-nav .nav-item {
+    margin-bottom: 10px;
+  }
+  
+  .navbar-nav .nav-link {
+    cursor: pointer;
+  }
+
+  no-padding{
+    padding: 0;
+  }
+
+  .form-control {
+    width: 100%; /* Otra opción es especificar un porcentaje según tu preferencia */
+    max-width: 400px; /* Ajusta el ancho máximo según tus preferencias */
+  }
+
+  .nav-item {
+    margin-bottom: 10px;
+  }
+  
+  .nav-item span {
+    cursor: pointer;
+    padding: 5px;
+    display: block;
+  }
+  
+  .nav-item.active span {
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
 
   
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .admin-menu {
+    padding: 20px;
+  }
+  
+
+ 
