@@ -120,74 +120,16 @@ def delete_user(user_id):
 
 # ----------------------------- ENDPOINTS PRODUCTOS ------------------------------------------------------------------
 
-""" # Endpoint para obtener todos los productos o agregar uno nuevo
-@api.route('/products', methods=['GET', 'POST'])
-def manage_products():
-    if request.method == 'GET':
+# Endpoint para obtener todos los productos
+@api.route('/products', methods=['GET'])
+def get_all_products():
+    try:
         products_query = Product.query.all()
         products_list = [product.serialize() for product in products_query]
         return jsonify(products_list), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
 
-    elif request.method == 'POST':
-        try:
-            data = request.json
-            new_product = Product(
-                cost=data['cost'],
-                name=data['name'],
-                description=data['description'],
-                stars=data.get('stars', None),
-                img_url=data['img_url'],
-                category=data.get('category', None)
-            )
-            db.session.add(new_product)
-            db.session.commit()
-            return jsonify({"success": True, "message": "Product added", "product": new_product.serialize()}), 201
-        except Exception as e:
-            return jsonify({"success": False, "message": str(e)}), 400
-
-
-# Endpoint para obtener, actualizar o eliminar un producto por su ID
-@api.route('/products/<int:product_id>', methods=['GET', 'PUT', 'DELETE'])
-def manage_product(product_id):
-    product = Product.query.get(product_id)
-    if product is None:
-        return jsonify({'error': 'Product not found'}), 404
-
-    if request.method == 'GET':
-        return jsonify(product.serialize()), 200
-
-    elif request.method == 'PUT':
-        try:
-            data = request.json
-            if 'cost' in data:
-                product.cost = data['cost']
-            if 'name' in data:
-                product.name = data['name']
-            if 'description' in data:
-                product.description = data['description']
-            if 'stars' in data:
-                product.stars = data['stars']
-            if 'img_url' in data:
-                product.img_url = data['img_url']
-            if 'category' in data:
-                product.category = data['category']
-            db.session.commit()
-            return jsonify({"success": True, "message": "Product updated", "product": product.serialize()}), 200
-        except Exception as e:
-            return jsonify({"success": False, "message": str(e)}), 400
-
-    elif request.method == 'DELETE':
-        try:
-            db.session.delete(product)
-            db.session.commit()
-            return jsonify({"success": True, "message": "Product deleted"}), 200
-        except Exception as e:
-            return jsonify({"success": False, "message": str(e)}), 400 """
-
-# -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
-# -------------------------- ENDPOINTS ORDER ----------------------------------
-
-  
 
 # Ver producto individual
 @api.route('/products/<int:product_id>', methods=['GET'])
@@ -221,6 +163,37 @@ def add_product():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
+# Endpoint para actualizar un producto existente por su ID
+@api.route('/products/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    try:
+        product = Product.query.get(product_id)
+        if product is None:
+            return jsonify({'error': 'Producto no encontrado'}), 404
+        
+        data = request.json
+        if 'cost' in data:
+            product.cost = data['cost']
+        if 'name' in data:
+            product.name = data['name']
+        if 'description' in data:
+            product.description = data['description']
+        if 'stars' in data:
+            product.stars = data['stars']
+        if 'img_url' in data:
+            product.img_url = data['img_url']
+        if 'category' in data:
+            product.category = data['category']
+        if 'promo' in data:
+            product.its_promo = data['promo']
+        
+        db.session.commit()
+        return jsonify({"success": True, "message": "Producto actualizado exitosamente", "product": product.serialize()}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+
 #ENDPOINT PARA TRAER PROMOS DEL BACK
 @app.route('/products', methods=['GET'])
 def get_promo_products():
@@ -233,6 +206,11 @@ def get_promo_products():
 
     # Serializar los productos y devolverlos como una lista de diccionarios
     return jsonify([product.serialize() for product in promo_products])
+
+# -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
+# -------------------------- ENDPOINTS ORDER ----------------------------------
+
+  
 
 # ENDPOINT PARA TRAER TODOS LOS EXTRAS
 @api.route('/extras', methods=['GET'])
