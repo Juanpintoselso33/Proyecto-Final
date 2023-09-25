@@ -57,7 +57,7 @@ class Product(db.Model):
     name = db.Column(db.String(40), nullable=False)
     description = db.Column(db.String(120), nullable=False)
     stars = db.Column(db.Integer)
-    img_url = db.Column(db.String(120), nullable=False)
+    img_url = db.Column(db.String(500), nullable=False)
     category = db.Column(db.String(40), nullable=True)
     its_promo = db.Column(db.Boolean(), nullable=False, default=False)
 

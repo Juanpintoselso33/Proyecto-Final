@@ -1,6 +1,5 @@
-
-export const preloadProducts = (actions) => {
-    const preloadProducts = [
+export const preloadHamburgers = (actions) => {
+    const hamburgers = [
         {
             cost: 100,
             name: 'Hamburguesa Clásica',
@@ -33,6 +32,15 @@ export const preloadProducts = (actions) => {
             img_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/NCI_Visuals_Food_Hamburger.jpg/410px-NCI_Visuals_Food_Hamburger.jpg',
             category: 'Hamburguesas'
         },
+    ];
+
+    for (const product of hamburgers) {
+        actions.addProduct(product);
+    }
+};
+
+export const preloadMilanesas = (actions) => {
+    const milanesas = [
         {
             cost: 80,
             name: 'Milanesa Simple',
@@ -65,10 +73,8 @@ export const preloadProducts = (actions) => {
             img_url: 'https://2trendies.com/hero/2023/02/milanesas-de-pollo-al-horno.jpg?width=1200&aspect_ratio=16:9',
             category: 'Milanesas'
         },
-        
     ];
-
-    for (const product of preloadProducts) {
+    for (const product of milanesas) {
         actions.addProduct(product);
     }
 };

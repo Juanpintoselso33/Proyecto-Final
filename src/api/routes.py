@@ -56,8 +56,38 @@ def register_user():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
  
- 
-# Endpoint para iniciar sesión
+@api.route('/users/<int:user_id>', methods=['PUT'])
+@jwt_required()  # Omitir si no necesitas autenticación
+def update_user(user_id):
+    try:
+        data = request.json
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({'error': 'Usuario no encontrado'}), 404
+
+        email = data.get('email')
+        password = data.get('password')
+        role = data.get('role')
+
+        if email:
+            user.email = email
+        if password:
+            user.password = password  # Asegúrate de hashear la contraseña antes de almacenarla
+        if role:
+            user.role = role
+
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'message': 'Usuario actualizado exitosamente'
+        }), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+
+
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -68,9 +98,10 @@ def login():
 
     if user and user.password == password:
         access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token, id=user.id), 200
+        return jsonify(access_token=access_token, id=user.id, role=user.role), 200  # Incluye role aquí
     else:
         return jsonify({'error': 'Invalid email or password'}), 401
+
 
 
 # Endpoint para obtener todos los usuarios
