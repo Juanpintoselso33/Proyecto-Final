@@ -218,7 +218,7 @@ export const Navbar = () => {
             </ul>
           </div>
         </div>
-        <style jsx>{`
+        <style>{`
           .hoverEffect:active {
             transform: scale(0.9);
           }
