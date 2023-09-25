@@ -4,8 +4,27 @@ import Product from "./Product.jsx";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "../../styles/Stylecard.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export const ProductList = ({ products, category }) => {
+
+  const CustomRightArrow = ({ onClick }) => {
+    return (
+      <div className="custom-arrow right" onMouseOver={onClick}>
+        <FontAwesomeIcon icon={faArrowRight} />
+      </div>
+    );
+  };
+  
+  const CustomLeftArrow = ({ onClick }) => {
+    return (
+      <div className="custom-arrow left" onMouseOver={onClick}>
+        <FontAwesomeIcon icon={faArrowLeft} />
+      </div>
+    );
+  };
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 5000, min: 4000 },
@@ -27,14 +46,16 @@ export const ProductList = ({ products, category }) => {
 
   // Filtrar productos por categoría  
   const filteredProducts = category === "Promociones"
-  ? products.filter((product) => product.itspromo)
-  : products.filter((product) => product.category === category);
+    ? products.filter((product) => product.itspromo)
+    : products.filter((product) => product.category === category);
 
   return (
     <div className="home">
       <div className="App apapa">
         <h1>{category}</h1>
-        <Carousel responsive={responsive}>
+        <Carousel responsive={responsive}
+          customLeftArrow={<CustomLeftArrow />}
+          customRightArrow={<CustomRightArrow />}>
           {filteredProducts.map((product, index) => (
             <Product
               key={product.id}

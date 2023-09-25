@@ -120,7 +120,7 @@ def delete_user(user_id):
 
 # ----------------------------- ENDPOINTS PRODUCTOS ------------------------------------------------------------------
 
-# Endpoint para obtener todos los productos o agregar uno nuevo
+""" # Endpoint para obtener todos los productos o agregar uno nuevo
 @api.route('/products', methods=['GET', 'POST'])
 def manage_products():
     if request.method == 'GET':
@@ -182,7 +182,7 @@ def manage_product(product_id):
             db.session.commit()
             return jsonify({"success": True, "message": "Product deleted"}), 200
         except Exception as e:
-            return jsonify({"success": False, "message": str(e)}), 400
+            return jsonify({"success": False, "message": str(e)}), 400 """
 
 # -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
 # -------------------------- ENDPOINTS ORDER ----------------------------------
@@ -202,28 +202,24 @@ def handle_get_product_by_id(product_id):
 @api.route('/products', methods=['POST'])
 def add_product():
     try:
-        data = request.json  # Recibir los datos en formato JSON
-
-        # Crear una nueva instancia de Product con los datos recibidos
+        data = request.json  # Recibir los datos en formato JSON        
         new_product = Product(
             cost=data['cost'],
             name=data['name'],
             description=data['description'],
-            stars=data.get('stars', None),  # Si 'stars' no se encuentra, se asume None
+            stars=data.get('stars', None), 
             img_url=data['img_url'],
-            category=data.get('category', None),  # Si 'category' no se encuentra, se asume None
-            its_promo=data.get('its_promo', False)  # Si 'its_promo' no se encuentra, se asume False
+            category=data.get('category', None),  
+            its_promo= data.get('promo')
         )
-
-        # Añadir el nuevo producto a la base de datos
+        print(new_product)
         db.session.add(new_product)
         db.session.commit()
-
+        print("Producto agregado exitosamente:", new_product.serialize())  
         return jsonify({"success": True, "message": "Product added", "product": new_product.serialize()}), 201
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
-
 
 #ENDPOINT PARA TRAER PROMOS DEL BACK
 @app.route('/products', methods=['GET'])

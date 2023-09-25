@@ -4,7 +4,7 @@ import "../../styles/home.css";
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
-import {ProductList} from "../component/ProductList.jsx"; 
+import {ProductListContainer} from "../component/ProductListContainer.jsx"; 
 
 
 
@@ -27,9 +27,10 @@ export const Home = () => {
 					<CarruselInicio />
 				</div> */}
 				<div className="div2">
-					<ProductList category="Promociones" products={store.productos} />
+					<ProductListContainer/>
+					{/* <ProductList category="Promociones" products={store.productos} />
 					<ProductList category="Hamburguesas" products={store.productos} />
-					<ProductList category="Milanesas" products={store.productos} />				
+					<ProductList category="Milanesas" products={store.productos} />				 */}
 				</div>
 			</div>
 		</div>

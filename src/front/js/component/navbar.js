@@ -8,6 +8,8 @@ import cartIcon from "../../img/cart.png";
 import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
 import "../../styles/cartDropdown.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import RegisterModal from './register';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -16,13 +18,10 @@ export const Navbar = () => {
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
-
+  const [successMessage, setSuccessMessage] = useState("");  
 
   let navigate = useNavigate();
-  const [showCartDropdown, setShowCartDropdown] = useState(false);
-  const [cartTotal, setCartTotal] = useState(0);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);  
   const [cart, setCart] = useState({ items: [], totalCost: 0 });
 
   useEffect(() => {
@@ -39,7 +38,7 @@ export const Navbar = () => {
   }, [store.isAuthenticated, store.email]);
 
   const { email, password } = formData;
- 
+
   const handleShowModal = () => {
     setShowModal(true);
   };
@@ -116,7 +115,7 @@ export const Navbar = () => {
         <div className="w-100">
           <div className="navbar-header">CARRITO EL TATIN</div>
           {store.isAdmin && (
-            <button className="nav-item  mt-2">
+            <button className="nav-item mt-2">
               <Link to="/usuarioAdmin" className="nav-link text-black p-1">
                 Administrar
               </Link>
@@ -137,15 +136,13 @@ export const Navbar = () => {
                 style={{ paddingLeft: '40px', backgroundImage: `url(${lupa})`, backgroundPosition: '10px center', backgroundRepeat: 'no-repeat' }}
               />
             </div>
-
             <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
-              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}
-              <img src={Favorito} alt="Favoritos" className="decora" width={30} />
-              <Button variant="link" className="login" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
+              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}              
+              <Button variant="link" className="login hoverEffect" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
                 <img src={login} alt="login" className="icono-login" width={30} />
                 {store.isAuthenticated ? "Cerrar sesión" : "Login"}
               </Button>
-              {!store.isAuthenticated && <Button variant="link" className="register" onClick={handleShowRegisterModal}>
+              {!store.isAuthenticated && <Button variant="link" className="register hoverEffect" onClick={handleShowRegisterModal}>
                 Register
               </Button>}
               {store.isAuthenticated &&
@@ -154,15 +151,10 @@ export const Navbar = () => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <Button variant="link" onClick={() => navigate('/cart')}>
-                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} /> {/* Icono de carrito restaurado */}
+                  <Button variant="link hoverEffect" onClick={() => navigate('/cart')}>
+                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} />
                   </Button>
-                  <div
-                    className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    key={cart.items.reduce((acc, item) => acc + item.quantity, 0)}
-                  >
+                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`}>
                     {cart && cart.items && cart.items.length > 0 ? (
                       cart.items.map((item, index) => (
                         <div className="cart-item" key={item.order_id}>
@@ -171,11 +163,15 @@ export const Navbar = () => {
                             {' x '}
                             {item.quantity}
                           </span>
-                          <button className="item-increment" onClick={() => handleIncrementNavbar(item.order_id)}>+</button>
-                          <button className="item-decrement" onClick={() => handleDecrementNavbar(item.order_id)}>-</button>
+                          <button className="item-increment" onClick={() => handleIncrementNavbar(item.order_id)}>
+                            <FontAwesomeIcon icon={faPlus} />
+                          </button>
+                          <button className="item-decrement" onClick={() => handleDecrementNavbar(item.order_id)}>
+                            <FontAwesomeIcon icon={faMinus} />
+                          </button>
                         </div>
                       ))
-                    ) : null}
+                    ) : <div className="cart-empty">El carrito está vacío.</div>}
                     {cart && cart.items && cart.items.length > 0 && (
                       <div className="cart-total">
                         Total: ${cart.totalCost}
@@ -222,7 +218,35 @@ export const Navbar = () => {
             </ul>
           </div>
         </div>
-      </nav>
+        <style jsx>{`
+          .hoverEffect:active {
+            transform: scale(0.9);
+          }
+          .hoverEffect:hover {
+            background-color: transparent !important;
+          }
+          .item-increment, .item-decrement {
+            background: transparent; /* Elimina el fondo */
+            border: none; /* Elimina el borde */
+            transition: all 0.3s ease;
+            cursor: pointer; /* Cambia el cursor a 'mano' */
+          }
+        
+          .item-increment:active, .item-decrement:active {
+            transform: scale(0.9);
+          }
+        
+          /* Elimina el efecto de foco y hover del navegador y Bootstrap */
+          .item-increment:focus, .item-increment:hover,
+          .item-decrement:focus, .item-decrement:hover {
+            background: transparent;
+            outline: none; /* Elimina el contorno al hacer foco */
+          }
+        
+        `}</style>
+      </nav>  
+
+
 
 
       <Modal show={showModal} onHide={handleCloseModal}>

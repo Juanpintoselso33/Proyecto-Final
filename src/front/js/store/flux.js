@@ -347,8 +347,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Inicializa el carrito desde localStorage
 			initializeCart: () => {
 				const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
-				setStore({ cart: storedCart });
-			},
+				if (storedCart.items.length > 0) {
+				  setStore({ cart: storedCart });
+				}
+			  },
 
 			// Guarda el carrito en localStorage
 			saveCart: () => {
