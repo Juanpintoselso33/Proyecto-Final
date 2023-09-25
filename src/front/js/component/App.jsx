@@ -38,33 +38,35 @@ export default function App() {
 
 
     <div class="col-6 text-center">
-      < div class="row " >
+      < div class="row  " >
         <div class="col-6 bg-danger">
           1 of 3
         </div>
         <div class="col-6 bg-danger">
           1 of 3
         </div>
-        <div class="col-12 bg-warning">
-          productos
-          <div className="row ">
-            <div className="row col-6 pepe2 ">
+        <div class="col-12  producto_indi">
+
+          <div className="row justify-content-between home_dentro">
+            <div className="row col-10 pepe2  pepe2 ">
               <div className="col-6 imagenP">
                 <img src="https://th.bing.com/th/id/R.033c8f01fbb84af4c5a55a3cbac42404?rik=%2bib7SrOYugiI%2bg&riu=http%3a%2f%2f1.bp.blogspot.com%2f-61BeHL1BdSo%2fTyKUcPwqfOI%2fAAAAAAAAAFA%2fr5X62fe8dRk%2fs1600%2fhamburguesa2.jpg&ehk=ro3LnT%2fFb%2fnjUfTdHupjmVvqBxsYOoorcmQnYdpuXt8%3d&risl=&pid=ImgRaw&r=0" alt="" />
               </div>
-              <div className="col-6">
-                <div className="col-12">
-                  name
-                </div >
-                <div className="col-12">
-                  detalle
-                </div >
+              <div className="col-6 d-flex padrNom_des">
+                <div className="nom_des">
+                  <div className="col-12">
+                    name
+                  </div >
+                  <div className="col-12">
+                    detalle
+                  </div >
+                </div>
                 <div className="col-12">
                   <strong>    - 2 +  </strong>
                 </div>
               </div>
             </div>
-            <div className="row col-6 pepe3">
+            <div className="row col-2 pepe3">
 
               <div className="col-12">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
