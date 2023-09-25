@@ -109,6 +109,33 @@ export const Navbar = () => {
     },
   });
 
+  const renderProfileIcon = () => {
+    const initial = store.email ? store.email.charAt(0).toUpperCase() : '';
+    return (
+      
+      <Link to="/usuarioEstandar" className="nav-link">
+        <div className="nav-item perfil-icon" style={{ marginLeft: '10px' }}/>
+          <span
+            className="perfil-inicial"
+            style={{
+              backgroundColor: '#7a7a7a',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              fontSize: '24px',
+              paddingBottom: '10px'
+            }}
+          >
+            {initial}
+          </span>
+          </Link>
+    );
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -137,7 +164,10 @@ export const Navbar = () => {
               />
             </div>
             <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
-              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}              
+              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>} 
+              <div className="perfil-icon" style={{ marginLeft: '10px' }}>
+              {store.isAuthenticated && renderProfileIcon()}
+              </div>             
               <Button variant="link" className="login hoverEffect" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
                 <img src={login} alt="login" className="icono-login" width={30} />
                 {store.isAuthenticated ? "Cerrar sesión" : "Login"}
@@ -218,7 +248,7 @@ export const Navbar = () => {
             </ul>
           </div>
         </div>
-        <style jsx>{`
+        <style>{`
           .hoverEffect:active {
             transform: scale(0.9);
           }

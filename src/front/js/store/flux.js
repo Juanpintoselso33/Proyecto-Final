@@ -228,7 +228,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						items,
 					};
 
-					const url = `${process.env.BACKEND_URL}api/user/${userId}/add_order`;
+					const url = `${process.env.BACKEND_URL}/api/user/${userId}/add_order`;
 					console.log("Enviando payload:", payload);
 					console.log("URL de la solicitud POST:", url);
 
@@ -267,7 +267,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			addExtra: async (extra) => {
 				try {
-					const response = await axios.post(process.env.BACKEND_URL + 'api/extras', extra);
+					const response = await axios.post(process.env.BACKEND_URL + '/api/extras', extra);
 
 					if (response.status === 200 || response.status === 201) {
 						console.log('Extra agregado exitosamente:', response.data);
@@ -389,6 +389,34 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ cart: updatedCart });
 				getActions().saveCart();
 			},
+
+
+
+
+
+
+
+
+
+
+
+
+
+			obtenerOrdenesUsuario: async () => {
+				try {
+				  const userId = localStorage.getItem('userId');
+				  const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
+			  
+				  if (response.data.success) {
+					setUserOrders(response.data.orders);
+				  } else {
+					console.error('Error al obtener las órdenes del usuario:', response.data.message);
+				  }
+				} catch (error) {
+				  console.error('Error al obtener las órdenes del usuario:', error);
+				}
+			  },
+			  
 
 
 
