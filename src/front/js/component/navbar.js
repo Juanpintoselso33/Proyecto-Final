@@ -22,14 +22,12 @@ export const Navbar = () => {
 
   let navigate = useNavigate();
   const [showCartDropdown, setShowCartDropdown] = useState(false);
-  const [cart, setCart] = useState({ items: [], totalCost: 0 });
   const [cartTotal, setCartTotal] = useState(0);
+  const [cart, setCart] = useState({ items: [], totalCost: 0 });
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
-    setCart(storedCart);
-  }, []);
-
+    setCart(store.cart);
+  }, [store.cart]);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -41,15 +39,7 @@ export const Navbar = () => {
   }, [store.isAuthenticated, store.email]);
 
   const { email, password } = formData;
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
+ 
   const handleShowModal = () => {
     setShowModal(true);
   };
@@ -66,8 +56,7 @@ export const Navbar = () => {
     setShowRegisterModal(false);
   };
 
-  const handleSubmit = async  (email, password) => {
-  //console.log(values.email, values.password)
+  const handleSubmit = async (email, password) => {
     let logged = await actions.login(email, password);
     if (logged) {
       setSuccessMessage("Login exitoso, cerrando ventana...");
@@ -93,46 +82,14 @@ export const Navbar = () => {
     setShowCartDropdown(false);
   };
 
-
-  const handleIncrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity + 1 };
-        console.log(`Incrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
-        return updatedItem;
-      }
-      return item;
-    });
-
-    // Calcula el precio total del carrito y actualiza el estado local
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-
-    // Actualiza el carrito en localStorage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const handleIncrementNavbar = (order_id) => {
+    actions.handleIncrement(order_id);
   };
 
-  const handleDecrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity - 1 };
-        console.log(`Decrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
-        return updatedItem;
-      }
-      return item;
-    }).filter(item => item.quantity > 0);
 
-    // Calcula el precio total del carrito y actualiza el estado local
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-
-    // Actualiza el carrito en localStorage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-  }
+  const handleDecrementNavbar = (order_id) => {
+    actions.handleDecrement(order_id);
+  };
 
   const SignupSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -200,7 +157,12 @@ export const Navbar = () => {
                   <Button variant="link" onClick={() => navigate('/cart')}>
                     <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} /> {/* Icono de carrito restaurado */}
                   </Button>
-                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <div
+                    className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    key={cart.items.reduce((acc, item) => acc + item.quantity, 0)}
+                  >
                     {cart && cart.items && cart.items.length > 0 ? (
                       cart.items.map((item, index) => (
                         <div className="cart-item" key={item.order_id}>
@@ -209,8 +171,8 @@ export const Navbar = () => {
                             {' x '}
                             {item.quantity}
                           </span>
-                          <button className="item-increment" onClick={() => handleIncrement(item.order_id)}>+</button>
-                          <button className="item-decrement" onClick={() => handleDecrement(item.order_id)}>-</button>
+                          <button className="item-increment" onClick={() => handleIncrementNavbar(item.order_id)}>+</button>
+                          <button className="item-decrement" onClick={() => handleDecrementNavbar(item.order_id)}>-</button>
                         </div>
                       ))
                     ) : null}

@@ -3,62 +3,28 @@ import { Context } from "../store/appContext";
 import { useNavigate } from 'react-router-dom';
 import Logo from "../../img/carrito.jpg";
 import Cerrar from "../../img/cerrar.png";
-import { Card } from 'react-bootstrap';
 
 export const CartView = () => {
-  const { actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [cart, setCart] = useState({ items: [], totalCost: 0 });
 
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
-    setCart(storedCart);
-  }, []);
 
-  const updateTotalCost = (items) => {
-    const total = items.reduce((acc, item) => acc + item.cost, 0);
-    return parseFloat(total.toFixed(2));
-  };
+  useEffect(() => {
+    setCart(store.cart);
+  }, [store.cart]);
+
 
   const handleIncrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        item.quantity += 1;
-        item.cost = (item.cost / (item.quantity - 1)) * item.quantity;
-      }
-      return item;
-    });
-
-    const updatedTotalCost = updateTotalCost(updatedCartItems);
-
-    const updatedCart = { ...cart, items: updatedCartItems, totalCost: updatedTotalCost };
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    actions.handleIncrement(order_id);
   };
 
   const handleDecrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id && item.quantity > 1) {
-        item.quantity -= 1;
-        item.cost = (item.cost / (item.quantity + 1)) * item.quantity;
-      }
-      return item;
-    }).filter(item => item.quantity > 0);
-
-    const updatedTotalCost = updateTotalCost(updatedCartItems);
-
-    const updatedCart = { ...cart, items: updatedCartItems, totalCost: updatedTotalCost };
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    actions.handleDecrement(order_id);
   };
 
   const removeFromCart = (order_id) => {
-    const updatedCartItems = cart.items.filter(item => item.order_id !== order_id);
-    const updatedTotalCost = updateTotalCost(updatedCartItems);
-
-    const updatedCart = { ...cart, items: updatedCartItems, totalCost: updatedTotalCost };
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    actions.removeFromCart(order_id);
   };
 
   const totalCost = cart.totalCost || 0;

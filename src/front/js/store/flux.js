@@ -1,41 +1,26 @@
-import React from 'react';
+import React from "react";
 import axios from 'axios';
-import { CartStore } from '../component/cartStore.js';
+import { preloadProducts, preloadExtras } from '../component/PreloadData.js';
+import { CartStore } from '../component/CartStore.js';
 
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			/* ----------<productos>--------------- */
-
+			cart: { items: [], totalCost: 0 },
 			isAdmin: false,
 			datosPrueba: [],
 			modalData: [],
 			productos: [],
+			extras: [],
 			extrasSeleccionados: [],
 			isAuthenticated: false,
 			token: null,
 
-
-
-
 			/* ----------</productos>--------------- */
-
-			message: null,
-
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
 		},
+
 		actions: {
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
@@ -68,18 +53,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 
+			preloadDataIfNeeded: async function () {
+				const store = getStore(); // Obtener el estado actual del flux
+
+				// Obtener los productos del localStorage si existen
+				const localStorageProductos = JSON.parse(localStorage.getItem('productos') || '[]');
+				const localStorageExtras = JSON.parse(localStorage.getItem('extras') || '[]');
+
+				if (store.productos.length === 0 && localStorageProductos.length === 0) {
+					// Si no hay datos de productos, cargarlos desde el componente PreloadComponent
+					preloadProducts(this);
+
+					// Después de cargar los datos, actualiza el estado del flux
+					const updatedStore = getStore(); // Obtener el estado actualizado
+					setStore(updatedStore); // Actualizar el estado del flux con los datos de productos cargados
+
+					// Guardar los datos de productos en el localStorage
+					localStorage.setItem('productos', JSON.stringify(updatedStore.productos));
+				}
+
+				if (store.extras.length === 0 && localStorageExtras.length === 0) {
+					// Si no hay datos de extras, cargarlos desde el componente PreloadComponent
+					preloadExtras(this);
+
+					// Después de cargar los datos, actualiza el estado del flux
+					const updatedStore = getStore(); // Obtener el estado actualizado
+					setStore(updatedStore); // Actualizar el estado del flux con los datos de extras cargados
+
+					// Guardar los datos de extras en el localStorage
+					localStorage.setItem('extras', JSON.stringify(updatedStore.extras));
+				}
+			},
 
 			/* -----------------Productos-----------------*/
 			obtenerAllProducts: async function () {
 				try {
 					let response = await fetch(process.env.BACKEND_URL + "/api/products");
 					let data = await response.json();
+
+					// Guardar los productos en la store
 					setStore({ productos: data });
-				}
 
-				catch (error) {
+					// Guardar los productos en el localStorage
+					localStorage.setItem("productos", JSON.stringify(data));
+				} catch (error) {
 					console.log(error);
-
 				}
 			},
 			/* -----------------Registro-----------------*/
@@ -111,11 +129,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			addProduct: async (productData) => {
 				try {
-
 					console.log('Datos que se enviarán:', productData);
 					const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
-
-
 					if (response.status === 200 || response.status === 201) {
 						console.log('Producto agregado exitosamente:', response.data);
 					} else {
@@ -126,10 +141,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-
-
-
-
 			initializeAuth: () => {
 				const token = localStorage.getItem("token");
 				const email = localStorage.getItem("email");
@@ -138,11 +149,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (token && email && userId) {
 					setStore({ isAuthenticated: true, token, email, userId });  // Usar la ID del usuario
 				}
+
+				getActions().initializeCart();
 			},
+
 
 			login: async (email, password) => {
 				try {
-
 					const response = await axios.post(process.env.BACKEND_URL + '/api/login', {
 						email,
 						password
@@ -159,8 +172,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					localStorage.setItem("token", userData.access_token);
 					localStorage.setItem("email", email);
 
-					// Verifica si el usuario es administrador
-					const isAdmin = email === "admin@gmail.com" && password === "admin123";
+					const isAdmin = userData && userData.role === "admin";
 
 					// Actualizar el estado global
 					setStore({
@@ -172,6 +184,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					return true;
+
 				} catch (error) {
 					console.log("Error during login:", error);
 					return false;
@@ -182,9 +195,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log("Ejecutando función logout");
 				localStorage.removeItem("token");
 				localStorage.removeItem("email");
-				setStore({ isAuthenticated: false, token: null, email: null });
+				localStorage.removeItem("cart"); // Añade esta línea para borrar el carrito del localStorage
+				setStore({ isAuthenticated: false, token: null, email: null, cart: { items: [], totalCost: 0 } }); // Limpia el carrito del estado también
 				setStore({ isAdmin: false });
-				CartStore.clearCart(); // Limpia el carrito
 			},
 
 			createOrder: async () => {
@@ -195,17 +208,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error("User ID is undefined");
 					}
 
-					CartStore.syncWithLocalStorage();  // Asegúrate de sincronizar antes de crear la orden
-					const cartFromLocalStorage = CartStore.getCart(); // Usa el método getCart()
+					// Obtén el carrito directamente desde el estado del store (Flux)
+					const cartFromStore = getStore().cart;  // Asegúrate de que `getStore()` esté definido correctamente
 
-					console.log("Estado del carrito antes de crear la orden:", cartFromLocalStorage);
+					console.log("Estado del carrito antes de crear la orden:", cartFromStore);
 
-					if (!cartFromLocalStorage || cartFromLocalStorage.length === 0) {
+					if (!cartFromStore || cartFromStore.items.length === 0) {
 						console.log("El carrito está vacío. No se puede crear la orden.");
 						return;
 					}
 
-					const items = cartFromLocalStorage.map(item => ({
+					const items = cartFromStore.items.map(item => ({
 						product_id: item.product_id,
 						quantity: item.quantity,
 						extras: item.extras || []
@@ -229,7 +242,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (data.success) {
 						console.log('Order created:', data.order);
-						CartStore.clearCart(); // Limpia el carrito usando el método de CartStore
+						actions.clearCart();  // Limpia el carrito usando el método del Flux
 					} else {
 						console.log('Order creation failed:', data.message);
 					}
@@ -245,13 +258,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				console.log("Extras actualizados:", nuevosExtras);
 			},
-
-
 			limpiarExtrasSeleccionados: () => {
 				setStore({
 					extrasSeleccionados: []
 				});
 				console.log("Arreglo de extras limpiado");
+			},
+
+			addExtra: async (extra) => {
+				try {
+					const response = await axios.post(process.env.BACKEND_URL + 'api/extras', extra);
+
+					if (response.status === 200 || response.status === 201) {
+						console.log('Extra agregado exitosamente:', response.data);
+
+						// Obtener y actualizar el estado del flux (store)
+						const store = getStore();
+						store.extras.push(response.data);
+						setStore(store);
+
+						// Guardar en localStorage
+						localStorage.setItem('extras', JSON.stringify(store.extras));
+					} else {
+						console.log('Error al agregar el extra:', response);
+					}
+				} catch (error) {
+					console.error('Hubo un problema con la petición:', error);
+				}
+			},
+
+			cargarProductosDesdeLocalStorage: () => {
+				const productosLocalStorage = localStorage.getItem('productos');
+				const productosAlmacenados = productosLocalStorage ? JSON.parse(productosLocalStorage) : [];
+
+				if (productosAlmacenados.length > 0) {
+					setStore({ productos: productosAlmacenados });
+				}
 			},
 
 
@@ -299,6 +341,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				setStore({ datosPrueba: data });
 				console.log(store.datosPrueba)
+			},
+
+
+			// Inicializa el carrito desde localStorage
+			initializeCart: () => {
+				const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
+				setStore({ cart: storedCart });
+			},
+
+			// Guarda el carrito en localStorage
+			saveCart: () => {
+				const store = getStore();
+				localStorage.setItem('cart', JSON.stringify(store.cart));
+			},
+
+			// Acción para incrementar la cantidad de un producto en el carrito
+			handleIncrement: (order_id) => {
+				const store = getStore();
+				const updatedCart = CartStore.handleIncrement(store.cart, order_id);
+				setStore({ cart: updatedCart });
+				getActions().saveCart();
+			},
+
+			// Acción para decrementar la cantidad de un producto en el carrito
+			handleDecrement: (order_id) => {
+				const store = getStore();
+				const updatedCart = CartStore.handleDecrement(store.cart, order_id);
+				setStore({ cart: updatedCart });
+				getActions().saveCart();
+			},
+
+			// Acción para añadir un producto al carrito
+			addToCart: (id, quantity, price, name, extras) => {
+				const store = getStore();
+				const updatedCart = CartStore.addToCart(store.cart, id, quantity, price, name, extras);
+				setStore({ cart: updatedCart });
+				getActions().saveCart();
+			},
+
+			// Acción para eliminar un producto del carrito
+			removeFromCart: (order_id) => {
+				const store = getStore();
+				const updatedCart = CartStore.removeFromCart(store.cart, order_id);
+				setStore({ cart: updatedCart });
+				getActions().saveCart();
 			},
 
 
@@ -422,46 +509,59 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			obtenerUsuarios: async () => {
 				try {
-				  const response = await axios.get(`${process.env.BACKEND_URL}/api/users`);
-				  const usuarios = response.data;
-				  setStore({ usuarios }); // Actualiza el estado con los usuarios obtenidos
+					const response = await axios.get(`${process.env.BACKEND_URL}/api/users`);
+					const usuarios = response.data;
+					setStore({ usuarios }); // Actualiza el estado con los usuarios obtenidos
 				} catch (error) {
-				  console.error('Error al obtener usuarios:', error);
+					console.error('Error al obtener usuarios:', error);
 				}
-			  },
+			},
 
-		
 
-			  eliminarUsuario: async (userId) => {
+
+			eliminarUsuario: async (userId) => {
 				try {
-				  // Eliminar usuario en el backend
-				  await axios.delete(`${process.env.BACKEND_URL}/api/users/${userId}`);
-				  
-				  // Actualizar la lista de usuarios en el frontend
-				  const updatedUsuarios = store.usuarios.filter((usuario) => usuario.id !== userId);
-				  setStore({ usuarios: updatedUsuarios });
-			  
-				  console.log('Usuario eliminado exitosamente con ID:', userId);
-				} catch (error) {
-				  console.error('Error al eliminar el usuario:', error);
-				}
-			  },
+					// Eliminar usuario en el backend
+					await axios.delete(`${process.env.BACKEND_URL}/api/users/${userId}`);
 
-              eliminarProducto: async (productId) => {
-                try {
-                    await axios.delete(`${process.env.BACKEND_URL}/api/products/${productId}`);
-                    console.log('Producto eliminado exitosamente con ID:', productId);
-            
-                    // Actualiza la lista de productos en el frontend después de eliminar
-                    const store = getStore();
-                    const updatedProducts = store.productos.filter(producto => producto.id !== productId);
-                    setStore({ productos: updatedProducts });
-                } catch (error) {
-                    console.error('Error al eliminar el producto:', error);
-                }
-            },
-            
-		
+					// Actualizar la lista de usuarios en el frontend
+					const updatedUsuarios = store.usuarios.filter((usuario) => usuario.id !== userId);
+					setStore({ usuarios: updatedUsuarios });
+
+					console.log('Usuario eliminado exitosamente con ID:', userId);
+				} catch (error) {
+					console.error('Error al eliminar el usuario:', error);
+				}
+			},
+
+			eliminarProducto: async (productId) => {
+				try {
+					await axios.delete(`${process.env.BACKEND_URL}/api/products/${productId}`);
+					console.log('Producto eliminado exitosamente con ID:', productId);
+
+					// Actualiza la lista de productos en el frontend después de eliminar
+					const store = getStore();
+					const updatedProducts = store.productos.filter(producto => producto.id !== productId);
+					setStore({ productos: updatedProducts });
+				} catch (error) {
+					console.error('Error al eliminar el producto:', error);
+				}
+			},
+
+			eliminarExtra: async (extraId) => {
+				try {
+					await axios.delete(`${process.env.BACKEND_URL}/api/extras/${extraId}`);
+					console.log('Extra eliminado exitosamente con ID:', extraId);
+
+					// Actualiza la lista de extras en el frontend después de eliminar
+					const store = getStore();
+					const updatedExtras = store.extras.filter(extra => extra.id !== extraId);
+					setStore({ extras: updatedExtras });
+				} catch (error) {
+					console.error('Error al eliminar el extra:', error);
+				}
+			},
+
 
 
 
