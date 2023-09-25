@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { CartStore } from './cartStore'; // Asegúrate de que la ruta sea correcta
+import { CartStore } from './CartStore'; // Asegúrate de que la ruta sea correcta
 import PropTypes from 'prop-types';
 import "../../styles/Cards1.css"
 import { Context } from "../store/appContext";
@@ -7,7 +7,6 @@ import { Context } from "../store/appContext";
 export const Product = (props) => {
   const { store, actions } = useContext(Context);
 
-  
   const handleAddToCart = () => {
     const inputQuantity = parseInt(prompt("Ingrese la cantidad de unidades:", "1"), 10);
     if (!isNaN(inputQuantity) && inputQuantity > 0) {
@@ -24,7 +23,7 @@ export const Product = (props) => {
     namex: props.name,
     pricex: props.price,
     descriptionx: props.description,
-    categoriax: props.categoria
+    categoriax: props.category
   }
 
   const enviarMensaje = () => {
@@ -38,9 +37,6 @@ export const Product = (props) => {
       <h2>{props.name}</h2>
       <p className="price">{props.price}</p>
       <p>{props.description}</p>
-      <p>
-        {/* <button onClick={handleAddToCart}>Add to Cart</button> */}
-      </p>
     </div>
   );
 };

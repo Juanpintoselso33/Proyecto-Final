@@ -1,19 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
-import { CardHamburguesas } from "../component/SecHamburguesa.jsx"
-import { CardMilanesas } from "../component/SecMilanesa.jsx"
-import { CardPescado } from "../component/SecPescado.jsx"
-import { CardPancho } from "../component/SecPancho.jsx";
-import { CardChivito } from "../component/SecChivito.jsx"
-import { CardPlato } from "../component/SecPlato.jsx"
-import { CardVianda } from "../component/SecVianda.jsx"
-import { CardBebida } from "../component/SecBebidas.jsx"
-import { CardEspecial } from "../component/SecEspecial.jsx"
-import { CardPromos } from "../component/SecPromos.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
+import {ProductListContainer} from "../component/ProductListContainer.jsx"; 
 
 
 
@@ -23,7 +14,6 @@ export const Home = () => {
 
 	useEffect(() => {
 		actions.obtenerAllProducts();
-
 	}, []);
 
 	return (
@@ -33,19 +23,14 @@ export const Home = () => {
 			</div>
 			<Extras_prod />
 			<div className="contenido">
-				<div className="div1">
+				{/* <div className="div1">
 					<CarruselInicio />
-				</div>
+				</div> */}
 				<div className="div2">
-					<CardPromos />
-					<CardHamburguesas />
-					<CardMilanesas />
-					<CardPescado />
-					<CardPancho />
-					<CardChivito />
-					<CardVianda />
-					<CardPlato />
-					<CardBebida />	
+					<ProductListContainer/>
+					{/* <ProductList category="Promociones" products={store.productos} />
+					<ProductList category="Hamburguesas" products={store.productos} />
+					<ProductList category="Milanesas" products={store.productos} />				 */}
 				</div>
 			</div>
 		</div>

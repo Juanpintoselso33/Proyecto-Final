@@ -4,6 +4,8 @@ import { Context } from '../store/appContext';
 
 export const AddProduct = () => {
   const { actions } = useContext(Context);
+
+  // Estado para los datos del producto
   const [productData, setProductData] = useState({
     cost: '',
     name: '',
@@ -12,7 +14,12 @@ export const AddProduct = () => {
     img_url: '',
     category: ''
   });
-  const [isPromo, setIsPromo] = useState(false);  // Nuevo estado para manejar si es promo o no
+
+  // Estado para el mensaje de éxito
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Estado para its_promo 
+  const [its_promo, setItsPromo] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,54 +44,45 @@ export const AddProduct = () => {
       reader.readAsDataURL(file);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!productData.cost || !productData.name || !productData.description || !productData.category) {
       alert("Por favor, completa todos los campos requeridos.");
       return;
     }
-  
-    if (!productData.img_url && !productData.img_file) {
+
+    if (!productData.img_url) {
       alert("Por favor, sube una imagen o proporciona una URL de imagen.");
       return;
     }
-  
-    // Se asegura de que el estado actual de isPromo se añade al producto
+
     const finalProductData = {
       ...productData,
-      its_promo: isPromo  // usa el mismo nombre que en la base de datos
+      promo: its_promo  // Ahora es un booleano
     };
-  
-    console.log(finalProductData);  // Añade esto para depuración
+
     actions.addProduct(finalProductData);
-  
-    // Mostrar mensaje de éxito
-    alert('Producto agregado exitosamente.');
-  
-    // Redireccionar hacia atrás
-    window.history.back();
+
+    setSuccessMessage('Producto agregado exitosamente.');
   };
+  
 
   return (
     <section className="vh-100 bg-image bg-light">
       <div className="mask d-flex align-items-center h-100 gradient-custom-3">
-
         <div className="container h-100">
-
-
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-12 col-md-9 col-lg-9 col-xl-6">
-
               <div style={{ borderRadius: '15px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                 <div className="p-5">
                   <h2 className="text-uppercase text-center mb-5">Add a Product</h2>
                   <form onSubmit={handleSubmit}>
-
                     <div className="form-outline mb-4">
                       <Link to="/usuarioAdmin" style={{ position: 'absolute', top: '20px', left: '20px' }}>
                         <button>Cerrar</button>
                       </Link>
-
                       <input type="number" name="cost" placeholder="Cost" onChange={handleChange} required className="form-control form-control-lg" />
                       <label className="form-label">Cost</label>
                     </div>
@@ -107,24 +105,25 @@ export const AddProduct = () => {
                     <div className="form-outline mb-4">
                       <select name="category" onChange={handleChange} required className="form-control form-control-lg">
                         <option value="">Select Category</option>
-                        <option value="H">Hamburguesas</option>
-                        <option value="M">Milanesas</option>
+                        <option value="Hamburguesas">Hamburguesas</option>
+                        <option value="Milanesas">Milanesas</option>
                       </select>
                       <label className="form-label">Category</label>
                     </div>
                     <div className="form-outline mb-4">
                       <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="promoOptions" id="promoTrue" value="true" onChange={() => setIsPromo(true)} />
+                        <input className="form-check-input" type="radio" name="promoOptions" id="promoTrue" value="S" onChange={() => setItsPromo(true)} />
                         <label className="form-check-label" htmlFor="promoTrue">Es Promo</label>
                       </div>
                       <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="promoOptions" id="promoFalse" value="false" onChange={() => setIsPromo(false)} />
+                        <input className="form-check-input" type="radio" name="promoOptions" id="promoFalse" value="N" onChange={() => setItsPromo(false)} />
                         <label className="form-check-label" htmlFor="promoFalse">No es Promo</label>
                       </div>
                     </div>
                     <div className="d-flex justify-content-center">
                       <button type="submit" className="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Add Product</button>
                     </div>
+                    {successMessage && <p className="text-success text-center">{successMessage}</p>} {/* Muestra el mensaje de éxito si existe */}
                   </form>
                 </div>
               </div>
@@ -134,6 +133,7 @@ export const AddProduct = () => {
       </div>
     </section>
   );
+
 };
 
 export default AddProduct;

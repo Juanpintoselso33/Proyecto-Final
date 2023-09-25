@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product, Order, OrderProduct  
+from api.models import db, User, Product, Order, OrderProduct, Extra  
 from api.utils import generate_sitemap, APIException  
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
@@ -120,7 +120,7 @@ def delete_user(user_id):
 
 # ----------------------------- ENDPOINTS PRODUCTOS ------------------------------------------------------------------
 
-# Endpoint para obtener todos los productos o agregar uno nuevo
+""" # Endpoint para obtener todos los productos o agregar uno nuevo
 @api.route('/products', methods=['GET', 'POST'])
 def manage_products():
     if request.method == 'GET':
@@ -182,7 +182,7 @@ def manage_product(product_id):
             db.session.commit()
             return jsonify({"success": True, "message": "Product deleted"}), 200
         except Exception as e:
-            return jsonify({"success": False, "message": str(e)}), 400
+            return jsonify({"success": False, "message": str(e)}), 400 """
 
 # -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
 # -------------------------- ENDPOINTS ORDER ----------------------------------
@@ -202,28 +202,24 @@ def handle_get_product_by_id(product_id):
 @api.route('/products', methods=['POST'])
 def add_product():
     try:
-        data = request.json  # Recibir los datos en formato JSON
-
-        # Crear una nueva instancia de Product con los datos recibidos
+        data = request.json  # Recibir los datos en formato JSON        
         new_product = Product(
             cost=data['cost'],
             name=data['name'],
             description=data['description'],
-            stars=data.get('stars', None),  # Si 'stars' no se encuentra, se asume None
+            stars=data.get('stars', None), 
             img_url=data['img_url'],
-            category=data.get('category', None),  # Si 'category' no se encuentra, se asume None
-            its_promo=data.get('its_promo', False)  # Si 'its_promo' no se encuentra, se asume False
+            category=data.get('category', None),  
+            its_promo= data.get('promo')
         )
-
-        # Añadir el nuevo producto a la base de datos
+        print(new_product)
         db.session.add(new_product)
         db.session.commit()
-
+        print("Producto agregado exitosamente:", new_product.serialize())  
         return jsonify({"success": True, "message": "Product added", "product": new_product.serialize()}), 201
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
-
 
 #ENDPOINT PARA TRAER PROMOS DEL BACK
 @app.route('/products', methods=['GET'])
@@ -238,6 +234,59 @@ def get_promo_products():
     # Serializar los productos y devolverlos como una lista de diccionarios
     return jsonify([product.serialize() for product in promo_products])
 
+# ENDPOINT PARA TRAER TODOS LOS EXTRAS
+@api.route('/extras', methods=['GET'])
+def get_all_extras():
+    extras = Extra.query.all()
+    if not extras:
+        return jsonify({"error": "No se encontraron extras"}), 404
+    return jsonify([extra.serialize() for extra in extras]), 200
+
+# ENDPOINT PARA TRAER UN EXTRA ESPECÍFICO
+@api.route('/extras/<int:extra_id>', methods=['GET'])
+def get_single_extra(extra_id):
+    extra = Extra.query.get(extra_id)
+    if not extra:
+        return jsonify({"error": "Extra no encontrado"}), 404
+    return jsonify(extra.serialize()), 200
+
+# ENDPOINT PARA CREAR UN NUEVO EXTRA
+@api.route('/extras', methods=['POST'])
+def create_extra():
+    data = request.json
+    new_extra = Extra(
+        name=data.get('name'),
+        price=data.get('price'),
+        type=data.get('type'),
+        categories=data.get('categories')
+    )
+    db.session.add(new_extra)
+    db.session.commit()
+    return jsonify(new_extra.serialize()), 201
+
+# ENDPOINT PARA ACTUALIZAR UN EXTRA EXISTENTE
+@api.route('/extras/<int:extra_id>', methods=['PUT'])
+def update_extra(extra_id):
+    data = request.json
+    extra = Extra.query.get(extra_id)
+    if not extra:
+        return jsonify({"error": "Extra no encontrado"}), 404
+    extra.name = data.get('name', extra.name)
+    extra.price = data.get('price', extra.price)
+    extra.type = data.get('type', extra.type)
+    extra.categories = data.get('categories', extra.categories)
+    db.session.commit()
+    return jsonify(extra.serialize()), 200
+
+# ENDPOINT PARA ELIMINAR UN EXTRA
+@api.route('/extras/<int:extra_id>', methods=['DELETE'])
+def delete_extra(extra_id):
+    extra = Extra.query.get(extra_id)
+    if not extra:
+        return jsonify({"error": "Extra no encontrado"}), 404
+    db.session.delete(extra)
+    db.session.commit()
+    return jsonify({"message": "Extra eliminado con éxito"}), 200
 
 
 
@@ -342,18 +391,26 @@ def add_order(user_id):
         new_order = Order(user_id=user_id)
         
         # Añadir los productos al pedido
-        for item_data in data['items']:  # Cambio de 'order_products' a 'items' para alinearlo con tu JSON de entrada
+        for item_data in data['items']:
             # Busca el producto en la base de datos
             product = Product.query.get(item_data['product_id'])
             if product is None:
                 return jsonify({"success": False, "message": "Product not found"}), 400
+            
+            # Busca los extras y los valida
+            extras_objects = []
+            for extra_data in item_data['extras']:
+                extra = Extra.query.get(extra_data['id'])
+                if not extra:
+                    return jsonify({"success": False, "message": f"Extra with id {extra_data['id']} not found"}), 400
+                extras_objects.append(extra)
             
             # Crea un nuevo OrderProduct y añádelo al pedido
             new_item = OrderProduct(
                 product=product,
                 product_id=item_data['product_id'],
                 quantity=item_data['quantity'],
-                extras=item_data['extras']
+                extras=extras_objects  # Ahora es una lista de objetos Extra
             )
             new_order.items.append(new_item)
         
