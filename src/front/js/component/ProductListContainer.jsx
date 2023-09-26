@@ -18,7 +18,8 @@ export const ProductListContainer = () => {
     ];
 
     // Agregar "Promociones" a la lista de categorías si hay productos en promoción
-    if (storedProducts.some(product => product.itspromo)) {
+    // y si "Promociones" aún no está en la lista
+    if (storedProducts.some(product => product.its_promo) && !uniqueCategories.includes("Promociones")) {
       uniqueCategories.push("Promociones");
     }
 

@@ -46,7 +46,7 @@ export const ProductList = ({ products, category }) => {
 
   // Filtrar productos por categoría  
   const filteredProducts = category === "Promociones"
-    ? products.filter((product) => product.itspromo)
+    ? products.filter((product) => product.its_promo)
     : products.filter((product) => product.category === category);
 
   return (

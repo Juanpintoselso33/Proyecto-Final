@@ -14,14 +14,14 @@ import RegisterModal from './register';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-export const Navbar = () => {
+export const Navbar = ({ setSeccionActiva }) => {
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");  
+  const [successMessage, setSuccessMessage] = useState("");
 
   let navigate = useNavigate();
-  const [showCartDropdown, setShowCartDropdown] = useState(false);  
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
   const [cart, setCart] = useState({ items: [], totalCost: 0 });
 
   useEffect(() => {
@@ -164,10 +164,11 @@ export const Navbar = () => {
               />
             </div>
             <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
+
               {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>} 
               <div className="perfil-icon" style={{ marginLeft: '10px' }}>
               {store.isAuthenticated && renderProfileIcon()}
-              </div>             
+              </div> 
               <Button variant="link" className="login hoverEffect" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
                 <img src={login} alt="login" className="icono-login" width={30} />
                 {store.isAuthenticated ? "Cerrar sesión" : "Login"}
@@ -226,12 +227,12 @@ export const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav mx-auto">
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Inicio")}>
                   Inicio
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/catalogo" className="nav-link">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Catalogo")}>
                   Catálogo
                 </Link>
               </li>
@@ -274,7 +275,7 @@ export const Navbar = () => {
           }
         
         `}</style>
-      </nav>  
+      </nav>
 
 
 

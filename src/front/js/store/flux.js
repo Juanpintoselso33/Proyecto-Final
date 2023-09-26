@@ -1,6 +1,6 @@
 import React from "react";
 import axios from 'axios';
-import { preloadProducts, preloadExtras } from '../component/PreloadData.js';
+import { preloadPromociones, preloadExtras, preloadHamburgers, preloadMilanesas } from '../component/PreloadData.js';
 import { CartStore } from '../component/CartStore.js';
 
 
@@ -29,7 +29,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					const resp = await fetch(process.env.BACKEND_URL + "api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
@@ -62,7 +62,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				if (store.productos.length === 0 && localStorageProductos.length === 0) {
 					// Si no hay datos de productos, cargarlos desde el componente PreloadComponent
-					preloadProducts(this);
+					preloadHamburgers(this)
+					preloadMilanesas(this)
+					preloadPromociones(this)
 
 					// Después de cargar los datos, actualiza el estado del flux
 					const updatedStore = getStore(); // Obtener el estado actualizado
@@ -88,7 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			/* -----------------Productos-----------------*/
 			obtenerAllProducts: async function () {
 				try {
-					let response = await fetch(process.env.BACKEND_URL + "/api/products");
+					let response = await fetch(process.env.BACKEND_URL + "api/products");
 					let data = await response.json();
 
 					// Guardar los productos en la store
@@ -105,7 +107,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Funcion para dar de alta registros
 			registerUser: async (formData) => {
 				try {
-					const response = await axios.post(process.env.BACKEND_URL + '/api/register', formData);
+					const response = await axios.post(process.env.BACKEND_URL + 'api/register', formData);
 
 					if (response.status === 200 || response.status === 201) {
 						console.log('Registro exitoso:', response.data);
@@ -130,7 +132,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			addProduct: async (productData) => {
 				try {
 					console.log('Datos que se enviarán:', productData);
-					const response = await axios.post(process.env.BACKEND_URL + '/api/products', productData);
+					const response = await axios.post(process.env.BACKEND_URL + 'api/products', productData);
 					if (response.status === 200 || response.status === 201) {
 						console.log('Producto agregado exitosamente:', response.data);
 					} else {
@@ -156,7 +158,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			login: async (email, password) => {
 				try {
-					const response = await axios.post(process.env.BACKEND_URL + '/api/login', {
+					const response = await axios.post(process.env.BACKEND_URL + 'api/login', {
 						email,
 						password
 					});
@@ -174,13 +176,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const isAdmin = userData && userData.role === "admin";
 
+					// Depuración: Imprimir los valores para verificar
+					console.log("Valor de userData.role:", userData.role);
+					console.log("Valor de isAdmin:", isAdmin);
+
+					// Guardar el valor de isAdmin como una cadena en localStorage
+					localStorage.setItem("isAdmin", isAdmin.toString());
+
 					// Actualizar el estado global
 					setStore({
 						isAuthenticated: true,
 						token: userData.access_token,
 						email,
 						userId: userData.id,
-						isAdmin
+						isAdmin  // Asegúrate de que esto actualiza correctamente tu estado global
 					});
 
 					return true;
@@ -193,13 +202,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			logout: () => {
 				console.log("Ejecutando función logout");
+
+				// Eliminar elementos del localStorage
 				localStorage.removeItem("token");
 				localStorage.removeItem("email");
-				localStorage.removeItem("cart"); // Añade esta línea para borrar el carrito del localStorage
-				setStore({ isAuthenticated: false, token: null, email: null, cart: { items: [], totalCost: 0 } }); // Limpia el carrito del estado también
-				setStore({ isAdmin: false });
-			},
+				localStorage.removeItem("cart");
+				localStorage.removeItem("isAdmin");  // Añadir esta línea para borrar isAdmin del localStorage
 
+				// Actualizar el estado global para limpiar la autenticación y el carrito
+				setStore({
+					isAuthenticated: false,
+					token: null,
+					email: null,
+					userId: null, // Añadir esto si también almacenas userId en el estado global
+					cart: { items: [], totalCost: 0 },
+					isAdmin: false  // Añadir esto para actualizar el estado de isAdmin
+				});
+			},
+			
 			createOrder: async () => {
 				try {
 					const userId = localStorage.getItem("userId");
@@ -318,7 +338,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			DataModalDetalle: (data) => {
 				const store = getStore();
 				const datosModal = [{}]
-
 				setStore({
 					modalData: {
 						id: data.idx,
@@ -327,30 +346,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 						price: data.pricex,
 						description: data.descriptionx,
 						categoria: data.categoriax
-
 					}
 				});
-
 			},
-
-
-
-			Prueba1: (data) => {
-				const store = getStore();
-				const datosModal = []
-
-				setStore({ datosPrueba: data });
-				console.log(store.datosPrueba)
-			},
-
 
 			// Inicializa el carrito desde localStorage
 			initializeCart: () => {
 				const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
 				if (storedCart.items.length > 0) {
-				  setStore({ cart: storedCart });
+					setStore({ cart: storedCart });
 				}
-			  },
+			},
 
 			// Guarda el carrito en localStorage
 			saveCart: () => {
@@ -388,6 +394,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const updatedCart = CartStore.removeFromCart(store.cart, order_id);
 				setStore({ cart: updatedCart });
 				getActions().saveCart();
+			},
+
+			actualizarUsuario: async (userId, updatedData) => {
+				try {
+					const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, updatedData);
+
+					if (response.status === 200) {
+						console.log('Usuario actualizado exitosamente:', response.data);
+
+						// Actualizar el estado de Flux si es necesario
+						const store = getStore();
+						const index = store.usuarios.findIndex(usuario => usuario.id === userId);
+
+						if (index !== -1) {
+							store.usuarios[index] = response.data;
+							setStore({ usuarios: [...store.usuarios] });
+						}
+
+					} else {
+						console.log('Error al actualizar el usuario:', response);
+					}
+				} catch (error) {
+					console.error('Hubo un problema con la petición:', error);
+				}
 			},
 
 
@@ -539,7 +569,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			obtenerUsuarios: async () => {
 				try {
-					const response = await axios.get(`${process.env.BACKEND_URL}/api/users`);
+					const response = await axios.get(`${process.env.BACKEND_URL}api/users`);
 					const usuarios = response.data;
 					setStore({ usuarios }); // Actualiza el estado con los usuarios obtenidos
 				} catch (error) {
@@ -552,7 +582,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			eliminarUsuario: async (userId) => {
 				try {
 					// Eliminar usuario en el backend
-					await axios.delete(`${process.env.BACKEND_URL}/api/users/${userId}`);
+					await axios.delete(`${process.env.BACKEND_URL}api/users/${userId}`);
 
 					// Actualizar la lista de usuarios en el frontend
 					const updatedUsuarios = store.usuarios.filter((usuario) => usuario.id !== userId);
@@ -566,7 +596,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			eliminarProducto: async (productId) => {
 				try {
-					await axios.delete(`${process.env.BACKEND_URL}/api/products/${productId}`);
+					await axios.delete(`${process.env.BACKEND_URL}api/products/${productId}`);
 					console.log('Producto eliminado exitosamente con ID:', productId);
 
 					// Actualiza la lista de productos en el frontend después de eliminar
@@ -580,7 +610,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			eliminarExtra: async (extraId) => {
 				try {
-					await axios.delete(`${process.env.BACKEND_URL}/api/extras/${extraId}`);
+					await axios.delete(`${process.env.BACKEND_URL}api/extras/${extraId}`);
 					console.log('Extra eliminado exitosamente con ID:', extraId);
 
 					// Actualiza la lista de extras en el frontend después de eliminar
@@ -743,7 +773,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 //categoria- catalogo
 obtenerProductosPorCategorias: async (categoria) => {
 	try {
-		const response = await axios.get(`${process.env.BACKEND_URL}/api/products`);
+		const response = await axios.get(`${process.env.BACKEND_URL}api/products`);
 		const productosFiltrados = response.data.filter(item => item.category === categoria);
 		setStore({ productos: productosFiltrados });
 	} catch (error) {
