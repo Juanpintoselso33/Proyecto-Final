@@ -1,53 +1,38 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
-import { CardHamburguesas } from "../component/SecHamburguesa.jsx"
-import { CardMilanesas } from "../component/SecMilanesa.jsx"
-import { CardPescado } from "../component/SecPescado.jsx"
-import { CardPancho } from "../component/SecPancho.jsx";
-import { CardChivito } from "../component/SecChivito.jsx"
-import { CardPlato } from "../component/SecPlato.jsx"
-import { CardVianda } from "../component/SecVianda.jsx"
-import { CardBebida } from "../component/SecBebidas.jsx"
-import { CardEspecial } from "../component/SecEspecial.jsx"
-import { CardPromos } from "../component/SecPromos.jsx"
 import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
+import { ProductListContainer } from "../component/ProductListContainer.jsx";
 
 
 
 export const Home = () => {
-	const { store, actions } = useContext(Context);
 
+	const { store, actions } = useContext(Context);
+	const [seccionActiva, setSeccionActiva] = useState("Inicio"); // Puedes inicializarlo con el nombre de la sección que quieres que se muestre primero
 
 	useEffect(() => {
 		actions.obtenerAllProducts();
-
 	}, []);
 
 	return (
 		<div className="text-center mt-5">
-			<div className="NANA">
-				<Navbar />
-			</div>
 			<Extras_prod />
-			<div className="contenido">
-				<div className="div1">
+			<div className="NANA mb-5">
+				<Navbar setSeccionActiva={setSeccionActiva} />
+			</div>
+			{seccionActiva === "Inicio" && (
+				<div className="Inicio">
 					<CarruselInicio />
 				</div>
-				<div className="div2">
-					<CardPromos />
-					<CardHamburguesas />
-					<CardMilanesas />
-					<CardPescado />
-					<CardPancho />
-					<CardChivito />
-					<CardVianda />
-					<CardPlato />
-					<CardBebida />	
+			)}
+			{seccionActiva === "Catalogo" && (
+				<div className="Catalogo">
+					<ProductListContainer />					
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

@@ -10,18 +10,12 @@ import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 // import { Navbar } from "./component/navbar";
 import { Catalogo } from "./component/catalogo";
-
 import { Footer } from "./component/footer";
-import { CardMultiple } from "./component/CardMultipleSLider.jsx"
-import { CardHamburguesas } from "./component/SecHamburguesa.jsx"
-import { CardMilanesas } from "./component/SecMilanesa.jsx"
-import { CardPromos } from "./component/SecPromos.jsx"
 import { AddProduct } from "./pages/addProduct"
 import { AddUsuario } from "./pages/addUsuario"
 import { CartView } from "./pages/cart"
-import { PreloadComponent } from './component/preloadProducts';
-import { UsuarioAdmin } from './component/usuarioAdmin';
-import App from "./component/App.jsx";
+import  {UsuarioAdmin} from  './component/usuarioAdmin';
+import  {UsuarioEstandar} from  './component/usuarioEstandar';
 
 
 
@@ -41,28 +35,18 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <PreloadComponent />
                     <Routes>
                         <Route element={<Home />} path="/" />
-                        <Route element={<Demo />} path="/demo" />
-
-                        <Route element={<Single />} path="/single/:theid" />
-
-                        <Route element={<h1>Not found!</h1>} />
-                        <Route element={<CardMultiple />} path="/prueba1" />
-                        <Route element={<CardHamburguesas />} path="/prueba2" />
-                        <Route element={<CardMilanesas />} path="/prueba3" />
-                        <Route element={<CardPromos />} path="/prueba4" />
-                        <Route element={<AddProduct />} path="/addProduct" />
-                        <Route element={<AddUsuario />} path="/addUsuario" />
-                        <Route element={<CartView />} path="/cart" />
-                        <Route element={<Catalogo />} path="/catalogo" />
-                        <Route element={<UsuarioAdmin />} path="/usuarioAdmin" />
-                        <Route element={<App />} path="/prueba1122" />
-
-
-                    </Routes>
-
+                        <Route element={<Demo />} path="/demo" />                       
+                        <Route element={<Single />} path="/single/:theid" />            
+                        <Route element={<h1>Not found!</h1>} />                       
+                        <Route element={<AddProduct />} path="/addProduct"/>
+                        <Route element={<AddUsuario />} path="/addUsuario"/>
+                        <Route element={<CartView />} path="/cart"/>
+                        <Route element={<Catalogo />} path="/catalogo"/>
+                        <Route element={<UsuarioAdmin />} path="/usuarioAdmin"/>    
+                        <Route element={<UsuarioEstandar />} path="/usuarioEstandar"/>
+                    </Routes>                   
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>

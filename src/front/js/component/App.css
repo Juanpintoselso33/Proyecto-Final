@@ -1,9 +1,11 @@
 #root {
-  display: flex;
+  display: flex ;
+  ;
   align-items: center;
 }
 
 body {
+   display: none; 
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -12,6 +14,11 @@ body {
   align-content: center;
   height: 100vh;
   width: 100vw;
+  padding: 50px;
+  background-color: #f6f6f6;
+  /* background-image: url("https://i.pinimg.com/736x/63/6e/2b/636e2bacb69ec2fa4a38d2701417f866.jpg"); */
+  /* -webkit-scrollbar; */
+  
 }
 
 form {
@@ -22,6 +29,7 @@ form {
   border-radius: 7px;
   padding: 40px;
   max-width: 100%;
+  background: white;
 }
 
 
@@ -114,6 +122,7 @@ button:disabled {
   transform-origin: 0px 10.2px;
   -webkit-animation: loading 2s infinite ease;
   animation: loading 2s infinite ease;
+  background: white;
 }
 
 @keyframes loading {
@@ -228,10 +237,11 @@ input[ type="number"]{
   width: 100%;
 }
 
-.body_home{
+/* .body_home{
   padding: 50px;
   background-color: #f6f6f6;
-}
+ background-image: url("https://th.bing.com/th/id/OIP.i7icu-kL4-8mDvVv4sn2NgHaE8?pid=ImgDet&rs=1");
+} */
 
 .detalle_com{
   text-align: initial;
@@ -257,10 +267,11 @@ button{
 }
 
 .div_izquierda{
-  display: flex;
-  justify-content: end;
+    /* display: flex; */
+   /*  justify-content: end; */
+    height: 85vh;
+    overflow: scroll;
 }
-
 
 .Titulo_Pr{
   font-size: 20px;
@@ -293,7 +304,7 @@ button{
   background: #fff;
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  pointer-events: ;
+  /* pointer-events: ;  */
 }
 
 .wrapper span{
@@ -351,7 +362,7 @@ button{
 
 .contenedor_productos{
 
-  border: 1px solid #d0bbbb;
+  /* border: 1px solid #d0bbbb; */
   overflow: scroll;
   height: 350px;
 }
@@ -365,4 +376,52 @@ button{
     margin-top: calc(-1 * var(--bs-gutter-y));
     margin-right: calc(-.5 * var(--bs-gutter-x));
     margin-left: 0 !important;
+}
+
+
+.contenedor_T_izquierda{
+
+  border: 1px solid #d0bbbb;
+}
+
+
+.cont_Sub{
+  height: 100px;
+  border-top: 1px solid #d0bbbb;
+  margin-top: 10px;
+  background: white;
+}
+
+.row.cont_Sub_1{
+  margin-top: 10px;
+}
+
+.price_Sub{
+  text-align: center;
+}
+
+.cont_total{
+ /* margin-top: 5px; */
+  
+    border-top: 1px solid #d0bbbb;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.title_T {
+  display: flex;
+  text-align: center;
+  align-items: center;
+}
+
+.input-group{
+  padding-bottom: 10px;
+}
+
+.price_code {
+  text-align: -webkit-center;
+}
+
+#Input_Total{
+  pointer-events: none
 }

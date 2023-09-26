@@ -8,28 +8,25 @@ import cartIcon from "../../img/cart.png";
 import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
 import "../../styles/cartDropdown.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import RegisterModal from './register';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-export const Navbar = () => {
+export const Navbar = ({ setSeccionActiva }) => {
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
-
 
   let navigate = useNavigate();
   const [showCartDropdown, setShowCartDropdown] = useState(false);
   const [cart, setCart] = useState({ items: [], totalCost: 0 });
-  const [cartTotal, setCartTotal] = useState(0);
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
-    setCart(storedCart);
-  }, []);
-
+    setCart(store.cart);
+  }, [store.cart]);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -41,14 +38,6 @@ export const Navbar = () => {
   }, [store.isAuthenticated, store.email]);
 
   const { email, password } = formData;
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
 
   const handleShowModal = () => {
     setShowModal(true);
@@ -66,8 +55,7 @@ export const Navbar = () => {
     setShowRegisterModal(false);
   };
 
-  const handleSubmit = async  (email, password) => {
-  //console.log(values.email, values.password)
+  const handleSubmit = async (email, password) => {
     let logged = await actions.login(email, password);
     if (logged) {
       setSuccessMessage("Login exitoso, cerrando ventana...");
@@ -93,46 +81,14 @@ export const Navbar = () => {
     setShowCartDropdown(false);
   };
 
-
-  const handleIncrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity + 1 };
-        console.log(`Incrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
-        return updatedItem;
-      }
-      return item;
-    });
-
-    // Calcula el precio total del carrito y actualiza el estado local
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-
-    // Actualiza el carrito en localStorage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const handleIncrementNavbar = (order_id) => {
+    actions.handleIncrement(order_id);
   };
 
-  const handleDecrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity - 1 };
-        console.log(`Decrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
-        return updatedItem;
-      }
-      return item;
-    }).filter(item => item.quantity > 0);
 
-    // Calcula el precio total del carrito y actualiza el estado local
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-
-    // Actualiza el carrito en localStorage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-  }
+  const handleDecrementNavbar = (order_id) => {
+    actions.handleDecrement(order_id);
+  };
 
   const SignupSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -153,13 +109,40 @@ export const Navbar = () => {
     },
   });
 
+  const renderProfileIcon = () => {
+    const initial = store.email ? store.email.charAt(0).toUpperCase() : '';
+    return (
+      
+      <Link to="/usuarioEstandar" className="nav-link">
+        <div className="nav-item perfil-icon" style={{ marginLeft: '10px' }}/>
+          <span
+            className="perfil-inicial"
+            style={{
+              backgroundColor: '#7a7a7a',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              fontSize: '24px',
+              paddingBottom: '10px'
+            }}
+          >
+            {initial}
+          </span>
+          </Link>
+    );
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
         <div className="w-100">
           <div className="navbar-header">CARRITO EL TATIN</div>
           {store.isAdmin && (
-            <button className="nav-item  mt-2">
+            <button className="nav-item mt-2">
               <Link to="/usuarioAdmin" className="nav-link text-black p-1">
                 Administrar
               </Link>
@@ -180,15 +163,17 @@ export const Navbar = () => {
                 style={{ paddingLeft: '40px', backgroundImage: `url(${lupa})`, backgroundPosition: '10px center', backgroundRepeat: 'no-repeat' }}
               />
             </div>
-
             <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
-              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}
-              <img src={Favorito} alt="Favoritos" className="decora" width={30} />
-              <Button variant="link" className="login" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
+
+              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>} 
+              <div className="perfil-icon" style={{ marginLeft: '10px' }}>
+              {store.isAuthenticated && renderProfileIcon()}
+              </div> 
+              <Button variant="link" className="login hoverEffect" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
                 <img src={login} alt="login" className="icono-login" width={30} />
                 {store.isAuthenticated ? "Cerrar sesión" : "Login"}
               </Button>
-              {!store.isAuthenticated && <Button variant="link" className="register" onClick={handleShowRegisterModal}>
+              {!store.isAuthenticated && <Button variant="link" className="register hoverEffect" onClick={handleShowRegisterModal}>
                 Register
               </Button>}
               {store.isAuthenticated &&
@@ -197,10 +182,10 @@ export const Navbar = () => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <Button variant="link" onClick={() => navigate('/cart')}>
-                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} /> {/* Icono de carrito restaurado */}
+                  <Button variant="link hoverEffect" onClick={() => navigate('/cart')}>
+                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} />
                   </Button>
-                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`}>
                     {cart && cart.items && cart.items.length > 0 ? (
                       cart.items.map((item, index) => (
                         <div className="cart-item" key={item.order_id}>
@@ -209,11 +194,15 @@ export const Navbar = () => {
                             {' x '}
                             {item.quantity}
                           </span>
-                          <button className="item-increment" onClick={() => handleIncrement(item.order_id)}>+</button>
-                          <button className="item-decrement" onClick={() => handleDecrement(item.order_id)}>-</button>
+                          <button className="item-increment" onClick={() => handleIncrementNavbar(item.order_id)}>
+                            <FontAwesomeIcon icon={faPlus} />
+                          </button>
+                          <button className="item-decrement" onClick={() => handleDecrementNavbar(item.order_id)}>
+                            <FontAwesomeIcon icon={faMinus} />
+                          </button>
                         </div>
                       ))
-                    ) : null}
+                    ) : <div className="cart-empty">El carrito está vacío.</div>}
                     {cart && cart.items && cart.items.length > 0 && (
                       <div className="cart-total">
                         Total: ${cart.totalCost}
@@ -238,12 +227,12 @@ export const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav mx-auto">
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Inicio")}>
                   Inicio
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/catalogo" className="nav-link">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Catalogo")}>
                   Catálogo
                 </Link>
               </li>
@@ -260,7 +249,35 @@ export const Navbar = () => {
             </ul>
           </div>
         </div>
+        <style>{`
+          .hoverEffect:active {
+            transform: scale(0.9);
+          }
+          .hoverEffect:hover {
+            background-color: transparent !important;
+          }
+          .item-increment, .item-decrement {
+            background: transparent; /* Elimina el fondo */
+            border: none; /* Elimina el borde */
+            transition: all 0.3s ease;
+            cursor: pointer; /* Cambia el cursor a 'mano' */
+          }
+        
+          .item-increment:active, .item-decrement:active {
+            transform: scale(0.9);
+          }
+        
+          /* Elimina el efecto de foco y hover del navegador y Bootstrap */
+          .item-increment:focus, .item-increment:hover,
+          .item-decrement:focus, .item-decrement:hover {
+            background: transparent;
+            outline: none; /* Elimina el contorno al hacer foco */
+          }
+        
+        `}</style>
       </nav>
+
+
 
 
       <Modal show={showModal} onHide={handleCloseModal}>
