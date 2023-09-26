@@ -60,6 +60,8 @@ class Product(db.Model):
     img_url = db.Column(db.String(500), nullable=False)
     category = db.Column(db.String(40), nullable=True)
     its_promo = db.Column(db.Boolean(), nullable=False, default=False)
+    its_daily_menu = db.Column(db.Boolean(), nullable=False, default=False)
+
 
     order_products = db.relationship('OrderProduct', back_populates='product')
 
@@ -75,7 +77,8 @@ class Product(db.Model):
             'stars': self.stars,
             'img_url': self.img_url,
             'category': self.category,
-            'its_promo':  self.its_promo
+            'its_promo':  self.its_promo,
+            'its_daily_menu':  self.its_daily_menu
         }
 
 class Order(db.Model):

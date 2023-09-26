@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import 'react-multi-carousel/lib/styles.css';
 import "../../styles/Stylecard.css";
-import { CartStore } from './CartStore'; // Asegúrate de que la ruta sea correcta
 import { useNavigate } from "react-router-dom";
 
 export const Extras_prod = () => {

@@ -183,7 +183,8 @@ def add_product():
             stars=data.get('stars', None), 
             img_url=data['img_url'],
             category=data.get('category', None),  
-            its_promo= data.get('promo')
+            its_promo= data.get('promo', False),
+            its_daily_menu= data.get('daily_menu', False)
         )
         print(new_product)
         db.session.add(new_product)
@@ -216,7 +217,7 @@ def update_product(product_id):
         if 'category' in data:
             product.category = data['category']
         if 'promo' in data:
-            product.its_promo = data['promo']
+            product.its_promo = data['promo']        
         
         db.session.commit()
         return jsonify({"success": True, "message": "Producto actualizado exitosamente", "product": product.serialize()}), 200
@@ -224,6 +225,43 @@ def update_product(product_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
+# ENDPOINT PARA TRAER MENÚ DEL DÍA DEL BACK
+@app.route('/daily_menu', methods=['GET'])
+def get_daily_menu():
+    # Consulta para encontrar todos los productos con "its_daily_menu" como verdadero
+    daily_menu_products = Product.query.filter_by(its_daily_menu=True).all()
+
+    # Verificar si se encontraron productos para el menú del día
+    if not daily_menu_products:
+        return jsonify({"error": "No se encontraron productos para el menú del día"}), 404
+
+    # Serializar los productos y devolverlos como una lista de diccionarios
+    return jsonify([product.serialize() for product in daily_menu_products])
+
+# Endpoint para actualizar el menú del día por su ID
+@app.route('/daily_menu/<int:product_id>', methods=['PUT'])
+def put_daily_menu(product_id):
+    try:
+        # Obtener el producto por su ID
+        product = Product.query.get(product_id)
+        if product is None:
+            return jsonify({'error': 'Producto no encontrado'}), 404
+
+        # Establecer todos los productos con "its_daily_menu" como falso
+        all_products = Product.query.all()
+        for p in all_products:
+            p.its_daily_menu = False
+
+        # Establecer el producto seleccionado como el menú del día
+        product.its_daily_menu = True
+
+        # Guardar los cambios en la base de datos
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Menú del día actualizado exitosamente", "daily_menu": product.serialize()}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
 
 #ENDPOINT PARA TRAER PROMOS DEL BACK
 @app.route('/products', methods=['GET'])
