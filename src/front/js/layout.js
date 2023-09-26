@@ -15,6 +15,7 @@ import { AddProduct } from "./pages/addProduct"
 import { AddUsuario } from "./pages/addUsuario"
 import { CartView } from "./pages/cart"
 import  {UsuarioAdmin} from  './component/usuarioAdmin';
+import  {UsuarioEstandar} from  './component/usuarioEstandar';
 
 
 
@@ -44,6 +45,7 @@ const Layout = () => {
                         <Route element={<CartView />} path="/cart"/>
                         <Route element={<Catalogo />} path="/catalogo"/>
                         <Route element={<UsuarioAdmin />} path="/usuarioAdmin"/>    
+                        <Route element={<UsuarioEstandar />} path="/usuarioEstandar"/>
                     </Routes>                   
                     <Footer />
                 </ScrollToTop>
