@@ -5,7 +5,7 @@ export const preloadHamburgers = (actions) => {
             name: 'Hamburguesa Clásica',
             description: 'Carne, lechuga, y tomate',
             stars: 4,
-            img_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/NCI_Visuals_Food_Hamburger.jpg/410px-NCI_Visuals_Food_Hamburger.jpg',
+            img_url: 'https://upload.mixerbox.com/01HB79HB1HNPSAYG0174A5YJ5H',
             category: 'Hamburguesas'
         },
         {
@@ -13,7 +13,7 @@ export const preloadHamburgers = (actions) => {
             name: 'Hamburguesa Deluxe',
             description: 'Carne, bacon, queso y cebolla caramelizada',
             stars: 5,
-            img_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/NCI_Visuals_Food_Hamburger.jpg/410px-NCI_Visuals_Food_Hamburger.jpg',
+            img_url: 'https://upload.mixerbox.com/01HB79HSGXXQ9BT85E0T9DNM99',
             category: 'Hamburguesas'
         },
         {
@@ -21,7 +21,7 @@ export const preloadHamburgers = (actions) => {
             name: 'Hamburguesa Vegana',
             description: 'Hamburguesa a base de plantas',
             stars: 4,
-            img_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/NCI_Visuals_Food_Hamburger.jpg/410px-NCI_Visuals_Food_Hamburger.jpg',
+            img_url: 'https://upload.mixerbox.com/01HB79J6XX6Y9KGME2NV9RGWFP',
             category: 'Hamburguesas'
         },
         {
@@ -29,7 +29,7 @@ export const preloadHamburgers = (actions) => {
             name: 'Hamburguesa Triple',
             description: 'Tres capas de carne',
             stars: 5,
-            img_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/NCI_Visuals_Food_Hamburger.jpg/410px-NCI_Visuals_Food_Hamburger.jpg',
+            img_url: 'https://upload.mixerbox.com/01HB79JX1SSN3PJEJJ3HVHG3FT',
             category: 'Hamburguesas'
         },
     ];
@@ -39,6 +39,59 @@ export const preloadHamburgers = (actions) => {
     }
 };
 
+export const preloadPromociones = (actions) => {
+    const promociones = [
+        {
+            cost: 180,
+            name: 'Promo Hamburguesa Clásica',
+            description: 'Hamburguesa Clásica + Papas Fritas',
+            stars: 4,
+            img_url: 'https://upload.mixerbox.com/01HB791CWYNKQ3PF5RV36MKRJB',
+            category: 'Hamburguesas',
+            promo: true
+        },
+        {
+            cost: 190,
+            name: 'Promo Milanesa Simple',
+            description: 'Milanesa Simple + Bebida',
+            stars: 4,
+            img_url: 'https://upload.mixerbox.com/01HB793YZTXCAQZXCC8ATEE2SP',
+            category: 'Hamburguesas',
+            promo: true
+        },
+        {
+            cost: 260,
+            name: 'Promo Hamburguesa Deluxe',
+            description: 'Hamburguesa Deluxe + Papas Fritas + Bebida',
+            stars: 5,
+            img_url: 'https://upload.mixerbox.com/01HB7947XKN5GZRRV65HX9SY51',
+            category: 'Hamburguesas',
+            promo: true
+        },
+        {
+            cost: 310,
+            name: 'Promo Milanesa Napolitana',
+            description: 'Milanesa Napolitana + Papas Fritas',
+            stars: 5,
+            img_url: 'https://upload.mixerbox.com/01HB7956X8C1B8B4SEFKB14N5B',
+            category: 'Milanesas',
+            promo: true
+        },
+        {
+            cost: 350,
+            name: 'Promo Hamburguesa Triple',
+            description: 'Hamburguesa Triple + Papas Fritas + Bebida',
+            stars: 5,
+            img_url: 'https://upload.mixerbox.com/01HB795M61JC51V3J8MSYW24H8',
+            category: 'Milanesas',
+            promo: true
+        },
+    ];
+
+    for (const promo of promociones) {
+        actions.addProduct(promo);
+    }
+};
 export const preloadMilanesas = (actions) => {
     const milanesas = [
         {
@@ -46,7 +99,7 @@ export const preloadMilanesas = (actions) => {
             name: 'Milanesa Simple',
             description: 'Milanesa de carne',
             stars: 4,
-            img_url: 'https://2trendies.com/hero/2023/02/milanesas-de-pollo-al-horno.jpg?width=1200&aspect_ratio=16:9',
+            img_url: 'https://upload.mixerbox.com/01HB79BZ6PSC6CMZXCF5E61P4Y',
             category: 'Milanesas'
         },
         {
@@ -54,7 +107,7 @@ export const preloadMilanesas = (actions) => {
             name: 'Milanesa Napolitana',
             description: 'Milanesa con jamón y queso',
             stars: 5,
-            img_url: 'https://2trendies.com/hero/2023/02/milanesas-de-pollo-al-horno.jpg?width=1200&aspect_ratio=16:9',
+            img_url: 'https://upload.mixerbox.com/01HB79CC2RNVGXZWZWPWCSAKK5',
             category: 'Milanesas'
         },
         {
@@ -62,7 +115,7 @@ export const preloadMilanesas = (actions) => {
             name: 'Milanesa de Pollo',
             description: 'Milanesa hecha de pollo',
             stars: 4,
-            img_url: 'https://2trendies.com/hero/2023/02/milanesas-de-pollo-al-horno.jpg?width=1200&aspect_ratio=16:9',
+            img_url: 'https://upload.mixerbox.com/01HB79CTKYQ6DA0QN5WKV33X4F',
             category: 'Milanesas'
         },
         {
@@ -70,10 +123,11 @@ export const preloadMilanesas = (actions) => {
             name: 'Milanesa a la Suiza',
             description: 'Milanesa con champiñones y queso suizo',
             stars: 5,
-            img_url: 'https://2trendies.com/hero/2023/02/milanesas-de-pollo-al-horno.jpg?width=1200&aspect_ratio=16:9',
+            img_url: 'https://upload.mixerbox.com/01HB79DA6H16CBBRTNGPKBKQJY',
             category: 'Milanesas'
         },
     ];
+
     for (const product of milanesas) {
         actions.addProduct(product);
     }
