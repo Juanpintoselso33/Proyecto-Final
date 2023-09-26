@@ -41,10 +41,8 @@ export const UsuarioEstandar = () => {
   };
 
   const handleSaveChanges = () => {
-    // Add logic to save the new password to the backend here
-    // This is a placeholder and should be replaced with actual API calls
     console.log('New Password:', newPassword);
-    // Close the modal and reset the state
+
     handleCloseModal();
   };
 
@@ -73,9 +71,37 @@ export const UsuarioEstandar = () => {
 
   const getProductNameById = (productId) => {
     const product = store.productos.find(item => item.id === productId);
-    return product ? product.name : 'Producto Desconocido';
+    return product ? product : null;
+  };
+
+  const getProductExtras = (extras) => {
+    return extras.map((extra, index) => (
+      <li key={index}>
+        {extra.name} - ${extra.price}
+      </li>
+    ));
+  };
+
+  const calcularCostoTotal = (item) => {
+    let costoTotal = 0;
+  
+    // Obtener el costo del producto
+    const productInfo = getProductNameById(item.product_id);
+    if (productInfo) {
+      costoTotal += item.quantity * productInfo.cost;
+  
+      // Agregar el costo de los extras, si existen
+      if (item.extras) {
+        item.extras.forEach(extra => {
+          costoTotal += extra.price; // Sumar el costo de cada extra
+        });
+      }
+    }
+  
+    return costoTotal;
   };
   
+
   return (
     <div className="usuario-estandar">
       <div className="menu">
@@ -120,32 +146,45 @@ export const UsuarioEstandar = () => {
         {categoriaSeleccionada === 'Ordenes' && (
           <div>
             <h3>Mis Órdenes</h3>
-            <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Timestamp</th>
-          <th>Items</th>
-        </tr>
-      </thead>
-      <tbody>
-        {userOrders.map((order) => (
-          <tr key={order.id}>
-            <td>{order.id}</td>
-            <td>{order.timestamp}</td>
-            <td>
-              <ul>
-                {order.items.map((item) => (
-                  <li key={item.product_id}>
-                  {item.quantity}- {getProductNameById(item.product_id)}
-                  </li>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Fecha y hora</th>
+                  <th>Items</th>
+                  <th>Costo Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userOrders.map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
+                    <td>{order.timestamp}</td>
+                    <td>
+                      <ul>
+                        {order.items.map((item, index) => {
+                          const productInfo = getProductNameById(item.product_id);
+                          return (
+                            <div key={index}>
+                              {item.quantity}- {productInfo ? <a href={productInfo.url}>{productInfo.name}</a> : 'Producto Desconocido'}
+                              {productInfo && <span> - ${productInfo.cost}</span>}
+                              {item.extras && (
+                                <ul>
+                                  {getProductExtras(item.extras)}
+                                </ul>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </ul>
+                    </td>
+                    <td className="costo-total text-center">
+                    <strong>${order.items.reduce((total, item) => total + calcularCostoTotal(item), 0)}</strong>
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+              </tbody>
+            </table>
           </div>
         )}
       </div>
