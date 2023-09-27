@@ -1,9 +1,14 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,  Navigate  } from "react-router-dom";
 import { Context } from '../store/appContext';
 
 export const AddUsuario = () => {
-  const { actions } = useContext(Context);
+  const { actions, store } = useContext(Context);
+  const isAdminUser = store.isAdmin;
+
+  if (!isAdminUser) {
+    return <Navigate to="/" />;
+  }
   const [userData, setUserData] = useState({
     email: '',
     password: '',
