@@ -111,8 +111,8 @@ export const UsuarioAdmin = () => {
                         />
                       </td>
                       <td>
-                        <button onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
-                        <button onClick={() => handleAbrirModal(producto.id)}>Editar</button>
+                        <button className='btn btn-dark m-1'onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
+                        <button className='btn btn-dark m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
                       </td>
                     </tr>
                   ))}

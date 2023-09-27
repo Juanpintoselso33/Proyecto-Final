@@ -509,6 +509,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}));
 			},
 
+			updateProduct: async (productId, productData) => {
+				try {
+					const token = localStorage.getItem("token"); // Asumiendo que el token se guarda en el localStorage
+					const response = await axios.put(`${process.env.BACKEND_URL}api/products/${productId}`, productData, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (response.data.success) {
+						console.log("Producto actualizado exitosamente:", response.data);
+
+						// Aquí puedes actualizar el estado de tu tienda, por ejemplo:
+						const store = getStore();
+						const updatedProducts = store.productos.map(product => {
+							if (product.id === productId) {
+								return { ...product, ...productData };
+							}
+							return product;
+						});
+						setStore({ productos: updatedProducts });
+
+						// Actualizar localStorage
+						localStorage.setItem('productos', JSON.stringify(updatedProducts));
+					} else {
+						console.error("Error al actualizar el producto:", response.data.message);
+					}
+				} catch (error) {
+					console.error("Ocurrió un error al intentar actualizar el producto:", error);
+				}
+			},
+			  
+
 
 
 
