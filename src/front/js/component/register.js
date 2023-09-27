@@ -13,6 +13,7 @@ const RegisterModal = ({ show, onHide }) => {
     password: Yup.string().min(8, 'Debe tener 8 caracteres o más').required('La contraseña es obligatoria'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Confirma tu contraseña'),
   });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const formik = useFormik({
     initialValues: {

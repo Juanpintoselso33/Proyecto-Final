@@ -17,6 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			extrasSeleccionados: [],
 			isAuthenticated: false,
 			token: null,
+			dailyMenu: null
 
 			/* ----------</productos>--------------- */
 		},
@@ -262,7 +263,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (data.success) {
 						console.log('Order created:', data.order);
-						actions.clearCart();  // Limpia el carrito usando el método del Flux
+						getActions().clearCart();  // Limpia el carrito usando el método del Flux
 					} else {
 						console.log('Order creation failed:', data.message);
 					}
@@ -315,29 +316,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ productos: productosAlmacenados });
 				}
 			},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			//Cargo datos para modal
 
 			DataModalDetalle: (data) => {
-				const store = getStore();
-				const datosModal = [{}]
 				setStore({
 					modalData: {
 						id: data.idx,
@@ -420,11 +401,64 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			actualizarMenuDelDiaEnStoreYLocalStorage: (nuevoProductoId, anteriorProductoId) => {
+				const store = getStore();
+				// Clonamos el array para evitar mutaciones directas
+				const nuevosProductos = [...store.productos].map(producto => {
+					if (producto.id === anteriorProductoId) {
+						return { ...producto, its_daily_menu: false };
+					}
+					if (producto.id === nuevoProductoId) {
+						return { ...producto, its_daily_menu: true };
+					}
+					return producto;
+				});
+			
+				// Actualizar el estado de la tienda
+				setStore(prevStore => ({
+					...prevStore,
+					productos: nuevosProductos
+				}));
+			
+				// Actualizar el localStorage
+				localStorage.setItem('productos', JSON.stringify(nuevosProductos));
+			},
 
+			cambiarMenuDelDia: async (productId) => {
+				try {
+					const response = await axios.put(`${process.env.BACKEND_URL}api/daily_menu/${productId}`);
+					const data = response.data;
 
+					if (data && data.success) {
+						const anteriorProductoId = JSON.parse(localStorage.getItem('dailyMenu'));
+						getActions().actualizarMenuDelDiaEnStoreYLocalStorage(data.daily_menu.id, anteriorProductoId);
 
+						// Guardar nuevo menú del día en localStorage
+						localStorage.setItem('dailyMenu', JSON.stringify(data.daily_menu.id));
+					}
+				} catch (error) {
+					console.log("Error durante la actualización del menú del día:", error);
+				}
+			},
 
+			obtenerMenuDelDia: async () => {
+				try {
+					const response = await axios.get(`${process.env.BACKEND_URL}api/daily_menu`);
+					const data = response.data;
 
+					if (Array.isArray(data) && data.length > 0) {
+						// Aquí podrías actualizar el store y el localStorage
+						getActions().actualizarMenuDelDiaEnStoreYLocalStorage(data[0].id, null);
+
+						// Guardar nuevo menú del día en localStorage
+						localStorage.setItem('dailyMenu', JSON.stringify(data[0].id));
+					} else {
+						console.log("No se encontraron productos para el menú del día.");
+					}
+				} catch (error) {
+					console.log("Error durante la consulta del menú del día:", error);
+				}
+			},
 
 
 
