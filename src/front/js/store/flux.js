@@ -219,7 +219,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					isAdmin: false  // Añadir esto para actualizar el estado de isAdmin
 				});
 			},
-			
+
 			createOrder: async () => {
 				try {
 					const userId = localStorage.getItem("userId");
@@ -434,19 +434,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			obtenerOrdenesUsuario: async () => {
 				try {
-				  const userId = localStorage.getItem('userId');
-				  const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
-			  
-				  if (response.data.success) {
-					setUserOrders(response.data.orders);
-				  } else {
-					console.error('Error al obtener las órdenes del usuario:', response.data.message);
-				  }
+					const userId = localStorage.getItem('userId');
+					const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
+
+					if (response.data.success) {
+						setUserOrders(response.data.orders);
+					} else {
+						console.error('Error al obtener las órdenes del usuario:', response.data.message);
+					}
 				} catch (error) {
-				  console.error('Error al obtener las órdenes del usuario:', error);
+					console.error('Error al obtener las órdenes del usuario:', error);
 				}
-			  },
-			  
+			},
+
+
+			// En actions.js o donde definas tus acciones
+			updatePassword: (newPassword) => {
+				// Actualiza la contraseña en el estado
+				setStore((prevState) => ({
+					...prevState,
+					password: newPassword,
+				}));
+			},
+
+
+
+
 
 
 
