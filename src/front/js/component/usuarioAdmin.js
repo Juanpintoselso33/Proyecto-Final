@@ -1,17 +1,26 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../store/appContext';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+
 
 export const UsuarioAdmin = () => {
-  const { actions, store } = useContext(Context);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Productos');
 
-  useEffect(() => {
-    actions.obtenerAllProducts();
-    actions.obtenerUsuarios();
-  }, [actions]);
 
+    const { actions, store } = useContext(Context);
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Productos');
   
+    useEffect(() => {
+      actions.obtenerAllProducts();
+      actions.obtenerUsuarios();
+    }, [actions]);
+  
+    // Check if the user is an admin
+    const isAdminUser = store.isAdmin;
+  
+    // Redirect non-admin users to another page
+    if (!isAdminUser) {
+      return <Navigate to="/" />;
+    }
 
   const handleCategoriaSeleccionada = (categoria) => {
     setCategoriaSeleccionada(categoria);
