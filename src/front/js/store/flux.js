@@ -12,6 +12,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			datosPrueba: [],
 			modalData: [],
 			productos: [],
+			ordenes: [],
 			extras: [],
 			extrasSeleccionados: [],
 			isAuthenticated: false,
@@ -174,7 +175,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					localStorage.setItem("token", userData.access_token);
 					localStorage.setItem("email", email);
-					
+
 
 					const isAdmin = userData && userData.role === "admin";
 
@@ -209,7 +210,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("token");
 				localStorage.removeItem("email");
 				localStorage.removeItem("cart");
-				localStorage.removeItem("isAdmin"); 
+				localStorage.removeItem("isAdmin");
 				localStorage.removeItem("userId");  // Añadir esta línea para borrar isAdmin del localStorage
 
 				// Actualizar el estado global para limpiar la autenticación y el carrito
@@ -225,8 +226,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			createOrder: async () => {
 				try {
-					const userId = localStorage.getItem("userId", );
-					  
+					const userId = localStorage.getItem("userId",);
+
 
 					if (!userId) {
 						throw new Error("User ID is undefined");
@@ -256,9 +257,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Enviando payload:", payload);
 					console.log("URL de la solicitud POST:", url);
 
+					const token = localStorage.getItem("token");  // Asumiendo que el token se guarda en el localStorage con la clave "token"
+
 					const response = await axios.post(url, payload, {
 						headers: {
 							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`  // Aquí se incluye el token en el header
 						}
 					});
 
@@ -416,13 +420,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 					return producto;
 				});
-			
+
 				// Actualizar el estado de la tienda
 				setStore(prevStore => ({
 					...prevStore,
 					productos: nuevosProductos
 				}));
-			
+
 				// Actualizar el localStorage
 				localStorage.setItem('productos', JSON.stringify(nuevosProductos));
 			},
@@ -463,10 +467,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			obtenerTodasLasOrdenes: async () => {
+				try {
+					const response = await axios.get(`${process.env.BACKEND_URL}api/orders`);
 
-
-
-
+					if (response.data.success) {
+						setStore({
+							ordenes: response.data.orders
+						});
+					} else {
+						console.error('Error al obtener todas las órdenes:', response.data.message);
+					}
+				} catch (error) {
+					console.error('Error al obtener todas las órdenes:', error);
+				}
+			},
 
 
 			obtenerOrdenesUsuario: async () => {
@@ -522,23 +537,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 			enviarMensaje: async (nombre, email, asunto, mensaje) => {
 				const userId = localStorage.getItem('userId');
 				const payload = {
-				  nombre,
-				  email,
-				  asunto,
-				  mensaje,
-				  userId: userId ? userId : null
-				};			
+					nombre,
+					email,
+					asunto,
+					mensaje,
+					userId: userId ? userId : null
+				};
 				try {
-				  const res = await axios.post(`${process.env.BACKEND_URL}api/messages`, payload);
-				  if (res.status === 201) {
-					console.log('Mensaje enviado correctamente');
-				  }
-				  return res;  // Asegúrate de retornar la respuesta aquí
+					const res = await axios.post(`${process.env.BACKEND_URL}api/messages`, payload);
+					if (res.status === 201) {
+						console.log('Mensaje enviado correctamente');
+					}
+					return res;  // Asegúrate de retornar la respuesta aquí
 				} catch (error) {
-				  console.error('Hubo un error al enviar el mensaje', error);
-				  return error.response;  // También puedes retornar la respuesta de error aquí
+					console.error('Hubo un error al enviar el mensaje', error);
+					return error.response;  // También puedes retornar la respuesta de error aquí
 				}
-			  },
+			},
 
 			obtenerMensajes: async () => {
 				const res = await axios.get(`${process.env.BACKEND_URL}api/messages`);
