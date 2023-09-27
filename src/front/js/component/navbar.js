@@ -5,7 +5,6 @@ import Logo from "../../img/carrito.jpg";
 import Login from './login';
 import login from "../../img/login.png";
 import cartIcon from "../../img/cart.png";
-import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
 import "../../styles/cartDropdown.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -148,7 +147,6 @@ export const Navbar = ({ setSeccionActiva }) => {
       </Link>
     );
   };
-
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -159,37 +157,20 @@ export const Navbar = ({ setSeccionActiva }) => {
               <img src={Logo} alt="Logo" className="logo" />
               <h5>Carrito el tatin</h5>
             </div>
-            <div className="admin-button-container">
-              {isAdmin && (
-                <Link
-                  to="/usuarioAdmin"
-                  className="btn btn-light admin-button"
-                  style={{
-                    color: 'black',
-                    border: '1px solid black',
-                    padding: '10px 20px',
-                    borderRadius: '5px',
-                    fontSize: '16px',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
-                  onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  Administrar
-                </Link>
-              )}
-            </div>
-            <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
-              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}
-              <div className="perfil-icon" style={{ marginLeft: '10px' }}>
+            <div className="iconos d-flex align-items-center justify-content-center">
+              {store.isAuthenticated && <span className="d-flex align-items-center">Bienvenido/a, {welcomeMessage}</span>}
+              <div className="perfil-icon d-flex align-items-center" style={{ marginLeft: '10px' }}>
                 {store.isAuthenticated && renderProfileIcon()}
               </div>
-              <Button variant="link" className="login hoverEffect" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
-                <img src={login} alt="login" className="icono-login" width={30} />
-                {store.isAuthenticated ? "Cerrar sesión" : "Login"}
+              <Button
+                variant="link"
+                className="login hoverEffect d-flex align-items-center justify-content-center"
+                onClick={store.isAuthenticated ? handleLogout : handleShowModal}
+              >
+                <img src={login} alt="login" className="icono-login align-self-center" width={30} />
+                <span className="align-self-center">{store.isAuthenticated ? "Cerrar sesión" : "Login"}</span>
               </Button>
-              {!store.isAuthenticated && <Button variant="link" className="register hoverEffect" onClick={handleShowRegisterModal}>
+              {!store.isAuthenticated && <Button variant="link" className="register hoverEffect d-flex align-items-center" onClick={handleShowRegisterModal}>
                 Register
               </Button>}
               {store.isAuthenticated &&
@@ -253,15 +234,21 @@ export const Navbar = ({ setSeccionActiva }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contacto" className="nav-link">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Contacto")}>
                   Contacto
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/comentarios" className="nav-link comentarios">
-                  Comentarios
-                </Link>
-              </li>
+              {isAdmin && (
+                <li className="nav-item">
+                  <Link
+                    to="/usuarioAdmin"
+                    className="nav-link"
+                    onClick={() => setSeccionActiva("Administrar")}
+                  >
+                    Administrar
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>

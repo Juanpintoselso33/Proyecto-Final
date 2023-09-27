@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product, Order, OrderProduct, Extra  
+from api.models import db, User, Product, Order, OrderProduct, Extra, Message  
 from api.utils import generate_sitemap, APIException  
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 
@@ -371,7 +371,43 @@ def delete_extra(extra_id):
 
 
 
+@api.route('/messages', methods=['POST'])
+def create_message():
+    data = request.json
+    name = data.get('nombre')
+    email = data.get('email')
+    subject = data.get('asunto')
+    message = data.get('mensaje')
+    user_id = data.get('userId', None)  # Obtener user_id, si está presente
 
+    if not all([name, email, subject, message]):
+        return jsonify({'error': 'Faltan campos requeridos'}), 400
+
+    new_message = Message(
+        name=name,
+        email=email,
+        subject=subject,
+        message=message,
+        user_id=user_id  # Almacenar user_id si está presente
+    )
+
+    db.session.add(new_message)
+    db.session.commit()
+
+    return jsonify({'message': 'Mensaje creado exitosamente', 'data': new_message.serialize()}), 201
+
+@api.route('/messages', methods=['GET'])
+def get_messages():
+    messages = Message.query.all()
+    return jsonify({'messages': [message.serialize() for message in messages]}), 200
+
+@api.route('/messages/<int:user_id>', methods=['GET'])
+def get_messages_by_user(user_id):
+    messages = Message.query.filter((Message.user_id == user_id) | (Message.user_id == None)).all()
+    if not messages:
+        return jsonify({'error': 'No se encontraron mensajes para este usuario'}), 404
+
+    return jsonify({'messages': [message.serialize() for message in messages]}), 200
 
 
 
