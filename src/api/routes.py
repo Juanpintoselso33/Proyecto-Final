@@ -55,7 +55,7 @@ def register_user():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
- 
+
 @api.route('/users/<int:user_id>', methods=['PUT'])
 @jwt_required()  # Omitir si no necesitas autenticación
 def update_user(user_id):
