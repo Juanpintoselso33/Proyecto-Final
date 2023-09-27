@@ -1,4 +1,3 @@
-import React from "react";
 import axios from 'axios';
 import { preloadPromociones, preloadExtras, preloadHamburgers, preloadMilanesas } from '../component/PreloadData.js';
 import { CartStore } from '../component/CartStore.js';
@@ -17,8 +16,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			extrasSeleccionados: [],
 			isAuthenticated: false,
 			token: null,
-			dailyMenu: null
-
+			dailyMenu: null,
+			mensajes: [],
+			mensajesPorUsuario: []
 			/* ----------</productos>--------------- */
 		},
 
@@ -174,6 +174,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					localStorage.setItem("token", userData.access_token);
 					localStorage.setItem("email", email);
+					
 
 					const isAdmin = userData && userData.role === "admin";
 
@@ -208,7 +209,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("token");
 				localStorage.removeItem("email");
 				localStorage.removeItem("cart");
-				localStorage.removeItem("isAdmin");  // Añadir esta línea para borrar isAdmin del localStorage
+				localStorage.removeItem("isAdmin"); 
+				localStorage.removeItem("userId");  // Añadir esta línea para borrar isAdmin del localStorage
 
 				// Actualizar el estado global para limpiar la autenticación y el carrito
 				setStore({
@@ -470,7 +472,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			obtenerOrdenesUsuario: async () => {
 				try {
 					const userId = localStorage.getItem('userId');
-					const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
+					const response = await axios.get(`${process.env.BACKEND_URL}api/user/${userId}/orders`);
 
 					if (response.data.success) {
 						setUserOrders(response.data.orders);
@@ -517,8 +519,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
+			enviarMensaje: async (nombre, email, asunto, mensaje) => {
+				const userId = localStorage.getItem('userId');
+				const payload = {
+				  nombre,
+				  email,
+				  asunto,
+				  mensaje,
+				  userId: userId ? userId : null
+				};			
+				try {
+				  const res = await axios.post(`${process.env.BACKEND_URL}api/messages`, payload);
+				  if (res.status === 201) {
+					console.log('Mensaje enviado correctamente');
+				  }
+				  return res;  // Asegúrate de retornar la respuesta aquí
+				} catch (error) {
+				  console.error('Hubo un error al enviar el mensaje', error);
+				  return error.response;  // También puedes retornar la respuesta de error aquí
+				}
+			  },
 
+			obtenerMensajes: async () => {
+				const res = await axios.get(`${process.env.BACKEND_URL}api/messages`);
+				if (res.status === 200) {
+					setStore({ mensajes: res.data });
+				}
+			},
 
+			obtenerMensajesPorUsuario: async () => {
+				const userId = localStorage.getItem('userId');
+				if (userId) {
+					const res = await axios.get(`${process.env.BACKEND_URL}api/messages/${userId}`);
+					if (res.status === 200) {
+						setStore({ mensajesPorUsuario: res.data });
+					}
+				}
+			},
 
 
 

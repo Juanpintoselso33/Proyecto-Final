@@ -5,6 +5,7 @@ import { Navbar } from "../component/navbar.js"
 import { CarruselInicio } from "../component/Carrusel_inicio.jsx"
 import { Extras_prod } from "../component/Extras_Productos.jsx"
 import { ProductListContainer } from "../component/ProductListContainer.jsx";
+import {Contacto } from "../component/Contacto.jsx"
 
 
 
@@ -18,9 +19,9 @@ export const Home = () => {
 	}, []);
 
 	return (
-		<div className="text-center mt-5">
+		<div className="text-center">
 			<Extras_prod />
-			<div className="NANA mb-5">
+			<div className="NANA mb-4">
 				<Navbar setSeccionActiva={setSeccionActiva} />
 			</div>
 			{seccionActiva === "Inicio" && (
@@ -31,6 +32,11 @@ export const Home = () => {
 			{seccionActiva === "Catalogo" && (
 				<div className="Catalogo">
 					<ProductListContainer />					
+				</div>
+			)}
+			{seccionActiva === "Contacto" && (
+				<div className="Contacto">
+					<Contacto />					
 				</div>
 			)}
 		</div>
