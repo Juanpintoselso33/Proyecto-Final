@@ -4,8 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Context } from "../store/appContext";
 
 export default function ItemCarrusel(props) {
-    console.log("Props en ItemCarrusel:", props);  // Para depurar
-
     const { actions } = useContext(Context);
     const [isPressed, setIsPressed] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -30,8 +28,7 @@ export default function ItemCarrusel(props) {
             descriptionx: props.descriptioni,
             categoriax: props.categoria
         };
-        actions.DataModalDetalle(data);
-        console.log(data);
+        actions.DataModalDetalle(data);       
     };
 
     const handleMouseDown = () => {
@@ -53,6 +50,22 @@ export default function ItemCarrusel(props) {
     return (
         <div className={`carousel-item ${props.activei} d-flex align-items-center position-relative`} style={{ width: '100%', height: '100%' }}>
             <div style={backgroundStyle}></div>
+
+            {props.its_daily_menu &&
+                <div style={{
+                    position: 'absolute',
+                    top: '10px',
+                    left: '10px',
+                    background: 'rgba(255,255,255,0.8)',
+                    color: 'black',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    zIndex: 1
+                }}>
+                    Menú del Día
+                </div>
+            }
+
             <div className="container">
                 <div className="row align-items-center justify-content-center">
                     <div className="col-1"></div>
@@ -88,6 +101,7 @@ export default function ItemCarrusel(props) {
     );
 }
 
+
 ItemCarrusel.propTypes = {
     idProducto: PropTypes.number,
     activei: PropTypes.string,
@@ -95,5 +109,6 @@ ItemCarrusel.propTypes = {
     namei: PropTypes.string,
     costi: PropTypes.number,
     descriptioni: PropTypes.string,
-    categoria: PropTypes.string
+    categoria: PropTypes.string,    
+    its_daily_menu: PropTypes.bool
 }

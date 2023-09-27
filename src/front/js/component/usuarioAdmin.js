@@ -9,10 +9,9 @@ export const UsuarioAdmin = () => {
   useEffect(() => {
     actions.obtenerAllProducts();
     actions.obtenerUsuarios();
-    //actions.obtenerOrdenes();
-
-   
   }, [actions]);
+
+  
 
   const handleCategoriaSeleccionada = (categoria) => {
     setCategoriaSeleccionada(categoria);
@@ -48,59 +47,70 @@ export const UsuarioAdmin = () => {
 
     return (
       <div className="">
-       
         <Link to="/addProduct" className="btn btn-success float-right mt-4 mr-2 mb-3">
           Agregar Productos
         </Link>
         
-        {Object.keys(categoriasConProductos).map((categoria, index) => (
-          
-          <div
-            key={index}
-            className={`tabla-categoria ${categoriaSeleccionada === categoria ? 'active' : ''}`}
-          >
-             
-            
-            <h3>{categoria}</h3>
-            <table className="table" border="1">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>URL</th>
-                  <th>NOMBRE</th>
-                  <th>DESCRIPCION</th>
-                  <th>PRECIO</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categoriasConProductos[categoria].map((producto, index) => (
-                  <tr key={index}>
-                    <td>{producto.id}</td>
-                    <td>
-                      <img
-                        src={producto.img_url}
-                        width={60}
-                        height={60}
-                        className="card-img"
-                        alt={producto.name}
-                      />
-                    </td>
-                    <td>{producto.name}</td>
-                    <td>{producto.description}</td>
-                    <td>${producto.cost}</td>
-                    <td>
-                      <button onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
-                    </td>
+        {Object.keys(categoriasConProductos).map((categoria, index) => {
+          categoriasConProductos[categoria].sort((a, b) => a.id - b.id);
+          return (
+            <div
+              key={index}
+              className={`tabla-categoria ${categoriaSeleccionada === categoria ? 'active' : ''}`}
+            >
+              <h3>{categoria}</h3>
+              <table className="table" border="1">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>URL</th>
+                    <th>NOMBRE</th>
+                    <th>DESCRIPCION</th>
+                    <th>PRECIO</th>
+                    <th>Menú del Día</th>
+                    <th>Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
+                </thead>
+                <tbody>
+                  {categoriasConProductos[categoria].map((producto, index) => (
+                    <tr key={index}>
+                      <td>{producto.id}</td>
+                      <td>
+                        <img
+                          src={producto.img_url}
+                          width={60}
+                          height={60}
+                          className="card-img"
+                          alt={producto.name}
+                        />
+                      </td>
+                      <td>{producto.name}</td>
+                      <td>{producto.description}</td>
+                      <td>${producto.cost}</td>
+                      <td>
+                        <input 
+                          type="radio" 
+                          name="menuDelDia"
+                          checked={localStorage.getItem('dailyMenu') === producto.id.toString()}
+                          onChange={() => {
+                            actions.cambiarMenuDelDia(producto.id);
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <button onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
       </div>
     );
   };
+
 
   const renderTablaOrdenes = () => {
     if (!categoriaSeleccionada || categoriaSeleccionada !== 'Órdenes') {
