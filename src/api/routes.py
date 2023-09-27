@@ -432,6 +432,7 @@ def get_user_orders(user_id):
 
 
 @api.route('/user/<int:user_id>/add_order', methods=['POST'])
+@jwt_required()
 def add_order(user_id):
     try:
         data = request.json
