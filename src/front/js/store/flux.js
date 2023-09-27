@@ -263,7 +263,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (data.success) {
 						console.log('Order created:', data.order);
-						actions.clearCart();  // Limpia el carrito usando el método del Flux
+						getActions().clearCart();  // Limpia el carrito usando el método del Flux
 					} else {
 						console.log('Order creation failed:', data.message);
 					}

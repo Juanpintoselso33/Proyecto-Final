@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Context } from '../store/appContext'
+import { Context } from '../store/appContext';
 import { Modal, Button } from 'react-bootstrap';
 
 const RegisterModal = ({ show, onHide }) => {
@@ -9,6 +9,7 @@ const RegisterModal = ({ show, onHide }) => {
     password: '',
     confirmPassword: ''
   });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +21,6 @@ const RegisterModal = ({ show, onHide }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!emailPattern.test(formData.email)) {
@@ -38,8 +38,15 @@ const RegisterModal = ({ show, onHide }) => {
       return;
     }
 
-    // Utiliza la acción del store para registrar al usuario
-    actions.registerUser(formData);
+    const isRegistered = actions.registerUser(formData);
+
+    if (isRegistered) {
+      setSuccessMessage("Registro exitoso, cerrando ventana...");
+      setTimeout(() => {
+        onHide();
+        setSuccessMessage("");
+      }, 2000);
+    }
   };
 
   return (
@@ -48,6 +55,7 @@ const RegisterModal = ({ show, onHide }) => {
         <Modal.Title>Register</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {successMessage && <div>{successMessage}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-outline mb-4">
             <input
@@ -115,6 +123,4 @@ const RegisterModal = ({ show, onHide }) => {
   );
 };
 
-
 export default RegisterModal;
-
