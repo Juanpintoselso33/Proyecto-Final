@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import RegisterModal from './register';
+import { Context } from "../store/appContext";
 
-const Login = ({ showModal, handleCloseModal, handleSubmit, successMessage, loginError }) => {
+const Login = ({ showModal, handleCloseModal }) => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(null);
+  const { actions } = useContext(Context);
+  const { login } = actions; // Desestructura la acción de login desde tus acciones de Flux
 
   const handleShowRegisterModal = () => {
     setShowRegisterModal(true);
   };
+
+  useEffect(() => {
+    if (loginSuccess === true) {
+      setSuccessMessage('Inicio de sesión exitoso');
+      setTimeout(() => {
+        handleCloseModal();
+        setSuccessMessage('');
+        setLoginSuccess(null);
+      }, 2000);
+    } else if (loginSuccess === false) {
+      setSuccessMessage('Error en el inicio de sesión');
+      setTimeout(() => {
+        setSuccessMessage('');
+        setLoginSuccess(null);
+      }, 2000);
+    }
+  }, [loginSuccess]);
 
   const SignupSchema = Yup.object().shape({
     email: Yup.string()
@@ -30,33 +50,27 @@ const Login = ({ showModal, handleCloseModal, handleSubmit, successMessage, logi
     validationSchema: SignupSchema,
     onSubmit: async (values) => {
       try {
-        await handleSubmit(values.email, values.password);
-        // Limpiar mensajes de error y éxito si la operación es exitosa
-        loginError('');
-        setErrorMessage('');
-        setShowErrorMessage(false);
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          loginError(error.response.data.error);
+        const result = await login(values.email, values.password); // Usar la acción de login
+        if (result && result.success) {
+          setLoginSuccess(true);
         } else {
-          loginError('Error durante el inicio de sesión: Verifica tus credenciales e inténtalo nuevamente.');
+          setLoginSuccess(false);
         }
-        setErrorMessage('Error en el intento de inicio de sesión. Comprueba tus credenciales.');
-        setShowErrorMessage(true);
-
-        // Imprimir el mensaje de error directamente desde la variable error
-        console.log('Mensaje de error:', error.message);
+      } catch (error) {
+        setLoginSuccess(false);
       }
     },
   });
 
-  const closeErrorMessage = () => {
-    setShowErrorMessage(false);
-  };
-
   return (
     <>
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal
+        show={showModal}
+        onHide={() => {
+          handleCloseModal();
+          setSuccessMessage(''); // Limpiar el mensaje al cerrar el modal
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Iniciar sesión</Modal.Title>
         </Modal.Header>
@@ -104,28 +118,22 @@ const Login = ({ showModal, handleCloseModal, handleSubmit, successMessage, logi
                 Ingresar
               </button>
               <button
-                className="btn btn-link"
+                type="button"
+                className="btn btn-secondary btn-lg"
                 onClick={handleShowRegisterModal}
               >
                 Crear cuenta
               </button>
             </div>
-            {successMessage && <p className='text-success'>{successMessage}</p>}
-            {showErrorMessage && (
-              <div className="alert alert-danger" role="alert">
-                {errorMessage}
-                <button type="button" className="close" onClick={closeErrorMessage}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
+            {successMessage && (
+              <p className={loginSuccess ? 'text-success' : 'text-danger'}>
+                {successMessage}
+              </p>
             )}
           </form>
         </Modal.Body>
       </Modal>
-      <RegisterModal
-        show={showRegisterModal}
-        onHide={() => setShowRegisterModal(false)}
-      />
+      <RegisterModal show={showRegisterModal} onHide={() => setShowRegisterModal(false)} />
     </>
   );
 };
