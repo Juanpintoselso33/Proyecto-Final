@@ -219,7 +219,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					isAdmin: false  // Añadir esto para actualizar el estado de isAdmin
 				});
 			},
-			
+
 			createOrder: async () => {
 				try {
 					const userId = localStorage.getItem("userId");
@@ -230,7 +230,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					// Obtén el carrito directamente desde el estado del store (Flux)
 					const cartFromStore = getStore().cart;  // Asegúrate de que `getStore()` esté definido correctamente
-
+					const pepe = []
+					// pepe = 
+					console.log("pepeargento => ", store.cart)
 					console.log("Estado del carrito antes de crear la orden:", cartFromStore);
 
 					if (!cartFromStore || cartFromStore.items.length === 0) {
@@ -247,7 +249,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const payload = {
 						items,
 					};
-
+					console.log("Estos =>", items);
 					const url = `${process.env.BACKEND_URL}/api/user/${userId}/add_order`;
 					console.log("Enviando payload:", payload);
 					console.log("URL de la solicitud POST:", url);
@@ -362,6 +364,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			saveCart: () => {
 				const store = getStore();
 				localStorage.setItem('cart', JSON.stringify(store.cart));
+
 			},
 
 			// Acción para incrementar la cantidad de un producto en el carrito
@@ -424,6 +427,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
+			// CargarPago: async () => {
+
+			// 	try {
+
+			// 		let data = await axios.post('https://symmetrical-space-lamp-r4gwxgwx9wv259gj-3001.app.github.dev/api/create-payment-intent',
+			// 			{
+
+			// 				"amount": 200
+
+			// 			})
+			// 		console.log(data)
+
+
+			// 		return true;
+
+			// 	} catch (error) {
+			// 		console.log(error);
+
+			// 	}
+			// },
+
+
+
 
 
 
@@ -434,19 +460,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			obtenerOrdenesUsuario: async () => {
 				try {
-				  const userId = localStorage.getItem('userId');
-				  const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
-			  
-				  if (response.data.success) {
-					setUserOrders(response.data.orders);
-				  } else {
-					console.error('Error al obtener las órdenes del usuario:', response.data.message);
-				  }
+					const userId = localStorage.getItem('userId');
+					const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
+
+					if (response.data.success) {
+						setUserOrders(response.data.orders);
+					} else {
+						console.error('Error al obtener las órdenes del usuario:', response.data.message);
+					}
 				} catch (error) {
-				  console.error('Error al obtener las órdenes del usuario:', error);
+					console.error('Error al obtener las órdenes del usuario:', error);
 				}
-			  },
-			  
+			},
+
 
 
 
@@ -621,6 +647,143 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Error al eliminar el extra:', error);
 				}
 			},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
+import { Pruebas } from "./Prueba.jsx"
+
 
 import CheckoutForm from "./CheckoutForm.jsx";
 import "./App.css";
+import { Navigate } from "react-router-dom";
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -13,6 +18,11 @@ const stripePromise = loadStripe("pk_test_51Nsr4fKXj5LWRngyICcySMhyijuGZpNBAj1mA
 export default function App() {
   const [clientSecret, setClientSecret] = useState("");
   const [valor, setValor] = useState(1);  // Usamos el estado de React para manejar la cantidad
+  const navigate = useNavigate();
+  const { store, actions } = useContext(Context);
+
+  const [total_Presio, setTotal_Presio] = useState();
+
 
   function sumarPro() {
     setValor(valor + 1);
@@ -29,12 +39,20 @@ export default function App() {
     fetch("https://symmetrical-space-lamp-r4gwxgwx9wv259gj-3001.app.github.dev/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: [{ id: "2000" }] }),
+      body: JSON.stringify({ "items": store.cart.totalCost }),
     })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
 
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret))
+    // .then((data) => console.log(data));
   }, []);
+
+  // useEffect(() => {
+  //   actions.CargarPago()
+  // }, []);
+
+  console.log("W2ww => ", store.cart.totalCost)
+
 
   const appearance = {
     theme: 'stripe',
@@ -44,6 +62,37 @@ export default function App() {
     appearance,
   };
   console.log("este =" + clientSecret)
+
+
+  // function mover_carrito() {
+  //   navigate("/prueba1122")
+  // }
+
+  // let prueba = {}
+
+  // store.cart.items.extras.map((item, index) => (
+
+  //   prueba = item.name
+
+  // ))
+  // let Producto_compra
+  // store.cart.items.map((item, index) => (
+
+  // ))
+
+  // const Producto_compra = store.cart.items[3].extras == [] ? <div key={index}>sin Extras</div>
+  //   : <div key={index}>con Extras</div>
+
+
+
+
+  // const Producto_compra = store.cart.items.map((item, index) => (
+  //   <Pruebas key={index} />
+  // ))
+
+
+  console.log(" => ", store.cart.totalCost)
+
   return (
 
     <div className="body_home">
@@ -54,17 +103,17 @@ export default function App() {
       <div className="row m-auto">
 
 
-        <div class="col-6 text-center">
-          < div class="row  " >
-            {/* <div class="col-6 bg-danger">
+        <div className="col-6 text-center">
+          < div className="row  " >
+            {/* <div className="col-6 bg-danger">
               1 of 3
             </div> */}
-            {/* <div class="col-12 bg-danger detalle_com">
+            {/* <div className="col-12 bg-danger detalle_com">
               <strong>Detalles de compra</strong>
             </div> */}
 
 
-            <div class="col ">
+            <div className="col ">
               3 of 3
             </div>
             <div className="col-12 App">
@@ -75,14 +124,14 @@ export default function App() {
               )}
 
             </div >
-            {/* <div class="row">
-              <div class="col bg-dark">
+            {/* <div className="row">
+              <div className="col bg-dark">
                 1 of 3
               </div>
-              <div class="col-5 bg-secondary">
+              <div className="col-5 bg-secondary">
                 2 of 3 (wider)
               </div>
-              <div class="col bg-info">
+              <div className="col bg-info">
                 3 of 3
               </div>
             </div> */}
@@ -94,156 +143,53 @@ export default function App() {
             <div className="row col-12 contenedor_T_izquierda">
               <div className="col-12 contenedor_productos">
                 <div className="row col-12 padre_Pr_indi">
-                  <div class="col-12  producto_indi">
 
-                    <div className="row  home_dentro">
-                      <div className="col-12">
-                        <div className="row  pepe2  ">
-                          <div className="col-4 imagenP">
-                            <img src="https://th.bing.com/th/id/R.033c8f01fbb84af4c5a55a3cbac42404?rik=%2bib7SrOYugiI%2bg&riu=http%3a%2f%2f1.bp.blogspot.com%2f-61BeHL1BdSo%2fTyKUcPwqfOI%2fAAAAAAAAAFA%2fr5X62fe8dRk%2fs1600%2fhamburguesa2.jpg&ehk=ro3LnT%2fFb%2fnjUfTdHupjmVvqBxsYOoorcmQnYdpuXt8%3d&risl=&pid=ImgRaw&r=0" alt="" />
-                          </div>
-                          <div className="col-8 d-flex padrNom_des">
-                            <div className="row pequeño__iz">
-                              <div className="col-12 arriba_M">
-                                <div className="row">
-                                  <div className="col-6">
-                                    <div className="nom_des">
-                                      <div className="col-12 Titulo_Pr">
-                                        Hamburguesa Completa
-                                      </div >
-                                      <div className="col-12">
-                                        detalle
-                                      </div >
-                                    </div>
-                                  </div>
-                                  <div className="col-6 contenedor_basura">
-                                    <div className="col-12 basura">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
-                                      </svg>
-                                    </div >
-                                  </div>
-                                </div>
-                              </div>
+                  {/* {Producto_compra} */}
 
-                              <div className="col-12 abajo_M">
-                                <div className="row input_M">
-                                  <div className="col-6">
-                                    <div className="container">
+                  {store.cart.items.map((item, index) => (
+
+                    <Pruebas key={index}
+                      name={item.name}
+                      price={item.price}
+                      extras={item.extras}
+                      cost={item.cost}
+                      quantity={item.quantity}
+                      order_id={item.order_id}
+
+                    />
+
+                  ))
+                  }
+                  {/* {Producto_compra} */}
+                  {/* {store.cart.items.extras == null
+                    ? store.cart.items.map((item, index) => (
+
+                      <div>sin extras</div>
 
 
-                                      <div class="row prueba">
-                                        <div className="wrapper">
-                                          <span className="minus" onClick={restarPro}>-</span>
-                                          <span className="num">{valor}</span>
-                                          <span className="plus" onClick={sumarPro}>+</span>
-                                        </div>
-                                      </div>
+                    ))
+                    : store.cart.items.map((item, index) => (
 
-                                      {/* <div className="elcon"> */}
-
-                                      {/* <button type="button" id="decrement">-</button>
-                                <input type="number" min="1" max="10" step="5"
-                                  value="2" id="my-input" readOnly />
-                                <button type="button" id="increment">+</button> */}
-                                      {/* </div> */}
-                                    </div>
-                                  </div>
-                                  <div className="col-6 precio_M">
-                                    <div className="preciosito">
-                                      <strong>$200</strong>
-                                    </div>
-                                  </div>
-
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
+                      <div>con Extras</div>
 
 
-                    </div>
+                    ))
 
 
-                  </div>
+
+                  } */}
 
 
-                  <div class="col-12  producto_indi">
-
-                    <div className="row  home_dentro">
-                      <div className="col-12">
-                        <div className="row  pepe2  ">
-                          <div className="col-4 imagenP">
-                            <img src="https://th.bing.com/th/id/R.033c8f01fbb84af4c5a55a3cbac42404?rik=%2bib7SrOYugiI%2bg&riu=http%3a%2f%2f1.bp.blogspot.com%2f-61BeHL1BdSo%2fTyKUcPwqfOI%2fAAAAAAAAAFA%2fr5X62fe8dRk%2fs1600%2fhamburguesa2.jpg&ehk=ro3LnT%2fFb%2fnjUfTdHupjmVvqBxsYOoorcmQnYdpuXt8%3d&risl=&pid=ImgRaw&r=0" alt="" />
-                          </div>
-                          <div className="col-8 d-flex padrNom_des">
-                            <div className="row pequeño__iz">
-                              <div className="col-12 arriba_M">
-                                <div className="row">
-                                  <div className="col-6">
-                                    <div className="nom_des">
-                                      <div className="col-12 Titulo_Pr">
-                                        Hamburguesa Completa
-                                      </div >
-                                      <div className="col-12">
-                                        detalle
-                                      </div >
-                                    </div>
-                                  </div>
-                                  <div className="col-6 contenedor_basura">
-                                    <div className="col-12 basura">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
-                                      </svg>
-                                    </div >
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="col-12 abajo_M">
-                                <div className="row input_M">
-                                  <div className="col-6">
-                                    <div className="container">
 
 
-                                      <div class="row prueba">
-                                        <div className="wrapper">
-                                          <span className="minus" onClick={restarPro}>-</span>
-                                          <span className="num">{valor}</span>
-                                          <span className="plus" onClick={sumarPro}>+</span>
-                                        </div>
-                                      </div>
+                  {/* {store.cart.items.map((item, index) => (
 
-                                      {/* <div className="elcon"> */}
+                    if (store.cart.items[index].extras) {
+                      
+                    }
 
-                                      {/* <button type="button" id="decrement">-</button>
-                                <input type="number" min="1" max="10" step="5"
-                                  value="2" id="my-input" readOnly />
-                                <button type="button" id="increment">+</button> */}
-                                      {/* </div> */}
-                                    </div>
-                                  </div>
-                                  <div className="col-6 precio_M">
-                                    <div className="preciosito">
-                                      <strong>$200</strong>
-                                    </div>
-                                  </div>
+                  ))} */}
 
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-
-
-                    </div>
-
-
-                  </div>
                 </div>
 
               </div>
@@ -253,7 +199,7 @@ export default function App() {
                     <div className="row">
                       <div className="col-6 title_sub">Sub total</div>
                       <div className="col-6 price_Sub">
-                        "$250"
+                        {store.cart.totalCost}
                       </div>
                     </div>
                   </div>
@@ -277,11 +223,11 @@ export default function App() {
 
                   <div className="col-6 title_T">Totall</div>
                   <div className="col-6 price_Sub">
-                    <div class="input-group ">
-                      <span class="input-group-text">$</span>
-                      <input type="number" class="form-control" id="Input_Total" aria-label="Amount (to the nearest dollar)" readonly />
+                    <div className="input-group ">
+                      <span className="input-group-text">$</span>
+                      <input type="number" value={store.cart.totalCost} className="form-control preciototal" id="Input_Total" aria-label="Amount (to the nearest dollar)" readOnly />
 
-                      <span class="input-group-text">.00</span>
+                      {/* <span className="input-group-text"></span> */}
                     </div>
                   </div>
 

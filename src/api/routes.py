@@ -6,8 +6,9 @@ import json
 import os
 import stripe
 
+
 # This is your test secret API key.
-# stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG9aT56ZppZYviuhqit7eKlKFZnjmFwxgiyjZ00Jvx3IxRM'
+stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG9aT56ZppZYviuhqit7eKlKFZnjmFwxgiyjZ00Jvx3IxRM'
 
 
 """
@@ -24,9 +25,9 @@ from flask_cors import CORS, cross_origin
 
 api = Blueprint('api', __name__)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public',
+            static_url_path='', template_folder='public')
 
-stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG9aT56ZppZYviuhqit7eKlKFZnjmFwxgiyjZ00Jvx3IxRM'
 
 
 app.config['JWT_SECRET_KEY'] = 'tu_clave_secreta'
@@ -36,28 +37,38 @@ jwt = JWTManager(app)
 
 # CORS(api,resources ={r"/create-payment-intent/*":{"origins":"https://super-duper-goldfish-gjrqrr4q9wpc9769-3000.app.github.dev"}})
 
-def calculate_order_amount(items):
+def calculate_order_amount(amount):
     # Replace this constant with a calculation of the order's amount
     # Calculate the order total on the server to prevent
     # people from directly manipulating the amount on the client
-    return 1400
+    return amount
 
 # @cross_origin
 @api.route('/create-payment-intent', methods=['POST'])
 def create_payment():
     try:
         data = json.loads(request.data)
+        pepe =  data['items']
+        prueba = 200
         # Create a PaymentIntent with the order amount and currency
         intent = stripe.PaymentIntent.create(
-            amount=200,
+            amount=calculate_order_amount(data["items"]),
             currency='USD',
+            # amount=data.get('amount'),
+            # currency=data.get('USD'),
             # In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
             automatic_payment_methods={
                 'enabled': True,
+           
             },
+
+   
         )
+        print(type(pepe), " ",str(pepe))
+        print(type(prueba)," "  ,str(prueba))
         return jsonify({
-            'clientSecret': intent['client_secret']
+            'clientSecret': intent['client_secret'],
+            'valor_enviado': data['items']
         })
     except Exception as e:
         return jsonify(error=str(e)), 403
@@ -78,6 +89,7 @@ def handle_hello():
 @api.route('/register', methods=['POST'])
 def register_user():
     try:
+
         data = request.json
         email = data.get('email')
         password = data.get('password')
@@ -330,34 +342,34 @@ def delete_product(product_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 # Endpoint para actualizar un producto existente por su ID
-@api.route('/products/<int:product_id>', methods=['PUT'])
-def update_product(product_id):
-    try:
-        product = Product.query.get(product_id)
-        if product is None:
-            return jsonify({'error': 'Producto no encontrado'}), 404
+# @api.route('/products/<int:product_id>', methods=['PUT'])
+# def update_product(product_id):
+#     try:
+#         product = Product.query.get(product_id)
+#         if product is None:
+#             return jsonify({'error': 'Producto no encontrado'}), 404
         
-        data = request.json
-        if 'cost' in data:
-            product.cost = data['cost']
-        if 'name' in data:
-            product.name = data['name']
-        if 'description' in data:
-            product.description = data['description']
-        if 'stars' in data:
-            product.stars = data['stars']
-        if 'img_url' in data:
-            product.img_url = data['img_url']
-        if 'category' in data:
-            product.category = data['category']
-        if 'promo' in data:
-            product.its_promo = data['promo']        
+#         data = request.json
+#         if 'cost' in data:
+#             product.cost = data['cost']
+#         if 'name' in data:
+#             product.name = data['name']
+#         if 'description' in data:
+#             product.description = data['description']
+#         if 'stars' in data:
+#             product.stars = data['stars']
+#         if 'img_url' in data:
+#             product.img_url = data['img_url']
+#         if 'category' in data:
+#             product.category = data['category']
+#         if 'promo' in data:
+#             product.its_promo = data['promo']        
         
-        db.session.commit()
-        return jsonify({"success": True, "message": "Producto actualizado exitosamente", "product": product.serialize()}), 200
+#         db.session.commit()
+#         return jsonify({"success": True, "message": "Producto actualizado exitosamente", "product": product.serialize()}), 200
 
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 400
+#     except Exception as e:
+#         return jsonify({"success": False, "message": str(e)}), 400
 
 # ENDPOINT PARA TRAER MENÚ DEL DÍA DEL BACK
 @app.route('/daily_menu', methods=['GET'])

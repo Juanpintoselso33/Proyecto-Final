@@ -166,9 +166,9 @@ button:disabled {
   border-radius: 20px;
 }
 
-.imagenP{
-  /* width: 50%; */
-}
+/* .imagenP{
+  width: 50%;
+} */
 
 .pepe3{
   max-width: 50%;
@@ -190,7 +190,7 @@ button:disabled {
 .producto_indi{
 
     /* margin: 20px; */
-    height: 170px;
+    min-height: 170px;
     /* border: 0.5px solid rgb(178, 162, 162); */
     box-shadow: #5469d4;
     padding: 10px;
@@ -274,7 +274,7 @@ button{
 }
 
 .Titulo_Pr{
-  font-size: 20px;
+  font-size: 13px;
   text-transform: capitalize;
   font-weight: bold;
 
@@ -282,6 +282,8 @@ button{
 
 .wrapper{
   user-select: none
+ 
+  
 }
 
 .basura{
@@ -296,7 +298,8 @@ button{
 
 
 .wrapper{
-  height: 25px;
+  height: 40px;
+  width: 100%;
   min-width: 20% ;
   display: flex;
   align-items: center;
@@ -305,9 +308,10 @@ button{
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   /* pointer-events: ;  */
+font-size: 10px;
 }
 
-.wrapper span{
+/* .wrapper span{
   width: 100%;
   text-align: center;
   font-size: 15px;
@@ -321,7 +325,7 @@ button{
   border-right: 2px solid rgba(0, 0, 0, 0.2);
   border-left: 2px solid rgba(0, 0, 0, 0.2);
 
-}
+} */
 
 .precio_M{
   text-align: right;
@@ -424,4 +428,13 @@ button{
 
 #Input_Total{
   pointer-events: none
+}
+
+.extras_M{
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+.preciosito{
+  font-size: 20px;
 }

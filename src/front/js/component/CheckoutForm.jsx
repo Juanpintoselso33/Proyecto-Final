@@ -62,7 +62,7 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "https://example.com/order/123/complete",
+        return_url: "https://symmetrical-space-lamp-r4gwxgwx9wv259gj-3000.app.github.dev",
       },
     });
 
