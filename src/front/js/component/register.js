@@ -168,7 +168,7 @@ export const RegisterModal = ({ show, onHide }) => {
             </div>
           )}
           <div className="pt-1 mb-4">
-            <button className="btn btn-info btn-lg btn-block" type="submit">
+            <button className="btn btn-secondary btn-lg btn-block" type="submit">
               {isAdmin ? 'Agregar Usuario' : 'Registro'}
             </button>
           </div>
