@@ -36,7 +36,7 @@ export default function App() {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    fetch("https://ominous-succotash-45v7vvjjq7pfqr6v-3001.app.github.dev/api/create-payment-intent", {
+    fetch(`${process.env.BACKEND_URL}api/create-payment-intent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ "items": store.cart.totalCost }),

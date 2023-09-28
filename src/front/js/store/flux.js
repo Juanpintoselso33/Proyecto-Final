@@ -226,23 +226,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			createOrder: async () => {
 				try {
-					const userId = localStorage.getItem("userId",);
-
+					const userId = localStorage.getItem("userId");
 
 					if (!userId) {
 						throw new Error("User ID is undefined");
 					}
 
-					// Obtén el carrito directamente desde el estado del store (Flux)
-					const cartFromStore = getStore().cart;  // Asegúrate de que `getStore()` esté definido correctamente
-					const pepe = []
-					// pepe = 
-					console.log("pepeargento => ", store.cart)
+					const cartFromStore = JSON.parse(localStorage.getItem("cart"));
+
 					console.log("Estado del carrito antes de crear la orden:", cartFromStore);
 
 					if (!cartFromStore || cartFromStore.items.length === 0) {
 						console.log("El carrito está vacío. No se puede crear la orden.");
-						return;
+						return null;
 					}
 
 					const items = cartFromStore.items.map(item => ({
@@ -254,32 +250,74 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const payload = {
 						items,
 					};
-					console.log("Estos =>", items);
-					const url = `${process.env.BACKEND_URL}/api/user/${userId}/add_order`;
-					console.log("Enviando payload:", payload);
-					console.log("URL de la solicitud POST:", url);
 
-					const token = localStorage.getItem("token");  // Asumiendo que el token se guarda en el localStorage con la clave "token"
+					const url = `${process.env.BACKEND_URL}/api/user/${userId}/add_order`;
+
+					const token = localStorage.getItem("token");
 
 					const response = await axios.post(url, payload, {
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${token}`  // Aquí se incluye el token en el header
+							'Authorization': `Bearer ${token}`
 						}
 					});
 
 					const data = response.data;
-
 					if (data.success) {
 						console.log('Order created:', data.order);
-						getActions().clearCart();  // Limpia el carrito usando el método del Flux
+						getActions().clearCart();
+						return data.order;  // Retorna la orden creada
 					} else {
 						console.log('Order creation failed:', data.message);
+						return null;
 					}
 				} catch (error) {
 					console.log('An error occurred:', error);
+					return null;
 				}
 			},
+			clearCart: () => {
+				// Limpia el carrito del localStorage
+				localStorage.removeItem("cart");
+
+				// Limpia el carrito del store (asumiendo que tienes un store para el carrito)
+				// Puedes adaptar esta parte según cómo estés manejando el estado en tu aplicación
+				setStore({
+					cart: {
+						items: [],
+						totalCost: 0
+					}
+				});
+
+				console.log("El carrito ha sido limpiado.");
+			},
+			  
+
+
+			updateOrderStatus: async (order_id, new_status) => {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/update_order_status`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							order_id,
+							new_status,
+						}),
+					});
+
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Estado del pago actualizado con éxito:", data);
+					} else {
+						console.log("Error al actualizar el estado del pago");
+					}
+				} catch (error) {
+					console.error("Ocurrió un error al actualizar el estado del pago:", error);
+				}
+			},
+
 
 
 			actualizarExtras: nuevosExtras => {
@@ -389,7 +427,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			actualizarUsuario: async (userId, updatedData) => {
 				try {
-					const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, updatedData);
+					const token = localStorage.getItem('token');  // Asegúrate de obtener el token de la manera correcta
+					const config = {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					};
+
+					const response = await axios.put(
+						`${process.env.BACKEND_URL}api/users/${userId}`,
+						updatedData,
+						config
+					);
 
 					if (response.status === 200) {
 						console.log('Usuario actualizado exitosamente:', response.data);
@@ -399,7 +448,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						const index = store.usuarios.findIndex(usuario => usuario.id === userId);
 
 						if (index !== -1) {
-							store.usuarios[index] = response.data;
+							store.usuarios[index] = { ...store.usuarios[index], ...updatedData };
 							setStore({ usuarios: [...store.usuarios] });
 						}
 
@@ -503,14 +552,134 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			// En actions.js o donde definas tus acciones
-			updatePassword: (newPassword) => {
-				// Actualiza la contraseña en el estado
-				setStore((prevState) => ({
-					...prevState,
-					password: newPassword,
-				}));
+			async updatePassword(newPassword, id) {
+				try {
+					const userId = id;
+					const token = localStorage.getItem("token");
+
+					const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, {
+						password: newPassword,
+					}, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (response.data.success) {
+						// Actualiza la contraseña en el estado local
+						setStore((prevState) => ({
+							...prevState,
+							password: newPassword,
+						}));
+
+						return { success: true };
+					} else {
+						console.error('Error al actualizar la contraseña:', response.data.message);
+						return { success: false, message: response.data.message };
+					}
+				} catch (error) {
+					console.error('Error al actualizar la contraseña:', error);
+					return { success: false, message: error.message };
+				}
 			},
+
+			updateProduct: async (productId, productData) => {
+				try {
+					const token = localStorage.getItem("token"); // Asumiendo que el token se guarda en el localStorage
+					const response = await axios.put(`${process.env.BACKEND_URL}api/products/${productId}`, productData, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (response.data.success) {
+						console.log("Producto actualizado exitosamente:", response.data);
+
+						// Aquí puedes actualizar el estado de tu tienda, por ejemplo:
+						const store = getStore();
+						const updatedProducts = store.productos.map(product => {
+							if (product.id === productId) {
+								return { ...product, ...productData };
+							}
+							return product;
+						});
+						setStore({ productos: updatedProducts });
+
+						// Actualizar localStorage
+						localStorage.setItem('productos', JSON.stringify(updatedProducts));
+					} else {
+						console.error("Error al actualizar el producto:", response.data.message);
+					}
+				} catch (error) {
+					console.error("Ocurrió un error al intentar actualizar el producto:", error);
+				}
+			},
+
+			async validarContrasena(contrasenaActual) {
+				try {
+					const token = localStorage.getItem("token");
+					const response = await axios.post(`${process.env.BACKEND_URL}api/validate-password`, {
+						password: contrasenaActual,
+					}, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (response.data.valid) {
+						return true;
+					} else {
+						return false;
+					}
+				} catch (error) {
+					console.error('Error al validar la contraseña:', error);
+					return false;
+				}
+			},
+			async updateEmail(newEmail, userId) {
+				try {
+					// Obtener todos los usuarios
+					const allUsersResponse = await axios.get(`${process.env.BACKEND_URL}api/users`, {
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+
+					// Verificar si el nuevo correo electrónico ya existe
+					const emailExists = allUsersResponse.data.some(user => user.email === newEmail);
+
+					if (emailExists) {
+						console.error('El correo electrónico ya existe.');
+						return { success: false, message: 'El correo electrónico ya existe.' };
+					}
+
+					// Actualizar el correo electrónico
+					const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, {
+						email: newEmail,
+					}, {
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+
+					if (response.data.success) {
+						// Actualizar el correo electrónico en el estado local
+						setStore((prevState) => ({
+							...prevState,
+							email: newEmail,
+						}));
+
+						return { success: true, message: 'Correo electrónico actualizado con éxito.' };
+					} else {
+						console.error('Error al actualizar el correo electrónico:', response.data.message);
+						return { success: false, message: response.data.message };
+					}
+				} catch (error) {
+					console.error('Error al actualizar el correo electrónico:', error);
+					return { success: false, message: error.message };
+				}
+			},
+
 
 
 
@@ -559,25 +728,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			obtenerMensajes: async () => {
-				const res = await axios.get(`${process.env.BACKEND_URL}api/messages`);
-				if (res.status === 200) {
-					setStore({ mensajes: res.data });
-				}
-			},
-
-			obtenerMensajesPorUsuario: async () => {
-				const userId = localStorage.getItem('userId');
-				if (userId) {
-					const res = await axios.get(`${process.env.BACKEND_URL}api/messages/${userId}`);
+				try {
+					const res = await axios.get(`${process.env.BACKEND_URL}api/messages`);
 					if (res.status === 200) {
-						setStore({ mensajesPorUsuario: res.data });
+						return Array.isArray(res.data.messages) ? res.data.messages : [];
 					}
+				} catch (error) {
+					return [];
 				}
 			},
-
-
-
-
 
 
 

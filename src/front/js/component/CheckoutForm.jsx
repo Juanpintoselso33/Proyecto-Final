@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Stripe from 'stripe';
-
+import React, { useEffect, useState, useContext } from "react";
+import { Context } from "../store/appContext";
 import {
   PaymentElement,
   LinkAuthenticationElement,
@@ -11,10 +10,22 @@ import {
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-
+  const { actions } = useContext(Context);
   const [email, setEmail] = useState('jocady21@gmail.com');
   const [message, setMessage] = useState("hola mundo");
   const [isLoading, setIsLoading] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+
+
+  useEffect(() => {
+    if (orderId) {
+      const interval = setInterval(() => {
+        actions.checkOrderStatus(orderId);
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [orderId]);
 
   useEffect(() => {
     if (!stripe) {
@@ -33,6 +44,7 @@ export default function CheckoutForm() {
       switch (paymentIntent.status) {
         case "succeeded":
           setMessage("Payment succeeded!");
+          actions.updateOrderStatus(orderId, 'Exitoso');
           break;
         case "processing":
           setMessage("Your payment is processing.");
@@ -51,30 +63,43 @@ export default function CheckoutForm() {
     e.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
+    const order = await actions.createOrder();
+    console.log("Orden a mandar a localstorage", order);
+    localStorage.setItem("order", JSON.stringify(order));    
+    setTimeout(async () => {
+      console.log("Orden creada en checkout", order);
+      if (order && order.id) {
+        setOrderId(order.id);
+        console.log("Orden creada en checkout con ID", order.id);
+        localStorage.setItem("order", JSON.stringify(order));    
+      } else {
+        console.log("La orden no se creó correctamente o no tiene un ID.");
+        setIsLoading(false);
+        return;
+      }
+    }, 10000);
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: "https://ominous-succotash-45v7vvjjq7pfqr6v-3000.app.github.dev",
+        return_url: 'https://laughing-space-robot-vgqgpqxx79xcwpq6-3000.app.github.dev/confirmation',
       },
     });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
+    if (error) {
       setMessage(error.message);
     } else {
-      setMessage("An unexpected error occurred.");
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        await actions.updateOrderStatus(order.id, 'Exitoso');
+        setMessage("El pago se realizó con éxito.");
+      } else {
+        setMessage("Ocurrió un error inesperado.");
+      }
     }
 
     setIsLoading(false);
@@ -88,7 +113,6 @@ export default function CheckoutForm() {
     <form id="payment-form" onSubmit={handleSubmit}>
       <LinkAuthenticationElement
         id="link-authentication-element"
-      //onChange={(e) => setEmail(e.target.value)}
       />
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button disabled={isLoading || !stripe || !elements} id="submit">
@@ -96,7 +120,6 @@ export default function CheckoutForm() {
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
       </button>
-      {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
   );

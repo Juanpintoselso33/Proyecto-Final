@@ -15,9 +15,9 @@ stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product, Order, OrderProduct, Extra, Message  
+from api.models import db, User, Product, Order, OrderProduct, Extra, Message, PaymentStatus  
 from api.utils import generate_sitemap, APIException  
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token,get_jwt_identity
 from flask_cors import CORS, cross_origin
 
 
@@ -484,7 +484,19 @@ def delete_extra(extra_id):
     db.session.commit()
     return jsonify({"message": "Extra eliminado con éxito"}), 200
 
+@api.route('/validate-password', methods=['POST'])
+@jwt_required()  # Asegura que el usuario esté autenticado
+def validate_password():
+    current_user = get_jwt_identity()  # Obtiene el usuario actual a partir del token
+    data = request.get_json()
+    input_password = data.get('password')  # La contraseña que el usuario ha ingresado
 
+    user = User.query.filter_by(email=current_user).first()
+
+    if user and user.password == input_password:
+        return jsonify({'valid': True}), 200
+    else:
+        return jsonify({'valid': False, 'error': 'Invalid password'}), 401
 
 
 
@@ -664,6 +676,51 @@ def add_order(user_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 
+@api.route('/update_order_status', methods=['POST'])
+def update_order_status():
+    try:
+        data = request.json
+        order_id = data['order_id']
+        new_status = data['new_status']
+
+        # Buscar la orden por ID
+        order = Order.query.get(order_id)
+
+        if not order:
+            return jsonify({"error": "Orden no encontrada"}), 404
+
+        # Actualizar el estado del pago
+        order.payment_status = PaymentStatus(new_status)
+
+        db.session.commit()
+
+        return jsonify({"message": "Estado del pago actualizado con éxito"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@api.route('/webhook', methods=['POST'])
+def stripe_webhook():
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe.api_key
+        )
+    except ValueError as e:
+        return 'Invalid payload', 400
+    except stripe.error.SignatureVerificationError as e:
+        return 'Invalid signature', 400
+
+    if event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']
+        # Aquí actualizas el estado de la orden en tu base de datos
+
+    return jsonify({'status': 'success'})
+
+if __name__ == '__main__':
+    app.run()
 
 
 

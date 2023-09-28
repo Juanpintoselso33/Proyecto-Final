@@ -13,6 +13,7 @@ import { Catalogo } from "./component/catalogo";
 import { Footer } from "./component/footer";
 import { AddProduct } from "./pages/addProduct"
 import { AddUsuario } from "./pages/addUsuario"
+import { ConfirmationPage } from "./pages/confirmationPage"
 import { CartView } from "./pages/cart"
 import { UsuarioAdmin } from './component/usuarioAdmin';
 import { UsuarioEstandar } from './component/usuarioEstandar';
@@ -48,6 +49,7 @@ const Layout = () => {
                         <Route element={<UsuarioAdmin />} path="/usuarioAdmin" />
                         <Route element={<UsuarioEstandar />} path="/usuarioEstandar" />
                         <Route element={<App />} path="/prueba1122" />
+                        <Route element={<ConfirmationPage />} path="/confirmation" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
