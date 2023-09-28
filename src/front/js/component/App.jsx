@@ -99,7 +99,7 @@ export default function App() {
     <div className="body_home">
 
       <div className="">
-        encabezado
+
       </div>
       <div className="row m-auto">
 
@@ -114,9 +114,9 @@ export default function App() {
             </div> */}
 
 
-            <div className="col ">
+            {/* <div className="col ">
               3 of 3
-            </div>
+            </div> */}
             <div className="col-12 App" id="body_prueba">
               {clientSecret && (
                 <Elements options={options} stripe={stripePromise}>

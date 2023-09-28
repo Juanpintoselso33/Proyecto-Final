@@ -4,7 +4,7 @@
   align-items: center;
 }
 
-#body_prueba {
+<<<<<<< HEAD #body_prueba {
   display: none;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
@@ -32,8 +32,7 @@ form#payment-form {
   background: white;
 }
 
-
-#payment-message {
+=======>>>>>>>093a0d7292e252edf45fd5b3cbd0d5350f68d376 #payment-message {
   color: rgb(105, 115, 134);
   font-size: 16px;
   line-height: 20px;
@@ -371,7 +370,7 @@ button {
 }
 
 
-/* .row {
+.row {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
   display: flex;
@@ -379,7 +378,7 @@ button {
   margin-top: calc(-1 * var(--bs-gutter-y));
   margin-right: calc(-.5 * var(--bs-gutter-x));
   margin-left: 0 !important;
-} */
+}
 
 
 .contenedor_T_izquierda {
