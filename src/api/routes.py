@@ -15,7 +15,7 @@ stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product, Order, OrderProduct, Extra  
+from api.models import db, User, Product, Order, OrderProduct, Extra, Message  
 from api.utils import generate_sitemap, APIException  
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from flask_cors import CORS, cross_origin
@@ -116,7 +116,7 @@ def register_user():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
- 
+
 @api.route('/users/<int:user_id>', methods=['PUT'])
 @jwt_required()  # Omitir si no necesitas autenticación
 def update_user(user_id):
@@ -295,7 +295,25 @@ def add_product():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-@api.route('/product/<int:product_id>', methods=['PUT'])
+# Endpoint para borrar un producto existente por su ID
+@api.route('/products/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    try:
+        product = Product.query.get(product_id)
+        if product is None:
+            return jsonify({'error': 'Producto no encontrado'}), 404
+
+        db.session.delete(product)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Producto eliminado exitosamente"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+
+# Endpoint para actualizar un producto existente por su ID
+@api.route('/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
     try:
         data = request.json
@@ -326,20 +344,20 @@ def update_product(product_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 @api.route('/product/<int:product_id>', methods=['DELETE'])
-def delete_product(product_id):
-    try:
-        product = Product.query.get(product_id)
+# def delete_product(product_id):
+#     try:
+#         product = Product.query.get(product_id)
 
-        if product is None:
-            return jsonify({"success": False, "message": "Product not found"}), 404
+#         if product is None:
+#             return jsonify({"success": False, "message": "Product not found"}), 404
 
-        db.session.delete(product)
-        db.session.commit()
+#         db.session.delete(product)
+#         db.session.commit()
 
-        return jsonify({"success": True, "message": "Product deleted"}), 200
+#         return jsonify({"success": True, "message": "Product deleted"}), 200
 
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 400
+#     except Exception as e:
+#         return jsonify({"success": False, "message": str(e)}), 400
 
 # Endpoint para actualizar un producto existente por su ID
 # @api.route('/products/<int:product_id>', methods=['PUT'])
@@ -372,7 +390,7 @@ def delete_product(product_id):
 #         return jsonify({"success": False, "message": str(e)}), 400
 
 # ENDPOINT PARA TRAER MENÚ DEL DÍA DEL BACK
-@app.route('/daily_menu', methods=['GET'])
+@api.route('/daily_menu', methods=['GET'])
 def get_daily_menu():
     # Consulta para encontrar todos los productos con "its_daily_menu" como verdadero
     daily_menu_products = Product.query.filter_by(its_daily_menu=True).all()
@@ -385,7 +403,7 @@ def get_daily_menu():
     return jsonify([product.serialize() for product in daily_menu_products])
 
 # Endpoint para actualizar el menú del día por su ID
-@app.route('/daily_menu/<int:product_id>', methods=['PUT'])
+@api.route('/daily_menu/<int:product_id>', methods=['PUT'])
 def put_daily_menu(product_id):
     try:
         # Obtener el producto por su ID
@@ -409,23 +427,8 @@ def put_daily_menu(product_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-#ENDPOINT PARA TRAER PROMOS DEL BACK
-@app.route('/products', methods=['GET'])
-def get_promo_products():
-    # Consulta para encontrar todos los productos con "its_promo" como verdadero
-    promo_products = Product.query.filter_by(its_promo=True).all()
-
-    # Verificar si se encontraron productos en promoción
-    if not promo_products:
-        return jsonify({"error": "No se encontraron productos en promoción"}), 404
-
-    # Serializar los productos y devolverlos como una lista de diccionarios
-    return jsonify([product.serialize() for product in promo_products])
-
 # -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
 # -------------------------- ENDPOINTS ORDER ----------------------------------
-
-  
 
 # ENDPOINT PARA TRAER TODOS LOS EXTRAS
 @api.route('/extras', methods=['GET'])
@@ -515,7 +518,43 @@ def delete_extra(extra_id):
 
 
 
+@api.route('/messages', methods=['POST'])
+def create_message():
+    data = request.json
+    name = data.get('nombre')
+    email = data.get('email')
+    subject = data.get('asunto')
+    message = data.get('mensaje')
+    user_id = data.get('userId', None)  # Obtener user_id, si está presente
 
+    if not all([name, email, subject, message]):
+        return jsonify({'error': 'Faltan campos requeridos'}), 400
+
+    new_message = Message(
+        name=name,
+        email=email,
+        subject=subject,
+        message=message,
+        user_id=user_id  # Almacenar user_id si está presente
+    )
+
+    db.session.add(new_message)
+    db.session.commit()
+
+    return jsonify({'message': 'Mensaje creado exitosamente', 'data': new_message.serialize()}), 201
+
+@api.route('/messages', methods=['GET'])
+def get_messages():
+    messages = Message.query.all()
+    return jsonify({'messages': [message.serialize() for message in messages]}), 200
+
+@api.route('/messages/<int:user_id>', methods=['GET'])
+def get_messages_by_user(user_id):
+    messages = Message.query.filter((Message.user_id == user_id) | (Message.user_id == None)).all()
+    if not messages:
+        return jsonify({'error': 'No se encontraron mensajes para este usuario'}), 404
+
+    return jsonify({'messages': [message.serialize() for message in messages]}), 200
 
 
 
@@ -580,6 +619,7 @@ def get_user_orders(user_id):
 
 
 @api.route('/user/<int:user_id>/add_order', methods=['POST'])
+@jwt_required()
 def add_order(user_id):
     try:
         data = request.json

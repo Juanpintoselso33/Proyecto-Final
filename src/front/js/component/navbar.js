@@ -2,10 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../img/carrito.jpg";
-import Favorito from "../../img/favorito.png";
+import Login from './login';
 import login from "../../img/login.png";
 import cartIcon from "../../img/cart.png";
-import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
 import "../../styles/cartDropdown.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,7 +13,16 @@ import RegisterModal from './register';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+const getIsAdminFromLocalStorage = () => {
+  const isAdmin = localStorage.getItem('isAdmin');
+  return isAdmin === 'true';
+};
+
 export const Navbar = ({ setSeccionActiva }) => {
+
+  const [isAdmin, setIsAdmin] = useState(getIsAdminFromLocalStorage());
+  const [forceUpdate, setForceUpdate] = useState(false); // Añade esta línea
+
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -25,8 +33,13 @@ export const Navbar = ({ setSeccionActiva }) => {
   const [cart, setCart] = useState({ items: [], totalCost: 0 });
 
   useEffect(() => {
+    setIsAdmin(getIsAdminFromLocalStorage());
+  }, [forceUpdate]); // Agregar forceUpdate como dependencia
+
+  useEffect(() => {
     setCart(store.cart);
   }, [store.cart]);
+
 
   const [formData, setFormData] = useState({
     email: "",
@@ -58,6 +71,7 @@ export const Navbar = ({ setSeccionActiva }) => {
   const handleSubmit = async (email, password) => {
     let logged = await actions.login(email, password);
     if (logged) {
+      setForceUpdate(!forceUpdate); // Forzar actualización
       setSuccessMessage("Login exitoso, cerrando ventana...");
       setTimeout(() => {
         navigate('/');
@@ -69,6 +83,7 @@ export const Navbar = ({ setSeccionActiva }) => {
 
   const handleLogout = () => {
     actions.logout();
+    setForceUpdate(!forceUpdate); // Forzar actualización
   };
 
   const welcomeMessage = store.email ? store.email.split("@")[0] : "";
@@ -112,68 +127,50 @@ export const Navbar = ({ setSeccionActiva }) => {
   const renderProfileIcon = () => {
     const initial = store.email ? store.email.charAt(0).toUpperCase() : '';
     return (
-      
       <Link to="/usuarioEstandar" className="nav-link">
-        <div className="nav-item perfil-icon" style={{ marginLeft: '10px' }}/>
-          <span
-            className="perfil-inicial"
-            style={{
-              backgroundColor: '#7a7a7a',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff',
-              fontSize: '24px',
-              paddingBottom: '10px'
-            }}
-          >
-            {initial}
-          </span>
-          </Link>
+        <span
+          className="perfil-inicial"
+          style={{
+            backgroundColor: '#7a7a7a',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#ffffff',
+            fontSize: '24px'
+          }}
+        >
+          {initial}
+        </span>
+      </Link>
     );
   };
-
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
         <div className="w-100">
           <div className="navbar-header">CARRITO EL TATIN</div>
-          {store.isAdmin && (
-            <button className="nav-item mt-2">
-              <Link to="/usuarioAdmin" className="nav-link text-black p-1">
-                Administrar
-              </Link>
-            </button>
-          )}
           <div className="mb-3 d-flex align-items-center justify-content-between w-100 position-relative">
             <div className="d-flex align-items-center">
               <img src={Logo} alt="Logo" className="logo" />
               <h5>Carrito el tatin</h5>
             </div>
-            <div className="w-40 position-relative">
-              <input
-                type="text"
-                className="form-control rounded-pill pr-5"
-                placeholder="Search products..."
-                aria-label="Buscar productos"
-                aria-describedby="basic-addon1"
-                style={{ paddingLeft: '40px', backgroundImage: `url(${lupa})`, backgroundPosition: '10px center', backgroundRepeat: 'no-repeat' }}
-              />
-            </div>
-            <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
-
-              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>} 
-              <div className="perfil-icon" style={{ marginLeft: '10px' }}>
-              {store.isAuthenticated && renderProfileIcon()}
-              </div> 
-              <Button variant="link" className="login hoverEffect" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
-                <img src={login} alt="login" className="icono-login" width={30} />
-                {store.isAuthenticated ? "Cerrar sesión" : "Login"}
+            <div className="iconos d-flex align-items-center justify-content-center">
+              {store.isAuthenticated && <span className="d-flex align-items-center">Bienvenido/a, {welcomeMessage}</span>}
+              <div className="perfil-icon d-flex align-items-center" style={{ marginLeft: '10px' }}>
+                {store.isAuthenticated && renderProfileIcon()}
+              </div>
+              <Button
+                variant="link"
+                className="login hoverEffect d-flex align-items-center justify-content-center"
+                onClick={store.isAuthenticated ? handleLogout : handleShowModal}
+              >
+                <img src={login} alt="login" className="icono-login align-self-center" width={30} />
+                <span className="align-self-center">{store.isAuthenticated ? "Cerrar sesión" : "Login"}</span>
               </Button>
-              {!store.isAuthenticated && <Button variant="link" className="register hoverEffect" onClick={handleShowRegisterModal}>
+              {!store.isAuthenticated && <Button variant="link" className="register hoverEffect d-flex align-items-center" onClick={handleShowRegisterModal}>
                 Register
               </Button>}
               {store.isAuthenticated &&
@@ -237,106 +234,32 @@ export const Navbar = ({ setSeccionActiva }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contacto" className="nav-link">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Contacto")}>
                   Contacto
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/comentarios" className="nav-link comentarios">
-                  Comentarios
-                </Link>
-              </li>
+              {isAdmin && (
+                <li className="nav-item">
+                  <Link
+                    to="/usuarioAdmin"
+                    className="nav-link"
+                    onClick={() => setSeccionActiva("Administrar")}
+                  >
+                    Administrar
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
-        <style>{`
-          .hoverEffect:active {
-            transform: scale(0.9);
-          }
-          .hoverEffect:hover {
-            background-color: transparent !important;
-          }
-          .item-increment, .item-decrement {
-            background: transparent; /* Elimina el fondo */
-            border: none; /* Elimina el borde */
-            transition: all 0.3s ease;
-            cursor: pointer; /* Cambia el cursor a 'mano' */
-          }
-        
-          .item-increment:active, .item-decrement:active {
-            transform: scale(0.9);
-          }
-        
-          /* Elimina el efecto de foco y hover del navegador y Bootstrap */
-          .item-increment:focus, .item-increment:hover,
-          .item-decrement:focus, .item-decrement:hover {
-            background: transparent;
-            outline: none; /* Elimina el contorno al hacer foco */
-          }
-        
-        `}</style>
       </nav>
-
-
-
-
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Log in</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form onSubmit={formik.handleSubmit}>
-            <div className="form-outline mb-4">
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="form-control form-control-lg"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                aria-activedescendant="emailHelp"
-              />
-              {formik.touched.email && formik.errors.email ? (
-                <div className="text-danger">{formik.errors.email}</div>
-              ) : null}
-              <label className="form-label" htmlFor="exampleInputEmail">
-                Email address
-              </label>
-            </div>
-            <div className="form-outline mb-4">
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="form-control form-control-lg"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-              />
-              {formik.touched.password && formik.errors.password ? (
-                <div className="text-danger">{formik.errors.password}</div>
-              ) : null}
-              <label className="form-label" htmlFor="password">
-                Password
-              </label>
-            </div>
-            <div className="pt-1 mb-4">
-              <button className="btn btn-info btn-lg btn-block" type="submit">
-                Login
-              </button>
-            </div>
-            {successMessage && <p>{successMessage}</p>}
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
+      <Login
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        handleSubmit={handleSubmit}
+        successMessage={successMessage}
+      />
       <RegisterModal show={showRegisterModal} onHide={handleCloseRegisterModal} />
-
     </>
   );
-
 };

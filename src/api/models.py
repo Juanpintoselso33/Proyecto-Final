@@ -40,6 +40,7 @@ class User(db.Model):
     role = db.Column(db.String(20), default='customer')
 
     orders = db.relationship('Order', back_populates='user')
+    messages = db.relationship('Message', back_populates='user') 
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -154,4 +155,29 @@ class Extra(db.Model):
             'price': self.price,
             'type': self.type,
             'categories': self.categories
+        }
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    subject = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.String(500), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Opcional, en caso de que el mensaje esté asociado a un usuario registrado
+
+    user = db.relationship('User', back_populates='messages')  # Opcional, en caso de que quieras una relación inversa
+
+    def __repr__(self):
+        return f'<Message {self.id} from {self.email}>'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'subject': self.subject,
+            'message': self.message,
+            'timestamp': self.timestamp,
+            'user_id': self.user_id  
         }

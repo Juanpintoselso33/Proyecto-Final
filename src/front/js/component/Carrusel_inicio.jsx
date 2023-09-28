@@ -8,12 +8,21 @@ export const CarruselInicio = () => {
     useEffect(() => {
         const productosAlmacenados = localStorage.getItem('productos');
         if (productosAlmacenados) {
-            const productos = JSON.parse(productosAlmacenados);
-            console.log("Productos desde localStorage:", productos);  // Para depurar
-            const productosFiltrados = productos.filter(producto => producto.its_promo === true);
-            console.log("Productos filtrados:", productosFiltrados);  // Para depurar
-            setArrayProductos(productosFiltrados);    
-            const myCarousel = document.getElementById('carouselExampleFade');
+            let productos = JSON.parse(productosAlmacenados);
+            console.log("Productos desde localStorage:", productos);
+
+            productos = productos.filter(producto => producto.its_promo === true || producto.its_daily_menu === true);
+
+            // Ordenar el array para que el producto del menú del día aparezca primero
+            productos.sort((a, b) => b.its_daily_menu - a.its_daily_menu);
+
+            console.log("Productos filtrados:", productos);
+            setArrayProductos(productos);
+        }
+
+        // Iniciar el carrusel
+        const myCarousel = document.getElementById('carouselExampleFade');
+        if (myCarousel) {
             new bootstrap.Carousel(myCarousel, {
                 interval: 10000
             });
@@ -24,10 +33,10 @@ export const CarruselInicio = () => {
         <div className="container">
             <div className="row justify-content-center">
                 <div className="col-12 col-lg-11">
-                    <div id="carouselExampleFade" className="carousel slide carousel-fade rounded shadow" 
-                         data-bs-ride="carousel" 
-                         data-bs-interval="10000" 
-                         style={{borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
+                    <div id="carouselExampleFade" className="carousel slide carousel-fade rounded shadow"
+                        data-bs-ride="carousel"
+                        data-bs-interval="10000"
+                        style={{ borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
                         <div className="carousel-inner carrusel_Principal">
                             {ArrayProductos.map((item, index) => (
                                 <ItemCarrusel
@@ -38,17 +47,18 @@ export const CarruselInicio = () => {
                                     img_urli={item.img_url}
                                     costi={item.cost}
                                     descriptioni={item.description}
-                                    categoria= {item.category}
+                                    categoria={item.category}
+                                    its_daily_menu={item.its_daily_menu}
                                 />
                             ))}
                         </div>
-                        <button className="carousel-control-prev" type="button" 
-                                data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                        <button className="carousel-control-prev" type="button"
+                            data-bs-target="#carouselExampleFade" data-bs-slide="prev">
                             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span className="visually-hidden">Previous</span>
                         </button>
-                        <button className="carousel-control-next" type="button" 
-                                data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                        <button className="carousel-control-next" type="button"
+                            data-bs-target="#carouselExampleFade" data-bs-slide="next">
                             <span className="carousel-control-next-icon" aria-hidden="true"></span>
                             <span className="visually-hidden">Next</span>
                         </button>

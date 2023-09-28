@@ -1,4 +1,3 @@
-import React from "react";
 import axios from 'axios';
 import { preloadPromociones, preloadExtras, preloadHamburgers, preloadMilanesas } from '../component/PreloadData.js';
 import { CartStore } from '../component/CartStore.js';
@@ -13,11 +12,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			datosPrueba: [],
 			modalData: [],
 			productos: [],
+			ordenes: [],
 			extras: [],
 			extrasSeleccionados: [],
 			isAuthenticated: false,
 			token: null,
-
+			dailyMenu: null,
+			mensajes: [],
+			mensajesPorUsuario: []
 			/* ----------</productos>--------------- */
 		},
 
@@ -174,6 +176,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					localStorage.setItem("token", userData.access_token);
 					localStorage.setItem("email", email);
 
+
 					const isAdmin = userData && userData.role === "admin";
 
 					// Depuración: Imprimir los valores para verificar
@@ -207,7 +210,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("token");
 				localStorage.removeItem("email");
 				localStorage.removeItem("cart");
-				localStorage.removeItem("isAdmin");  // Añadir esta línea para borrar isAdmin del localStorage
+				localStorage.removeItem("isAdmin");
+				localStorage.removeItem("userId");  // Añadir esta línea para borrar isAdmin del localStorage
 
 				// Actualizar el estado global para limpiar la autenticación y el carrito
 				setStore({
@@ -222,7 +226,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			createOrder: async () => {
 				try {
-					const userId = localStorage.getItem("userId");
+					const userId = localStorage.getItem("userId",);
+
 
 					if (!userId) {
 						throw new Error("User ID is undefined");
@@ -254,9 +259,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Enviando payload:", payload);
 					console.log("URL de la solicitud POST:", url);
 
+					const token = localStorage.getItem("token");  // Asumiendo que el token se guarda en el localStorage con la clave "token"
+
 					const response = await axios.post(url, payload, {
 						headers: {
 							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`  // Aquí se incluye el token en el header
 						}
 					});
 
@@ -264,7 +272,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (data.success) {
 						console.log('Order created:', data.order);
-						actions.clearCart();  // Limpia el carrito usando el método del Flux
+						getActions().clearCart();  // Limpia el carrito usando el método del Flux
 					} else {
 						console.log('Order creation failed:', data.message);
 					}
@@ -317,29 +325,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ productos: productosAlmacenados });
 				}
 			},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			//Cargo datos para modal
 
 			DataModalDetalle: (data) => {
-				const store = getStore();
-				const datosModal = [{}]
 				setStore({
 					modalData: {
 						id: data.idx,
@@ -423,45 +411,86 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			actualizarMenuDelDiaEnStoreYLocalStorage: (nuevoProductoId, anteriorProductoId) => {
+				const store = getStore();
+				// Clonamos el array para evitar mutaciones directas
+				const nuevosProductos = [...store.productos].map(producto => {
+					if (producto.id === anteriorProductoId) {
+						return { ...producto, its_daily_menu: false };
+					}
+					if (producto.id === nuevoProductoId) {
+						return { ...producto, its_daily_menu: true };
+					}
+					return producto;
+				});
 
+				// Actualizar el estado de la tienda
+				setStore(prevStore => ({
+					...prevStore,
+					productos: nuevosProductos
+				}));
 
+				// Actualizar el localStorage
+				localStorage.setItem('productos', JSON.stringify(nuevosProductos));
+			},
 
+			cambiarMenuDelDia: async (productId) => {
+				try {
+					const response = await axios.put(`${process.env.BACKEND_URL}api/daily_menu/${productId}`);
+					const data = response.data;
 
-			// CargarPago: async () => {
+					if (data && data.success) {
+						const anteriorProductoId = JSON.parse(localStorage.getItem('dailyMenu'));
+						getActions().actualizarMenuDelDiaEnStoreYLocalStorage(data.daily_menu.id, anteriorProductoId);
 
-			// 	try {
+						// Guardar nuevo menú del día en localStorage
+						localStorage.setItem('dailyMenu', JSON.stringify(data.daily_menu.id));
+					}
+				} catch (error) {
+					console.log("Error durante la actualización del menú del día:", error);
+				}
+			},
 
-			// 		let data = await axios.post('https://symmetrical-space-lamp-r4gwxgwx9wv259gj-3001.app.github.dev/api/create-payment-intent',
-			// 			{
+			obtenerMenuDelDia: async () => {
+				try {
+					const response = await axios.get(`${process.env.BACKEND_URL}api/daily_menu`);
+					const data = response.data;
 
-			// 				"amount": 200
+					if (Array.isArray(data) && data.length > 0) {
+						// Aquí podrías actualizar el store y el localStorage
+						getActions().actualizarMenuDelDiaEnStoreYLocalStorage(data[0].id, null);
 
-			// 			})
-			// 		console.log(data)
+						// Guardar nuevo menú del día en localStorage
+						localStorage.setItem('dailyMenu', JSON.stringify(data[0].id));
+					} else {
+						console.log("No se encontraron productos para el menú del día.");
+					}
+				} catch (error) {
+					console.log("Error durante la consulta del menú del día:", error);
+				}
+			},
 
+			obtenerTodasLasOrdenes: async () => {
+				try {
+					const response = await axios.get(`${process.env.BACKEND_URL}api/orders`);
 
-			// 		return true;
-
-			// 	} catch (error) {
-			// 		console.log(error);
-
-			// 	}
-			// },
-
-
-
-
-
-
-
-
-
+					if (response.data.success) {
+						setStore({
+							ordenes: response.data.orders
+						});
+					} else {
+						console.error('Error al obtener todas las órdenes:', response.data.message);
+					}
+				} catch (error) {
+					console.error('Error al obtener todas las órdenes:', error);
+				}
+			},
 
 
 			obtenerOrdenesUsuario: async () => {
 				try {
 					const userId = localStorage.getItem('userId');
-					const response = await axios.get(`${process.env.BACKEND_URL}/api/user/${userId}/orders`);
+					const response = await axios.get(`${process.env.BACKEND_URL}api/user/${userId}/orders`);
 
 					if (response.data.success) {
 						setUserOrders(response.data.orders);
@@ -471,6 +500,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error('Error al obtener las órdenes del usuario:', error);
 				}
+			},
+
+
+			// En actions.js o donde definas tus acciones
+			updatePassword: (newPassword) => {
+				// Actualiza la contraseña en el estado
+				setStore((prevState) => ({
+					...prevState,
+					password: newPassword,
+				}));
 			},
 
 
@@ -497,6 +536,44 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
+
+			enviarMensaje: async (nombre, email, asunto, mensaje) => {
+				const userId = localStorage.getItem('userId');
+				const payload = {
+					nombre,
+					email,
+					asunto,
+					mensaje,
+					userId: userId ? userId : null
+				};
+				try {
+					const res = await axios.post(`${process.env.BACKEND_URL}api/messages`, payload);
+					if (res.status === 201) {
+						console.log('Mensaje enviado correctamente');
+					}
+					return res;  // Asegúrate de retornar la respuesta aquí
+				} catch (error) {
+					console.error('Hubo un error al enviar el mensaje', error);
+					return error.response;  // También puedes retornar la respuesta de error aquí
+				}
+			},
+
+			obtenerMensajes: async () => {
+				const res = await axios.get(`${process.env.BACKEND_URL}api/messages`);
+				if (res.status === 200) {
+					setStore({ mensajes: res.data });
+				}
+			},
+
+			obtenerMensajesPorUsuario: async () => {
+				const userId = localStorage.getItem('userId');
+				if (userId) {
+					const res = await axios.get(`${process.env.BACKEND_URL}api/messages/${userId}`);
+					if (res.status === 200) {
+						setStore({ mensajesPorUsuario: res.data });
+					}
+				}
+			},
 
 
 
