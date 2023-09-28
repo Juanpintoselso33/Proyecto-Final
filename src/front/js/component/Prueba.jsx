@@ -38,9 +38,17 @@ export const Pruebas = (props) => {
         actions.removeFromCart(order_id);
         setPepeaa(order_id)
     };
+    let id_Product = []
+    for (let i = 0; i < store.productos.length; i++) {
+        // if (localStorage.productos[i].id == props.product_id) {
+        //     id_Product = localStorage.productos[i].img_url
+        // }
+        id_Product.push(store.productos[i])
 
+    }
+    console.log(id_Product)
 
-
+    // console.log("este =>", localStorage.productos)
     return (
         <div className="col-12  producto_indi">
             <div className="row  home_dentro">
@@ -115,6 +123,7 @@ Pruebas.propTypes = {
     extras: PropTypes.array,
     cost: PropTypes.number,
     quantity: PropTypes.number,
-    totalCost: PropTypes.number
+    totalCost: PropTypes.number,
+    product_id: PropTypes.number
 }
 export default Pruebas;

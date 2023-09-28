@@ -96,50 +96,14 @@ export default function App() {
 
   return (
 
-    <div className="body_home">
+    <div className="body_home" id="body_prueba">
 
       <div className="">
 
       </div>
-      <div className="row m-auto">
+      <div className="row m-auto contenedor_padre_app">
 
-
-        <div className="col-6 text-center">
-          < div className="row " >
-            {/* <div className="col-6 bg-danger">
-              1 of 3
-            </div> */}
-            {/* <div className="col-12 bg-danger detalle_com">
-              <strong>Detalles de compra</strong>
-            </div> */}
-
-
-            {/* <div className="col ">
-              3 of 3
-            </div> */}
-            <div className="col-12 App" id="body_prueba">
-              {clientSecret && (
-                <Elements options={options} stripe={stripePromise}>
-                  <CheckoutForm />
-                </Elements>
-              )}
-
-            </div >
-            {/* <div className="row">
-              <div className="col bg-dark">
-                1 of 3
-              </div>
-              <div className="col-5 bg-secondary">
-                2 of 3 (wider)
-              </div>
-              <div className="col bg-info">
-                3 of 3
-              </div>
-            </div> */}
-          </div >
-        </div >
-
-        <div className="col-6 div_izquierda">
+        <div className="col-6 div_izquierda item">
           <div className="col-10">
             <div className="row col-12 contenedor_T_izquierda">
               <div className="col-12 contenedor_productos">
@@ -156,6 +120,7 @@ export default function App() {
                       cost={item.cost}
                       quantity={item.quantity}
                       order_id={item.order_id}
+                      product_id={item.product_id}
 
                     />
 
@@ -204,7 +169,7 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12">
+                  {/* <div className="col-12">
                     <div className="row">
                       <div className="col-6 title_sub">Code Discount</div>
                       <div className="col-6 price_code">
@@ -213,7 +178,7 @@ export default function App() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -238,6 +203,42 @@ export default function App() {
           </div>
 
         </div>
+        <div className="col-6 text-center div_derecha item">
+          < div className="row " >
+            {/* <div className="col-6 bg-danger">
+              1 of 3
+            </div> */}
+            {/* <div className="col-12 bg-danger detalle_com">
+              <strong>Detalles de compra</strong>
+            </div> */}
+
+
+            {/* <div className="col ">
+              3 of 3
+            </div> */}
+            <div className="col-12 App" >
+              {clientSecret && (
+                <Elements options={options} stripe={stripePromise}>
+                  <CheckoutForm />
+                </Elements>
+              )}
+
+            </div >
+            {/* <div className="row">
+              <div className="col bg-dark">
+                1 of 3
+              </div>
+              <div className="col-5 bg-secondary">
+                2 of 3 (wider)
+              </div>
+              <div className="col bg-info">
+                3 of 3
+              </div>
+            </div> */}
+          </div >
+        </div >
+
+
       </div>
     </div>
   );

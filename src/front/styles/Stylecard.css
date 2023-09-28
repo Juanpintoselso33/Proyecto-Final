@@ -52,12 +52,12 @@ h1 {
 }
 
 .home {
-  /* width: 70%; */
+  width: 70%;
   margin: auto;
   padding: 100px;
   background: #ebebeb;
-  /* border-radius: 10%; */
-  /* border: solid 1px #d68227; */
+  border-radius: 10%;
+  border: solid 1px #d68227;
 
 
 }
@@ -302,8 +302,8 @@ h1 {
   /* background: gray; */
 }
 
-.div_img_comida{
-  height:55vh;
+.div_img_comida {
+  height: 55vh;
 }
 
 .div_img_comida img {

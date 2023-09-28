@@ -4,7 +4,7 @@
   align-items: center;
 }
 
-<<<<<<< HEAD #body_prueba {
+#body_prueba {
   display: none;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
@@ -32,7 +32,8 @@ form#payment-form {
   background: white;
 }
 
-=======>>>>>>>093a0d7292e252edf45fd5b3cbd0d5350f68d376 #payment-message {
+
+#payment-message {
   color: rgb(105, 115, 134);
   font-size: 16px;
   line-height: 20px;
@@ -248,6 +249,7 @@ button#submit:disabled {
 }
 
 button {
+
   color: #3264fe;
   background-color: #d49090;
   border: none;
@@ -370,7 +372,7 @@ button {
 }
 
 
-.row {
+.row.contenedor_T_izquierda {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
   display: flex;
@@ -378,6 +380,8 @@ button {
   margin-top: calc(-1 * var(--bs-gutter-y));
   margin-right: calc(-.5 * var(--bs-gutter-x));
   margin-left: 0 !important;
+  background: white;
+
 }
 
 
@@ -388,7 +392,7 @@ button {
 
 
 .cont_Sub {
-  height: 100px;
+  height: 50px;
   border-top: 1px solid #d0bbbb;
   margin-top: 10px;
   background: white;
@@ -425,7 +429,8 @@ button {
 }
 
 #Input_Total {
-  pointer-events: none
+  pointer-events: none;
+  text-align: center;
 }
 
 .extras_M {
@@ -435,4 +440,26 @@ button {
 
 .preciosito {
   font-size: 20px;
+}
+
+/* .container {
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  flex-wrap: 1;
+   flex-basis: 200; 
+} */
+
+.contenedor_padre_app {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit,
+      minmax(400px, 1fr));
+  ;
+  gap: 10px;
+
+
 }
