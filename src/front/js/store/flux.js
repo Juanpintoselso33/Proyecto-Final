@@ -20,6 +20,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			dailyMenu: null,
 			mensajes: [],
 			mensajesPorUsuario: []
+
+			
 			/* ----------</productos>--------------- */
 		},
 
@@ -106,45 +108,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			/* -----------------Registro-----------------*/
 
-			//Funcion para dar de alta registros
-			registerUser: async (formData) => {
-				try {
-					const response = await axios.post(process.env.BACKEND_URL + 'api/register', formData);
-
-					if (response.status === 200 || response.status === 201) {
-						console.log('Registro exitoso:', response.data);
-						// Aquí puedes actualizar el estado o hacer otras acciones
-					} else {
-						console.log('Error en el registro:', response);
-						console.log('Estado de la respuesta:', response.status);
-						console.log('Cuerpo de la respuesta:', response.data);
-
-						if (response.data.error) {
-							alert(response.data.error); // Mostrar el mensaje de error al usuario
-						}
-					}
-				} catch (error) {
-					console.error('Hubo un problema con la petición:', error);
-					if (error.response && error.response.data && error.response.data.error) {
-						alert(error.response.data.error); // Mostrar el mensaje de error al usuario
-					}
-				}
-			},
-
-			addProduct: async (productData) => {
-				try {
-					console.log('Datos que se enviarán:', productData);
-					const response = await axios.post(process.env.BACKEND_URL + 'api/products', productData);
-					if (response.status === 200 || response.status === 201) {
-						console.log('Producto agregado exitosamente:', response.data);
-					} else {
-						console.log('Error al agregar el producto:', response);
-					}
-				} catch (error) {
-					console.error('Hubo un problema con la petición:', error);
-				}
-			},
-
+			// Funcion para dar de alta registros
+registerUser: async (formData) => {
+	try {
+	  const response = await axios.post(process.env.BACKEND_URL + 'api/register', formData);
+  
+	  if (response.status === 200 || response.status === 201) {
+		console.log('Registro exitoso:', response.data);
+  
+		// Devolver los datos de respuesta del servidor
+		return response.data;
+	  } else {
+		console.log('Error en el registro:', response);
+  
+		if (response.data.error) {
+		  alert(response.data.error); // Mostrar el mensaje de error al usuario
+		} else {
+		  alert('Error en la solicitud'); // Mostrar un mensaje genérico en caso de error
+		}
+	  }
+	} catch (error) {
+	  console.error('Hubo un problema con la petición:', error);
+  
+	  if (error.response && error.response.data && error.response.data.error) {
+		alert(error.response.data.error); // Mostrar el mensaje de error al usuario
+	  } else {
+		alert('Error en la solicitud'); // Mostrar un mensaje genérico en caso de error
+	  }
+	}
+  },
+  
 			initializeAuth: () => {
 				const token = localStorage.getItem("token");
 				const email = localStorage.getItem("email");
@@ -160,48 +153,52 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			login: async (email, password) => {
 				try {
-					const response = await axios.post(process.env.BACKEND_URL + 'api/login', {
-						email,
-						password
-					});
-
-					const userData = response.data;
-
-					if (userData && userData.id) {
-						localStorage.setItem("userId", userData.id.toString());
-					} else {
-						throw new Error("User ID not found in the response");
-					}
-
-					localStorage.setItem("token", userData.access_token);
-					localStorage.setItem("email", email);
-
-
-					const isAdmin = userData && userData.role === "admin";
-
-					// Depuración: Imprimir los valores para verificar
-					console.log("Valor de userData.role:", userData.role);
-					console.log("Valor de isAdmin:", isAdmin);
-
-					// Guardar el valor de isAdmin como una cadena en localStorage
-					localStorage.setItem("isAdmin", isAdmin.toString());
-
-					// Actualizar el estado global
-					setStore({
-						isAuthenticated: true,
-						token: userData.access_token,
-						email,
-						userId: userData.id,
-						isAdmin  // Asegúrate de que esto actualiza correctamente tu estado global
-					});
-
-					return true;
-
+				  // Antes de realizar la solicitud
+				  console.log("Iniciando solicitud de inicio de sesión...");
+			  
+				  const response = await axios.post(`${process.env.BACKEND_URL}api/login`, {
+					email,
+					password
+				  });
+			  
+				  // Después de recibir una respuesta exitosa
+				  console.log("Solicitud exitosa:", response.data);
+			  
+				  const userData = response.data;
+			  
+				  if (userData && userData.id) {
+					localStorage.setItem("userId", userData.id.toString());
+				  } else {
+					throw new Error("User ID not found in the response");
+				  }
+			  
+				  localStorage.setItem("token", userData.access_token);
+				  localStorage.setItem("email", email);
+			  
+				  const isAdmin = userData && userData.role === "admin";
+				  localStorage.setItem("isAdmin", isAdmin.toString());
+			  
+				  // Actualiza el estado global
+				  setStore({
+					isAuthenticated: true,
+					token: userData.access_token,
+					email,
+					userId: userData.id,
+					isAdmin
+				  });
+			  
+				  // Antes de retornar true
+				  console.log("Inicio de sesión exitoso.");
+				  
+				  return true;
 				} catch (error) {
-					console.log("Error during login:", error);
-					return false;
+				  // En caso de error
+				  console.error("Error durante el inicio de sesión:", error);
+			  
+				  return false;
 				}
-			},
+			  },
+			  
 
 			logout: () => {
 				console.log("Ejecutando función logout");
