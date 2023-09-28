@@ -52,12 +52,13 @@ export default function ItemCarrusel(props) {
 
             <div className="container">
                 <div className="row align-items-center justify-content-center contenedor_image">
+
                     {/* <div className="col-1"></div> */}
-                    <div className="col-6">
+                    <div className="col-6 imagenM">
                         <img src={props.img_urli} className="img-fluid rounded shadow" alt={props.namei} />
                     </div>
                     {/* <div className="col-1"></div> */}
-                    <div className="col-3">
+                    <div className="col-6 textoM">
                         {props.its_daily_menu &&
                             <div className="mb-3" style={{
                                 background: 'rgba(255,255,255,0.8)',
@@ -90,7 +91,8 @@ export default function ItemCarrusel(props) {
                             <h3>${props.costi}</h3>
                         </div>
                     </div>
-                    <div className="col-1"></div>
+
+
                 </div>
             </div>
         </div>
