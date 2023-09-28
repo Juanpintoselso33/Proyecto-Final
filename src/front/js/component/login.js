@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import RegisterModal from './register';
 import { Context } from "../store/appContext";
 
-const Login = ({ showModal, handleCloseModal }) => {
+export const Login = ({ showModal, handleCloseModal }) => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(null);

@@ -10,9 +10,6 @@ import "../../styles/cartDropdown.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-
 const getIsAdminFromLocalStorage = () => {
   const isAdmin = localStorage.getItem('isAdmin');
   return isAdmin === 'true';
@@ -38,7 +35,7 @@ export const Navbar = ({ setSeccionActiva }) => {
 
   useEffect(() => {
     setIsAdmin(getIsAdminFromLocalStorage());
-  }, [forceUpdate]);
+  }, [store.isAuthenticated, forceUpdate]);
 
   useEffect(() => {
     setCart(store.cart);
@@ -67,7 +64,7 @@ export const Navbar = ({ setSeccionActiva }) => {
   const handleSubmit = async (email, password) => {
     let logged = await actions.login(email, password);
     if (logged) {
-      setForceUpdate(!forceUpdate);
+      setIsAdmin(getIsAdminFromLocalStorage()); // Aquí actualizamos el estado isAdmin
       setSuccessMessage("Login exitoso, cerrando ventana...");
       setTimeout(() => {
         navigate('/');
@@ -76,6 +73,8 @@ export const Navbar = ({ setSeccionActiva }) => {
       }, 2000);
     }
   };
+  
+  
 
   const handleLogout = () => {
     actions.logout();
