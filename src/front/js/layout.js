@@ -9,13 +9,14 @@ import { Single } from "./pages/single";
 
 import injectContext from "./store/appContext";
 // import { Navbar } from "./component/navbar";
-import { Catalogo } from "./component/catalogo";
 import { Footer } from "./component/footer";
 import { AddProduct } from "./pages/addProduct"
 import { AddUsuario } from "./pages/addUsuario"
+import { ConfirmationPage } from "./pages/confirmationPage"
 import { CartView } from "./pages/cart"
-import  {UsuarioAdmin} from  './component/usuarioAdmin';
-import  {UsuarioEstandar} from  './component/usuarioEstandar';
+import { UsuarioAdmin } from './component/usuarioAdmin';
+import { UsuarioEstandar } from './component/usuarioEstandar';
+import App from './component/App.jsx'
 
 
 
@@ -29,7 +30,7 @@ const Layout = () => {
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
     return (
         <div>
@@ -37,16 +38,17 @@ const Layout = () => {
                 <ScrollToTop>
                     <Routes>
                         <Route element={<Home />} path="/" />
-                        <Route element={<Demo />} path="/demo" />                       
-                        <Route element={<Single />} path="/single/:theid" />            
-                        <Route element={<h1>Not found!</h1>} />                       
-                        <Route element={<AddProduct />} path="/addProduct"/>
-                        <Route element={<AddUsuario />} path="/addUsuario"/>
-                        <Route element={<CartView />} path="/cart"/>
-                        <Route element={<Catalogo />} path="/catalogo"/>
-                        <Route element={<UsuarioAdmin />} path="/usuarioAdmin"/>    
-                        <Route element={<UsuarioEstandar />} path="/usuarioEstandar"/>
-                    </Routes>                   
+                        <Route element={<Demo />} path="/demo" />
+                        <Route element={<Single />} path="/single/:theid" />
+                        <Route element={<h1>Not found!</h1>} />
+                        <Route element={<AddProduct />} path="/addProduct" />
+                        <Route element={<AddUsuario />} path="/addUsuario" />
+                        <Route element={<CartView />} path="/cart" />
+                        <Route element={<UsuarioAdmin />} path="/usuarioAdmin" />
+                        <Route element={<UsuarioEstandar />} path="/usuarioEstandar" />
+                        <Route element={<App />} path="/prueba1122" />
+                        <Route element={<ConfirmationPage />} path="/confirmation" />
+                    </Routes>
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>

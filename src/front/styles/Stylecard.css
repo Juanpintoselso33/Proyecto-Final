@@ -23,13 +23,16 @@ h1 {
   z-index: 1;
   cursor: pointer;
   transform: translateY(-50%);
-  transition: font-size 2s ease, box-shadow 2s ease;  /* Tiempo más largo para la transición */
+  transition: font-size 2s ease, box-shadow 2s ease;
+  /* Tiempo más largo para la transición */
 }
 
 .custom-arrow:hover {
   font-size: 32px;
-  box-shadow: 0px 0px 20px 5px rgba(255, 255, 255, 0.9);  /* Brillito al hacer hover */
-  outline: 2px solid rgba(255, 255, 255, 0.9);  /* Brillito como outline */
+  box-shadow: 0px 0px 20px 5px rgba(255, 255, 255, 0.9);
+  /* Brillito al hacer hover */
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  /* Brillito como outline */
 }
 
 .custom-arrow.left {
@@ -48,22 +51,23 @@ h1 {
   font-family: arial;
 }
 
-.home{
+.home {
   width: 70%;
   margin: auto;
   padding: 100px;
   background: #ebebeb;
   border-radius: 10%;
   border: solid 1px #d68227;
- 
+
 
 }
+
 .price {
   color: grey;
   font-size: 22px;
 }
 
-.react-multi-carousel-list{
+.react-multi-carousel-list {
   max-width: 100%;
 }
 
@@ -84,37 +88,37 @@ h1 {
   opacity: 0.7;
 }
 
-.card{
+.card {
 
-width: 90%;
+  width: 90%;
 }
 
-.App{
+.App {
 
   max-width: 100%;
 }
 
 .App h1 {
 
-text-align: center;
+  text-align: center;
 
 }
 
-.home{
+.home {
 
-margin-top: 40px;
+  margin-top: 40px;
 
 }
 
-.CarruselInicio{
+.CarruselInicio {
 
-max-height: 10vh;
+  max-height: 10vh;
 
 }
 
 .elementoProducto:active {
 
-color: red;
+  color: red;
 
 }
 
@@ -125,38 +129,39 @@ color: red;
   transform: scale(1.1);
 } */
 
-.pruebasss{
+.pruebasss {
   height: 90vh;
 }
 
-.pepesq1{
+.pepesq1 {
 
-max-width: 100% !important;
-text-align: center !important;
-align-items: center;
+  max-width: 100% !important;
+  text-align: center !important;
+  align-items: center;
 
 
 }
 
-.pruebahome{
+.pruebahome {
   width: 100% !important;
- text-align: center !important;
+  text-align: center !important;
 
 
 }
 
-.pruebaas{
+.pruebaas {
 
-justify-content: center !important;
+  justify-content: center !important;
 }
 
 
-.contenedorImg_Data{
+.contenedorImg_Data {
 
- overflow: hidden;
+  overflow: hidden;
 
-} 
-.c1{
+}
+
+.c1 {
   display: flex;
   width: 50%;
   /* background: red; */
@@ -164,7 +169,7 @@ justify-content: center !important;
   margin: auto;
 }
 
-.c2{
+.c2 {
 
   width: 50%;
   /* background: blue; */
@@ -173,20 +178,20 @@ justify-content: center !important;
   height: 100%;
 }
 
-.imagenDetalle{
+.imagenDetalle {
   max-width: 100%;
   align-items: center;
 }
 
-.c2_1{
-display: flex;
-height: 15vh;
-/* background: greenyellow; */
-flex-direction: column;
-gap: 20px;
-text-align: initial;
+.c2_1 {
+  display: flex;
+  height: 15vh;
+  /* background: greenyellow; */
+  flex-direction: column;
+  gap: 20px;
+  text-align: initial;
 
-width: 100%;
+  width: 100%;
 }
 
 /* .c2_2{
@@ -194,27 +199,27 @@ width: 100%;
   background: green;
 } */
 
-.c2_conjunto{
+.c2_conjunto {
   width: 100%;
 }
 
-.c2_1_1_Precio{
-/* background: violet; */
-width: 100%;
+.c2_1_1_Precio {
+  /* background: violet; */
+  width: 100%;
 }
 
-.carrusel_Principal{
+.carrusel_Principal {
   height: 90vh;
 }
 
-.DetallesAgregados{
+.DetallesAgregados {
 
-width: 100%;
-overflow: auto;
-height: 65vh;
+  width: 100%;
+  overflow: auto;
+  height: 65vh;
 }
 
-.Salsas_title{
+.Salsas_title {
 
   /* background-color: goldenrod; */
   height: 20%;
@@ -224,26 +229,26 @@ height: 65vh;
   gap: 20px;
   padding: calc(20px) calc(20px) 0px;
   width: 100%;
- 
+
 }
 
-.Sal_1{
+.Sal_1 {
   width: 100%;
 }
 
-.Maxsal{
+.Maxsal {
   width: 100%;
 }
-.Lista_Agregados{
+
+.Lista_Agregados {
 
   width: 100%;
   margin: 0px;
-  padding: 0px
-  ;
+  padding: 0px;
 
 }
 
-.Bebidas_title{
+.Bebidas_title {
   /* background-color: goldenrod; */
   height: 20%;
   display: flex;
@@ -252,14 +257,14 @@ height: 65vh;
   gap: 20px;
   padding: calc(20px) calc(20px) 0px;
   width: 100%;
-  
+
 }
 
 
-.Tipos_Detalle{
+.Tipos_Detalle {
 
-width: 100%;
-max-width: 100%;
+  width: 100%;
+  max-width: 100%;
 
 }
 
@@ -268,21 +273,21 @@ max-width: 100%;
   /* height: 100%; */
 
   display: flex;
- flex-direction: column;
-border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.Elemento_del_UL{
+.Elemento_del_UL {
 
-width: 50%;
-margin-left: 10px;
-text-align: initial;
+  width: 50%;
+  margin-left: 10px;
+  text-align: initial;
 
 }
 
-.titulos_tipo{
+.titulos_tipo {
   width: 100%;
-  height: 7vh; 
+  height: 7vh;
   display: flex;
   flex-direction: column;
   align-items: baseline;
@@ -291,47 +296,48 @@ text-align: initial;
   margin-left: 10px;
 }
 
-.envo{
+.envo {
 
   width: 100%;
   /* background: gray; */
 }
 
-.div_img_comida{
-  height: 65vh;
+.div_img_comida {
+  height: 55vh;
 }
 
-.div_img_comida img{
+.div_img_comida img {
   height: 65vh;
   max-width: 90%;
   border-radius: 10%;
 }
 
-.listas{
+.listas {
   display: flex;
   width: 100%;
   height: 10vh;
 }
 
-.wrapper{
+.wrapper {
   height: 45px;
-  min-width: 20% ;
+  min-width: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #fff;
   border-radius: 12px;
-border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  user-select: none
 }
 
-.wrapper span{
+.wrapper span {
   width: 100%;
   text-align: center;
   font-size: 35px;
   font-weight: 600;
 }
 
-.wrapper span.num{
+.wrapper span.num {
 
   font-size: 30px;
   border-right: 2px solid rgba(0, 0, 0, 0.2);
@@ -340,10 +346,10 @@ border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 
-.Menu_dia img{
+.Menu_dia img {
   width: 100%;
 }
 
-.Menu_dia{
+.Menu_dia {
   width: 100%;
 }

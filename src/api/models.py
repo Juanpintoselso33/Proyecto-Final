@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import JSON
+from enum import Enum
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -81,12 +82,18 @@ class Product(db.Model):
             'its_promo':  self.its_promo,
             'its_daily_menu':  self.its_daily_menu
         }
+    
+class PaymentStatus(Enum):
+    PENDING = "Pendiente"
+    SUCCESSFUL = "Exitoso"
+    FAILED = "Fallido"
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     total_cost = db.Column(db.Float, nullable=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    payment_status = db.Column(db.Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False)
 
     items = db.relationship('OrderProduct', back_populates='order')
     user = db.relationship('User', back_populates='orders')
@@ -138,6 +145,7 @@ class Order(db.Model):
             "total_cost_without_extras": total_cost_without_extras,
             "timestamp": self.timestamp,
             "user_id": self.user_id,
+            "payment_status": self.payment_status.value,
             "items": serialized_items
         }
 

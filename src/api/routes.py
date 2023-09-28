@@ -1,16 +1,77 @@
+#! /usr/bin/env python3.6
+"""
+Python 3.6 or newer required.
+"""
+import json
+import os
+import stripe
+
+
+# This is your test secret API key.
+stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG9aT56ZppZYviuhqit7eKlKFZnjmFwxgiyjZ00Jvx3IxRM'
+
+
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product, Order, OrderProduct, Extra, Message  
+from api.models import db, User, Product, Order, OrderProduct, Extra, Message, PaymentStatus  
 from api.utils import generate_sitemap, APIException  
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token,  get_jwt_identity
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token,get_jwt_identity
+from flask_cors import CORS, cross_origin
+
+
+
 
 api = Blueprint('api', __name__)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public',
+            static_url_path='', template_folder='public')
+
+
+
 app.config['JWT_SECRET_KEY'] = 'tu_clave_secreta'
 jwt = JWTManager(app) 
+
+# CORS(api)
+
+# CORS(api,resources ={r"/create-payment-intent/*":{"origins":"https://super-duper-goldfish-gjrqrr4q9wpc9769-3000.app.github.dev"}})
+
+def calculate_order_amount(amount):
+    # Replace this constant with a calculation of the order's amount
+    # Calculate the order total on the server to prevent
+    # people from directly manipulating the amount on the client
+    return amount
+
+# @cross_origin
+@api.route('/create-payment-intent', methods=['POST'])
+def create_payment():
+    try:
+        data = json.loads(request.data)
+        pepe =  data['items']
+        prueba = 200
+        # Create a PaymentIntent with the order amount and currency
+        intent = stripe.PaymentIntent.create(
+            amount=calculate_order_amount(data["items"]),
+            currency='USD',
+            # amount=data.get('amount'),
+            # currency=data.get('USD'),
+            # In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+            automatic_payment_methods={
+                'enabled': True,
+           
+            },
+
+   
+        )
+        print(type(pepe), " ",str(pepe))
+        print(type(prueba)," "  ,str(prueba))
+        return jsonify({
+            'clientSecret': intent['client_secret'],
+            'valor_enviado': data['items']
+        })
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
 
 @api.route('/hello', methods=['POST', 'GET'])
@@ -22,13 +83,13 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-
 # ----------------------------- ENDPOINTS USUARIOS -----------------------------------------------------------------
 
  
 @api.route('/register', methods=['POST'])
 def register_user():
     try:
+
         data = request.json
         email = data.get('email')
         password = data.get('password')
@@ -107,46 +168,78 @@ def login():
 # Endpoint para obtener todos los usuarios
 @api.route('/users', methods=['GET'])
 def get_all_users():
-    try:
-        users_query = User.query.all()
-        users_list = [user.serialize() for user in users_query]
+    users = User.query.all()
+    return jsonify([user.serialize() for user in users]), 200
 
-        return jsonify(users_list), 200
-
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 400
-
-
-# Endpoint para obtener un usuario por su ID
-@api.route('/users/<int:user_id>', methods=['GET'])
-def get_user_by_id(user_id):
-    try:
-        user = User.query.get(user_id)
-        if user is None:
-            return jsonify({'error': 'User not found'}), 404
-
+@api.route('/user/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_user_data(user_id):
+    user = User.query.get(user_id)
+    if user:
         return jsonify(user.serialize()), 200
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 400
+@api.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    
+    # Validación básica
+    if 'email' not in data or 'password' not in data:
+        return jsonify({'error': 'Email y contraseña son requeridos'}), 400
+    
+    email = data['email']
+    password = data['password']
+
+    # Verificar si el usuario ya existe
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({'error': 'El email ya está registrado'}), 400
+
+    new_user = User(email=email, password=password)
+    
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message': 'Usuario registrado exitosamente'}), 201
+
+@api.route('/user/<int:user_id>', methods=['PUT'])
+#@jwt_required()
+def edit_user(user_id):
+    data = request.get_json()
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'Usuario no encontrado'}), 404
+
+    if 'email' in data:
+        user.email = data['email']
+    if 'password' in data:
+        user.password = data['password']  
+    if 'role' in data:
+        user.role = data['role']
+
+    db.session.commit()
+
+    return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
 
 
-# Endpoint para eliminar un usuario por su ID
-@api.route('/users/<int:user_id>', methods=['DELETE'])
+@api.route('/user/<int:user_id>', methods=['DELETE'])
+#@jwt_required()
 def delete_user(user_id):
-    try:
-        user = User.query.get(user_id)
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'Usuario no encontrado'}), 404
 
-        if user is None:
-            return jsonify({"success": False, "message": "User not found"}), 404
+    db.session.delete(user)
+    db.session.commit()
 
-        db.session.delete(user)
-        db.session.commit()
+    return jsonify({'message': 'Usuario eliminado exitosamente'}), 200
 
-        return jsonify({"success": True, "message": "User deleted"}), 200
-
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 400
+@api.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    return jsonify(message="This is a protected route.")
 
 
 # ----------------------------- ENDPOINTS PRODUCTOS ------------------------------------------------------------------
@@ -162,7 +255,15 @@ def get_all_products():
         return jsonify({"success": False, "message": str(e)}), 400
 
 
-# Ver producto individual
+#Listar productos
+@api.route('/products', methods=['GET'])
+def handle_list_products():
+    products_query = Product.query.all()  # Consulta para obtener todos los productos
+    products_list = [product.serialize() for product in products_query]
+
+    return jsonify(products_list), 200
+
+#Ver producto individual
 @api.route('/products/<int:product_id>', methods=['GET'])
 def handle_get_product_by_id(product_id):
     product = Product.query.get(product_id)
@@ -170,7 +271,6 @@ def handle_get_product_by_id(product_id):
         return jsonify({'error': 'Product not found'}), 404
 
     return jsonify(product.serialize()), 200
-
 
 @api.route('/products', methods=['POST'])
 def add_product():
@@ -191,7 +291,7 @@ def add_product():
         db.session.commit()
         print("Producto agregado exitosamente:", new_product.serialize())  
         return jsonify({"success": True, "message": "Product added", "product": new_product.serialize()}), 201
-
+    
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
@@ -216,11 +316,13 @@ def delete_product(product_id):
 @api.route('/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
     try:
-        product = Product.query.get(product_id)
-        if product is None:
-            return jsonify({'error': 'Producto no encontrado'}), 404
-        
         data = request.json
+        product = Product.query.get(product_id)
+        
+        if product is None:
+            return jsonify({"success": False, "message": "Product not found"}), 404
+
+        # Actualizar los campos
         if 'cost' in data:
             product.cost = data['cost']
         if 'name' in data:
@@ -233,14 +335,59 @@ def update_product(product_id):
             product.img_url = data['img_url']
         if 'category' in data:
             product.category = data['category']
-        if 'promo' in data:
-            product.its_promo = data['promo']        
-        
-        db.session.commit()
-        return jsonify({"success": True, "message": "Producto actualizado exitosamente", "product": product.serialize()}), 200
 
+        db.session.commit()
+        
+        return jsonify({"success": True, "message": "Product updated", "product": product.serialize()}), 200
+    
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
+
+@api.route('/product/<int:product_id>', methods=['DELETE'])
+# def delete_product(product_id):
+#     try:
+#         product = Product.query.get(product_id)
+
+#         if product is None:
+#             return jsonify({"success": False, "message": "Product not found"}), 404
+
+#         db.session.delete(product)
+#         db.session.commit()
+
+#         return jsonify({"success": True, "message": "Product deleted"}), 200
+
+#     except Exception as e:
+#         return jsonify({"success": False, "message": str(e)}), 400
+
+# Endpoint para actualizar un producto existente por su ID
+# @api.route('/products/<int:product_id>', methods=['PUT'])
+# def update_product(product_id):
+#     try:
+#         product = Product.query.get(product_id)
+#         if product is None:
+#             return jsonify({'error': 'Producto no encontrado'}), 404
+        
+#         data = request.json
+#         if 'cost' in data:
+#             product.cost = data['cost']
+#         if 'name' in data:
+#             product.name = data['name']
+#         if 'description' in data:
+#             product.description = data['description']
+#         if 'stars' in data:
+#             product.stars = data['stars']
+#         if 'img_url' in data:
+#             product.img_url = data['img_url']
+#         if 'category' in data:
+#             product.category = data['category']
+#         if 'promo' in data:
+#             product.its_promo = data['promo']        
+        
+#         db.session.commit()
+#         return jsonify({"success": True, "message": "Producto actualizado exitosamente", "product": product.serialize()}), 200
+
+#     except Exception as e:
+#         return jsonify({"success": False, "message": str(e)}), 400
 
 # ENDPOINT PARA TRAER MENÚ DEL DÍA DEL BACK
 @api.route('/daily_menu', methods=['GET'])
@@ -444,6 +591,10 @@ def get_messages_by_user(user_id):
 
 
 
+
+
+
+
 # -------------------------- FIN ENDPOINTS PRODUCTOS --------------------------
 # -------------------------- ENDPOINTS ORDER ----------------------------------
 
@@ -525,7 +676,51 @@ def add_order(user_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 
+@api.route('/update_order_status', methods=['POST'])
+def update_order_status():
+    try:
+        data = request.json
+        order_id = data['order_id']
+        new_status = data['new_status']
 
+        # Buscar la orden por ID
+        order = Order.query.get(order_id)
+
+        if not order:
+            return jsonify({"error": "Orden no encontrada"}), 404
+
+        # Actualizar el estado del pago
+        order.payment_status = PaymentStatus(new_status)
+
+        db.session.commit()
+
+        return jsonify({"message": "Estado del pago actualizado con éxito"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@api.route('/webhook', methods=['POST'])
+def stripe_webhook():
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe.api_key
+        )
+    except ValueError as e:
+        return 'Invalid payload', 400
+    except stripe.error.SignatureVerificationError as e:
+        return 'Invalid signature', 400
+
+    if event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']
+        # Aquí actualizas el estado de la orden en tu base de datos
+
+    return jsonify({'status': 'success'})
+
+if __name__ == '__main__':
+    app.run()
 
 
 
@@ -533,3 +728,6 @@ app.register_blueprint(api, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run()
+
+
+

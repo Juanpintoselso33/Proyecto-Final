@@ -7,14 +7,8 @@ import "../../styles/Stylecard.css";
 import { array } from "prop-types";
 
 
-
-
-
 export const CardMultiple = () => {
     const { store, actions } = useContext(Context);
-    const [arrayHambur, setArrayHambur] = useState([])
-    const [arrayMilane, setArrayMilane] = useState([])
-
 
     const responsive = {
         superLargeDesktop: {
@@ -41,38 +35,9 @@ export const CardMultiple = () => {
 
     }, [])
 
-    //guardo solo los productos con categoria "H" => hamburguesas
-    for (let i = 0; i < store.productos.length; i++) {
-        if (store.productos[i].category === "H") {
-            arrayHambur.push(store.productos[i])
-        }
-
-
-    }
-
-    const productHambur = arrayHambur.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
-
-    const productMila = arrayMilane.map((item, index) => (
-        <Product key={index}
-            name={item.name}
-            url={item.img_url}
-            price={item.cost}
-            description={item.description}
-        />
-    ));
-
-
-
+ 
     return (
         <div className="Demo">
-
             <div className="home">
                 <div className="App" >
                     <h1>Hamburguesas</h1>
@@ -81,7 +46,6 @@ export const CardMultiple = () => {
                     </Carousel>
                 </div>
             </div>
-
             <div className="home">
                 <div className="App" >
                     <h1>Milanesas</h1>
@@ -90,13 +54,6 @@ export const CardMultiple = () => {
                     </Carousel>
                 </div>
             </div>
-
-
         </div>
-
-
     );
-
-
-
 };

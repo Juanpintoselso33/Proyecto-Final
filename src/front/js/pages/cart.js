@@ -6,9 +6,12 @@ import Cerrar from "../../img/cerrar.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faTrashAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
+
 export const CartView = () => {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
+  const [isPressed, setIsPressed] = useState([]);
+
 
   const cart = store.cart;
 
@@ -30,6 +33,15 @@ export const CartView = () => {
 
   const totalCost = cart.totalCost || 0;
 
+  // useEffect(() => {
+  //   actions.CargarPago()
+  // }, []);
+
+
+
+  function mover_carrito() {
+    navigate("/prueba1122")
+  }
   return (
     <section className="vh-100 bg-image d-flex justify-content-center align-items-center" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(10, 10, 10, 1)), url(${Logo})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
       <div className="container d-flex justify-content-center" style={{ maxWidth: '800px', width: '100%' }}>
@@ -86,11 +98,11 @@ export const CartView = () => {
           </table>
           <div className="text-center">
             <h2 style={{ fontWeight: 'bolder', color: '#000' }}>Costo Total: ${totalCost.toFixed(2)}</h2>
-            <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '30px', color: '#fff', padding: '15px 30px', fontSize: '20px', transition: '0.3s' }} onClick={() => actions.createOrder()}>Comprar</button>
+            <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '30px', color: '#fff', padding: '15px 30px', fontSize: '20px', transition: '0.3s' }}  onClick={() => {  mover_carrito() }}>Comprar</button>
           </div>
         </div>
       </div>
-      <style jsx>{`
+      <style>{`
         .hoverEffect:hover,
         .hoverEffectDelete:hover {
           background-color: #fff;

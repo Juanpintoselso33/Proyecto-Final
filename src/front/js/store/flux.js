@@ -20,6 +20,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			dailyMenu: null,
 			mensajes: [],
 			mensajesPorUsuario: []
+
+
 			/* ----------</productos>--------------- */
 		},
 
@@ -106,29 +108,46 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			/* -----------------Registro-----------------*/
 
-			//Funcion para dar de alta registros
+			// Funcion para dar de alta registros
 			registerUser: async (formData) => {
 				try {
 					const response = await axios.post(process.env.BACKEND_URL + 'api/register', formData);
 
 					if (response.status === 200 || response.status === 201) {
 						console.log('Registro exitoso:', response.data);
-						// Aquí puedes actualizar el estado o hacer otras acciones
+
+						// Devolver los datos de respuesta del servidor
+						return response.data;
 					} else {
 						console.log('Error en el registro:', response);
-						console.log('Estado de la respuesta:', response.status);
-						console.log('Cuerpo de la respuesta:', response.data);
 
 						if (response.data.error) {
 							alert(response.data.error); // Mostrar el mensaje de error al usuario
+						} else {
+							alert('Error en la solicitud'); // Mostrar un mensaje genérico en caso de error
 						}
 					}
 				} catch (error) {
 					console.error('Hubo un problema con la petición:', error);
+
 					if (error.response && error.response.data && error.response.data.error) {
 						alert(error.response.data.error); // Mostrar el mensaje de error al usuario
+					} else {
+						alert('Error en la solicitud'); // Mostrar un mensaje genérico en caso de error
 					}
 				}
+			},
+
+			initializeAuth: () => {
+				const token = localStorage.getItem("token");
+				const email = localStorage.getItem("email");
+				const userId = localStorage.getItem("userId");  // Recuperar la ID del usuario
+
+				if (token && email && userId) {
+					setStore({ isAuthenticated: true, token, email, userId });  // Usar la ID del usuario
+				}
+
+				getActions().initializeCart();
 			},
 
 			addProduct: async (productData) => {
@@ -145,63 +164,63 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			initializeAuth: () => {
-				const token = localStorage.getItem("token");
-				const email = localStorage.getItem("email");
-				const userId = localStorage.getItem("userId");  // Recuperar la ID del usuario
-
-				if (token && email && userId) {
-					setStore({ isAuthenticated: true, token, email, userId });  // Usar la ID del usuario
-				}
-
-				getActions().initializeCart();
-			},
-
-
 			login: async (email, password) => {
 				try {
-					const response = await axios.post(process.env.BACKEND_URL + 'api/login', {
+					// Antes de realizar la solicitud
+					console.log("Iniciando solicitud de inicio de sesión...");
+
+					const response = await axios.post(`${process.env.BACKEND_URL}api/login`, {
 						email,
 						password
 					});
 
-					const userData = response.data;
+					// Verificar si la respuesta es exitosa
+					if (response.status === 200) {
+						const userData = response.data;
 
-					if (userData && userData.id) {
-						localStorage.setItem("userId", userData.id.toString());
+						if (userData && userData.id) {
+							localStorage.setItem("userId", userData.id.toString());
+						} else {
+							throw new Error("ID de usuario no encontrado en la respuesta");
+						}
+
+						localStorage.setItem("token", userData.access_token);
+						localStorage.setItem("email", email);
+
+						const isAdmin = userData && userData.role === "admin";
+						localStorage.setItem("isAdmin", isAdmin.toString());
+
+						// Actualiza el estado global
+						setStore({
+							isAuthenticated: true,
+							token: userData.access_token,
+							email,
+							userId: userData.id,
+							isAdmin
+						});
+
+						// Antes de retornar true
+						console.log("Inicio de sesión exitoso.");
+
+						return { success: true };
 					} else {
-						throw new Error("User ID not found in the response");
+						throw new Error("Error durante el inicio de sesión");
 					}
-
-					localStorage.setItem("token", userData.access_token);
-					localStorage.setItem("email", email);
-
-
-					const isAdmin = userData && userData.role === "admin";
-
-					// Depuración: Imprimir los valores para verificar
-					console.log("Valor de userData.role:", userData.role);
-					console.log("Valor de isAdmin:", isAdmin);
-
-					// Guardar el valor de isAdmin como una cadena en localStorage
-					localStorage.setItem("isAdmin", isAdmin.toString());
-
-					// Actualizar el estado global
-					setStore({
-						isAuthenticated: true,
-						token: userData.access_token,
-						email,
-						userId: userData.id,
-						isAdmin  // Asegúrate de que esto actualiza correctamente tu estado global
-					});
-
-					return true;
-
 				} catch (error) {
-					console.log("Error during login:", error);
-					return false;
+					// En caso de error
+					console.error("Error durante el inicio de sesión:", error);
+
+					// Aquí puedes manejar el error específico del 401
+					if (error.response && error.response.status === 401) {
+						throw new Error("Error 401: No autorizado, comprueba tus credenciales");
+					} else {
+						throw new Error("Error durante el inicio de sesión");
+					}
 				}
 			},
+
+
+
 
 			logout: () => {
 				console.log("Ejecutando función logout");
@@ -226,21 +245,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			createOrder: async () => {
 				try {
-					const userId = localStorage.getItem("userId",);
-
+					const userId = localStorage.getItem("userId");
 
 					if (!userId) {
 						throw new Error("User ID is undefined");
 					}
 
-					// Obtén el carrito directamente desde el estado del store (Flux)
-					const cartFromStore = getStore().cart;  // Asegúrate de que `getStore()` esté definido correctamente
+					const cartFromStore = JSON.parse(localStorage.getItem("cart"));
 
 					console.log("Estado del carrito antes de crear la orden:", cartFromStore);
 
 					if (!cartFromStore || cartFromStore.items.length === 0) {
 						console.log("El carrito está vacío. No se puede crear la orden.");
-						return;
+						return null;
 					}
 
 					const items = cartFromStore.items.map(item => ({
@@ -254,30 +271,72 @@ const getState = ({ getStore, getActions, setStore }) => {
 					};
 
 					const url = `${process.env.BACKEND_URL}/api/user/${userId}/add_order`;
-					console.log("Enviando payload:", payload);
-					console.log("URL de la solicitud POST:", url);
 
-					const token = localStorage.getItem("token");  // Asumiendo que el token se guarda en el localStorage con la clave "token"
+					const token = localStorage.getItem("token");
 
 					const response = await axios.post(url, payload, {
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${token}`  // Aquí se incluye el token en el header
+							'Authorization': `Bearer ${token}`
 						}
 					});
 
 					const data = response.data;
-
 					if (data.success) {
 						console.log('Order created:', data.order);
-						getActions().clearCart();  // Limpia el carrito usando el método del Flux
+						getActions().clearCart();
+						return data.order;  // Retorna la orden creada
 					} else {
 						console.log('Order creation failed:', data.message);
+						return null;
 					}
 				} catch (error) {
 					console.log('An error occurred:', error);
+					return null;
 				}
 			},
+			clearCart: () => {
+				// Limpia el carrito del localStorage
+				localStorage.removeItem("cart");
+
+				// Limpia el carrito del store (asumiendo que tienes un store para el carrito)
+				// Puedes adaptar esta parte según cómo estés manejando el estado en tu aplicación
+				setStore({
+					cart: {
+						items: [],
+						totalCost: 0
+					}
+				});
+
+				console.log("El carrito ha sido limpiado.");
+			},
+
+
+
+			updateOrderStatus: async (order_id, new_status) => {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/update_order_status`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							order_id,
+							new_status,
+						}),
+					});
+
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Estado del pago actualizado con éxito:", data);
+					} else {
+						console.log("Error al actualizar el estado del pago");
+					}
+				} catch (error) {
+					console.error("Ocurrió un error al actualizar el estado del pago:", error);
+				}
+			},
+
 
 
 			actualizarExtras: nuevosExtras => {
@@ -350,6 +409,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			saveCart: () => {
 				const store = getStore();
 				localStorage.setItem('cart', JSON.stringify(store.cart));
+
 			},
 
 			// Acción para incrementar la cantidad de un producto en el carrito
@@ -513,32 +573,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			async updatePassword(newPassword, id) {
 				try {
-				  const userId = id;
-				  const token = localStorage.getItem("token");
-			  
-				  const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, {
-					password: newPassword,
-				  }, {
-					headers: {
-					  'Authorization': `Bearer ${token}`
+					const userId = id;
+					const token = localStorage.getItem("token");
+
+					const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, {
+						password: newPassword,
+					}, {
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (response.data.success) {
+						// Actualiza la contraseña en el estado local
+						setStore((prevState) => ({
+							...prevState,
+							password: newPassword,
+						}));
+
+						return { success: true };
+					} else {
+						console.error('Error al actualizar la contraseña:', response.data.message);
+						return { success: false, message: response.data.message };
 					}
-				  });
-			  
-				  if (response.data.success) {
-					// Actualiza la contraseña en el estado local
-					setStore((prevState) => ({
-					  ...prevState,
-					  password: newPassword,
-					}));
-			  
-					return { success: true };
-				  } else {
-					console.error('Error al actualizar la contraseña:', response.data.message);
-					return { success: false, message: response.data.message };
-				  }
 				} catch (error) {
-				  console.error('Error al actualizar la contraseña:', error);
-				  return { success: false, message: error.message };
+					console.error('Error al actualizar la contraseña:', error);
+					return { success: false, message: error.message };
 				}
 			},
 
@@ -576,7 +636,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			async validarContrasena(contrasenaActual) {
 				try {
-					const token = localStorage.getItem("token"); 
+					const token = localStorage.getItem("token");
 					const response = await axios.post(`${process.env.BACKEND_URL}api/validate-password`, {
 						password: contrasenaActual,
 					}, {
@@ -597,48 +657,48 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			async updateEmail(newEmail, userId) {
 				try {
-				  // Obtener todos los usuarios
-				  const allUsersResponse = await axios.get(`${process.env.BACKEND_URL}api/users`, {
-					headers: {
-					  'Authorization': `Bearer ${localStorage.getItem("token")}`
+					// Obtener todos los usuarios
+					const allUsersResponse = await axios.get(`${process.env.BACKEND_URL}api/users`, {
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+
+					// Verificar si el nuevo correo electrónico ya existe
+					const emailExists = allUsersResponse.data.some(user => user.email === newEmail);
+
+					if (emailExists) {
+						console.error('El correo electrónico ya existe.');
+						return { success: false, message: 'El correo electrónico ya existe.' };
 					}
-				  });
-			  
-				  // Verificar si el nuevo correo electrónico ya existe
-				  const emailExists = allUsersResponse.data.some(user => user.email === newEmail);
-			  
-				  if (emailExists) {
-					console.error('El correo electrónico ya existe.');
-					return { success: false, message: 'El correo electrónico ya existe.' };
-				  }
-			  
-				  // Actualizar el correo electrónico
-				  const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, {
-					email: newEmail,
-				  }, {
-					headers: {
-					  'Authorization': `Bearer ${localStorage.getItem("token")}`
+
+					// Actualizar el correo electrónico
+					const response = await axios.put(`${process.env.BACKEND_URL}api/users/${userId}`, {
+						email: newEmail,
+					}, {
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+
+					if (response.data.success) {
+						// Actualizar el correo electrónico en el estado local
+						setStore((prevState) => ({
+							...prevState,
+							email: newEmail,
+						}));
+
+						return { success: true, message: 'Correo electrónico actualizado con éxito.' };
+					} else {
+						console.error('Error al actualizar el correo electrónico:', response.data.message);
+						return { success: false, message: response.data.message };
 					}
-				  });
-			  
-				  if (response.data.success) {
-					// Actualizar el correo electrónico en el estado local
-					setStore((prevState) => ({
-					  ...prevState,
-					  email: newEmail,
-					}));
-			  
-					return { success: true, message: 'Correo electrónico actualizado con éxito.' };
-				  } else {
-					console.error('Error al actualizar el correo electrónico:', response.data.message);
-					return { success: false, message: response.data.message };
-				  }
 				} catch (error) {
-				  console.error('Error al actualizar el correo electrónico:', error);
-				  return { success: false, message: error.message };
+					console.error('Error al actualizar el correo electrónico:', error);
+					return { success: false, message: error.message };
 				}
-			  },
-			  
+			},
+
 
 
 
@@ -842,6 +902,143 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Error al eliminar el extra:', error);
 				}
 			},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

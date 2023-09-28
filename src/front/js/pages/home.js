@@ -9,6 +9,7 @@ import {Contacto } from "../component/Contacto.jsx"
 
 
 
+
 export const Home = () => {
 
 	const { store, actions } = useContext(Context);
@@ -19,7 +20,7 @@ export const Home = () => {
 	}, []);
 
 	return (
-		<div className="text-center">
+		<div className="text-center pb-5">
 			<Extras_prod />
 			<div className="NANA mb-4">
 				<Navbar setSeccionActiva={setSeccionActiva} />

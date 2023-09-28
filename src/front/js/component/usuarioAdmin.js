@@ -3,6 +3,7 @@ import { Context } from '../store/appContext';
 import { Link } from 'react-router-dom';
 import { EditProduct } from './EditProduct.jsx'
 import { RegisterModal } from './register.js'
+import { OrderDetailsModal } from './OrderDetails.jsx';
 
 export const UsuarioAdmin = () => {
   const { actions, store } = useContext(Context);
@@ -12,12 +13,14 @@ export const UsuarioAdmin = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [mensajes, setMensajes] = useState([]); // Nuevo estado para los mensajes
   const [recargarDatos, setRecargarDatos] = useState(false);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     actions.obtenerAllProducts();
     actions.obtenerUsuarios();
     actions.obtenerTodasLasOrdenes();
-  
+
     const cargarMensajes = async () => {
       const mensajesObtenidos = await actions.obtenerMensajes();
       if (mensajesObtenidos) {
@@ -25,7 +28,7 @@ export const UsuarioAdmin = () => {
       }
     };
     cargarMensajes();
-  
+
     // Restablecer la bandera
     if (recargarDatos) {
       setRecargarDatos(false);
@@ -37,7 +40,7 @@ export const UsuarioAdmin = () => {
     actions.obtenerAllProducts();
     actions.obtenerUsuarios();
     actions.obtenerTodasLasOrdenes();
-  
+
     const cargarMensajes = async () => {
       const mensajesObtenidos = await actions.obtenerMensajes();
       if (mensajesObtenidos) {
@@ -45,7 +48,7 @@ export const UsuarioAdmin = () => {
       }
     };
     cargarMensajes();
-  
+
     // Restablecer la bandera
     if (recargarDatos) {
       setRecargarDatos(false);
@@ -94,6 +97,19 @@ export const UsuarioAdmin = () => {
     setShowModal(false);
     setRecargarDatos(true);
   };
+
+  // Función para mostrar el modal de detalles de la orden
+  const handleMostrarDetalleOrden = (orden) => {
+    setSelectedOrder(orden);
+    setShowOrderDetails(true);
+  };
+
+  // Función para cerrar el modal de detalles de la orden
+  const handleCerrarDetalleOrden = () => {
+    setSelectedOrder(null);
+    setShowOrderDetails(false);
+  };
+
 
   const renderTablaProductos = () => {
     if (!categoriaSeleccionada || categoriaSeleccionada !== 'Productos') {
@@ -247,31 +263,20 @@ export const UsuarioAdmin = () => {
               <tr key={index}>
                 <td className="text-center">{orden.id}</td>
                 <td className="text-center">{orden.user_id}</td>
-                <td className="text-center">{orden.timestamp}</td>
-                <td className="text-center">
-                  <ul>
-                    {orden.items.map((item, index) => (
-                      <div key={index}>
-                        {item.quantity}- {item.product_name}
-                        <span> - ${item.cost_with_extras}</span>
-                        {item.extras.length > 0 && (
-                          <ul>
-                            {item.extras.map((extra, extraIndex) => (
-                              <li key={extraIndex}>{extra.name} - ${extra.cost}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    ))}
-                  </ul>
-                </td>
+                <td className="text-center">{orden.timestamp}</td>                
                 <td className="text-center">
                   <strong>${orden.total_cost_with_extras}</strong>
+                </td>
+                <td className="text-center">
+                  {/* Agrega el botón "Detalles" que abre el modal de detalles */}
+                  <button className='btn btn-dark m-1' onClick={() => handleMostrarDetalleOrden(orden)}>Detalles</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {/* Renderiza el modal de detalles de la orden si showOrderDetails es true */}
+        {showOrderDetails && <OrderDetailsModal order={selectedOrder} onClose={handleCerrarDetalleOrden} />}
       </div>
     );
   };
