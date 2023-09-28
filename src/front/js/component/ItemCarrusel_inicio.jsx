@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Context } from "../store/appContext";
-
+import "../../styles/Carucel_inicio.css";
 export default function ItemCarrusel(props) {
     const { actions } = useContext(Context);
     const [isPressed, setIsPressed] = useState(false);
@@ -49,14 +49,14 @@ export default function ItemCarrusel(props) {
     return (
         <div className={`carousel-item ${props.activei} d-flex align-items-center position-relative`} style={{ width: '100%', height: '100%' }}>
             <div style={backgroundStyle}></div>
-    
+
             <div className="container">
-                <div className="row align-items-center justify-content-center">
-                    <div className="col-1"></div>
+                <div className="row align-items-center justify-content-center contenedor_image">
+                    {/* <div className="col-1"></div> */}
                     <div className="col-6">
                         <img src={props.img_urli} className="img-fluid rounded shadow" alt={props.namei} />
                     </div>
-                    <div className="col-1"></div>
+                    {/* <div className="col-1"></div> */}
                     <div className="col-3">
                         {props.its_daily_menu &&
                             <div className="mb-3" style={{
@@ -95,7 +95,7 @@ export default function ItemCarrusel(props) {
             </div>
         </div>
     );
-    
+
 }
 
 
