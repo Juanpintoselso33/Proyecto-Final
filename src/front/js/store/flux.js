@@ -235,7 +235,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					// Obtén el carrito directamente desde el estado del store (Flux)
 					const cartFromStore = getStore().cart;  // Asegúrate de que `getStore()` esté definido correctamente
-
+					const pepe = []
+					// pepe = 
+					console.log("pepeargento => ", store.cart)
 					console.log("Estado del carrito antes de crear la orden:", cartFromStore);
 
 					if (!cartFromStore || cartFromStore.items.length === 0) {
@@ -252,7 +254,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const payload = {
 						items,
 					};
-
+					console.log("Estos =>", items);
 					const url = `${process.env.BACKEND_URL}/api/user/${userId}/add_order`;
 					console.log("Enviando payload:", payload);
 					console.log("URL de la solicitud POST:", url);
@@ -350,6 +352,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			saveCart: () => {
 				const store = getStore();
 				localStorage.setItem('cart', JSON.stringify(store.cart));
+
 			},
 
 			// Acción para incrementar la cantidad de un producto en el carrito
@@ -842,6 +845,143 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Error al eliminar el extra:', error);
 				}
 			},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
