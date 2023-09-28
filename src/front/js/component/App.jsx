@@ -104,7 +104,7 @@ export default function App() {
       <div className="row m-auto contenedor_padre_app">
 
         <div className="col-6 div_izquierda item">
-          <div className="col-10">
+          <div className="col-12">
             <div className="row col-12 contenedor_T_izquierda">
               <div className="col-12 contenedor_productos">
                 <div className="row col-12 padre_Pr_indi">
