@@ -29,7 +29,7 @@ export const ProductListContainer = () => {
   }, []);
 
   return (
-    <div>
+    <div className="rounded bg-light py-4 px-3" style={{ margin: '0 auto', width: '90%' }}>
       {categories.map((category, index) => (
         <ProductList key={index} products={products} category={category} />
       ))}
