@@ -15,7 +15,7 @@ stripe.api_key = 'sk_test_51Nsr4fKXj5LWRngy31gxXDgOiRztmNpiBBmqDpLBRuqDHNdfDIbOG
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Product, Order, OrderProduct, Extra, Message  
+from api.models import db, User, Product, Order, OrderProduct, Extra, Message, PaymentStatus  
 from api.utils import generate_sitemap, APIException  
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token,get_jwt_identity
 from flask_cors import CORS, cross_origin
@@ -676,6 +676,51 @@ def add_order(user_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 
+@api.route('/update_order_status', methods=['POST'])
+def update_order_status():
+    try:
+        data = request.json
+        order_id = data['order_id']
+        new_status = data['new_status']
+
+        # Buscar la orden por ID
+        order = Order.query.get(order_id)
+
+        if not order:
+            return jsonify({"error": "Orden no encontrada"}), 404
+
+        # Actualizar el estado del pago
+        order.payment_status = PaymentStatus(new_status)
+
+        db.session.commit()
+
+        return jsonify({"message": "Estado del pago actualizado con éxito"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@api.route('/webhook', methods=['POST'])
+def stripe_webhook():
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe.api_key
+        )
+    except ValueError as e:
+        return 'Invalid payload', 400
+    except stripe.error.SignatureVerificationError as e:
+        return 'Invalid signature', 400
+
+    if event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']
+        # Aquí actualizas el estado de la orden en tu base de datos
+
+    return jsonify({'status': 'success'})
+
+if __name__ == '__main__':
+    app.run()
 
 
 

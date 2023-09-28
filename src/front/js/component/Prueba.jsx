@@ -24,33 +24,6 @@ export const Pruebas = (props) => {
         }
     }
 
-
-
-    // useEffect(() => {
-    //     if (localStorage.cart[].totalCost == 0) {
-    //         navigate("/cart")
-
-    //     }
-    // }, [pepeaa]);
-
-
-    // const pepit = props.extras
-    // const moc = pepit.map(function (el) {
-    //     return pepit[el]
-    // })
-
-    // useEffect(() => {
-
-    // }, []);
-
-    // var array1 = [100, 200, 300, 400, 500, 600, 700, 800, 900];
-    // var array2 = [1, 2, 5];
-    // var posit = array2.map(function (el) {
-    //     return array1[el];
-    // });
-
-
-
     const pepit = props.extras
     var mono = []
     for (let i = 0; i < pepit.length; i++) {
@@ -66,21 +39,6 @@ export const Pruebas = (props) => {
         setPepeaa(order_id)
     };
 
-
-
-    // let moc = ""
-    // pepit.map((item, index) => (
-
-    //     moc = pepit[index].name.map(function (el) {
-    //         return pepit[el]
-    //     })
-
-    // ))
-
-
-
-    // const pepe = range(0, 4, 1)
-    // console.log("este es pepito => ", pepe)
 
 
     return (

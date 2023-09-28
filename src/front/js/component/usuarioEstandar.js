@@ -3,6 +3,7 @@ import { Context } from '../store/appContext';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { OrderDetailsModal } from './OrderDetails.jsx';
 
 export const UsuarioEstandar = () => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Perfil');
@@ -22,6 +23,8 @@ export const UsuarioEstandar = () => {
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('email');
@@ -34,6 +37,11 @@ export const UsuarioEstandar = () => {
 
   const handleCategoriaSeleccionada = (categoria) => {
     setCategoriaSeleccionada(categoria);
+  };
+
+  const openOrderDetailsModal = (order) => {
+    setSelectedOrder(order);
+    setShowOrderDetailsModal(true);
   };
 
   const handleEditClick = () => {
@@ -60,6 +68,7 @@ export const UsuarioEstandar = () => {
     setCurrentPassword(e.target.value);
     setIsCurrentPasswordValid(true);  // Restablecer a verdadero
   };
+
 
   const handlePasswordChange = (e) => {
     setNewPassword(e.target.value);
@@ -252,10 +261,22 @@ export const UsuarioEstandar = () => {
                     <td className="costo-total text-center">
                       <strong>${order.items.reduce((total, item) => total + calcularCostoTotal(item), 0)}</strong>
                     </td>
+                    <td>
+                      <button className="btn btn-dark" onClick={() => openOrderDetailsModal(order)}>
+                        Detalles
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <OrderDetailsModal
+              order={selectedOrder}
+              onClose={() => {
+                setSelectedOrder(null);
+                setShowOrderDetailsModal(false);
+              }}
+            />
           </div>
         )}
       </div>

@@ -98,11 +98,11 @@ export const CartView = () => {
           </table>
           <div className="text-center">
             <h2 style={{ fontWeight: 'bolder', color: '#000' }}>Costo Total: ${totalCost.toFixed(2)}</h2>
-            <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '30px', color: '#fff', padding: '15px 30px', fontSize: '20px', transition: '0.3s' }} onClick={() => { actions.createOrder(); mover_carrito() }}>Comprar</button>
+            <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '30px', color: '#fff', padding: '15px 30px', fontSize: '20px', transition: '0.3s' }}  onClick={() => {  mover_carrito() }}>Comprar</button>
           </div>
         </div>
       </div>
-      <style jsx>{`
+      <style>{`
         .hoverEffect:hover,
         .hoverEffectDelete:hover {
           background-color: #fff;
