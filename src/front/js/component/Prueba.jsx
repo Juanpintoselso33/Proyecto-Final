@@ -38,15 +38,17 @@ export const Pruebas = (props) => {
         actions.removeFromCart(order_id);
         setPepeaa(order_id)
     };
+    let prodespe = ""
     let id_Product = []
-    for (let i = 0; i < store.productos.length; i++) {
-        // if (localStorage.productos[i].id == props.product_id) {
-        //     id_Product = localStorage.productos[i].img_url
-        // }
-        id_Product.push(store.productos[i])
-
+    id_Product = JSON.parse(localStorage.productos)
+    for (let i = 0; i < id_Product.length; i++) {
+        if (id_Product[i].id == props.product_id) {
+            prodespe = id_Product[props.product_id].img_url
+        }
     }
-    console.log(id_Product)
+
+    // console.log(JSON.parse(localStorage.productos))
+    console.log(id_Product[1].img_url)
 
     // console.log("este =>", localStorage.productos)
     return (
@@ -55,7 +57,7 @@ export const Pruebas = (props) => {
                 <div className="col-12">
                     <div className="row  pepe2  ">
                         <div className="col-4 imagenP">
-                            <img src="https://th.bing.com/th/id/R.033c8f01fbb84af4c5a55a3cbac42404?rik=%2bib7SrOYugiI%2bg&riu=http%3a%2f%2f1.bp.blogspot.com%2f-61BeHL1BdSo%2fTyKUcPwqfOI%2fAAAAAAAAAFA%2fr5X62fe8dRk%2fs1600%2fhamburguesa2.jpg&ehk=ro3LnT%2fFb%2fnjUfTdHupjmVvqBxsYOoorcmQnYdpuXt8%3d&risl=&pid=ImgRaw&r=0" alt="" />
+                            <img src={prodespe} alt="" />
                         </div>
                         <div className="col-8 d-flex padrNom_des">
                             <div className="row pequeño__iz">

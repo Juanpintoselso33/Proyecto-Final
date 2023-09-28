@@ -271,7 +271,12 @@ button {
   /* display: flex; */
   /*  justify-content: end; */
   height: 85vh;
-  overflow: scroll;
+  /* overflow: scroll; */
+  width: 100%;
+}
+
+.div_derecha {
+  width: 100%;
 }
 
 .Titulo_Pr {
