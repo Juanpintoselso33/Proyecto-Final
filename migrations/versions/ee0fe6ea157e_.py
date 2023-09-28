@@ -1,14 +1,8 @@
 """empty message
 
-<<<<<<<< HEAD:migrations/versions/00aa23865535_.py
-Revision ID: 00aa23865535
+Revision ID: ee0fe6ea157e
 Revises: 
-Create Date: 2023-09-26 20:38:42.977203
-========
-Revision ID: 80cbd56f98e8
-Revises: 
-Create Date: 2023-09-27 12:57:44.752164
->>>>>>>> 5ceef32bf2748ba028ec2dd0fa32581f91070957:migrations/versions/80cbd56f98e8_.py
+Create Date: 2023-09-28 02:18:17.469817
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/00aa23865535_.py
-revision = '00aa23865535'
-========
-revision = '80cbd56f98e8'
->>>>>>>> 5ceef32bf2748ba028ec2dd0fa32581f91070957:migrations/versions/80cbd56f98e8_.py
+revision = 'ee0fe6ea157e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -56,6 +46,17 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
     )
+    op.create_table('message',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('email', sa.String(length=120), nullable=False),
+    sa.Column('subject', sa.String(length=120), nullable=False),
+    sa.Column('message', sa.String(length=500), nullable=False),
+    sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('order',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('total_cost', sa.Float(), nullable=True),
@@ -89,6 +90,7 @@ def downgrade():
     op.drop_table('order_product_extras')
     op.drop_table('order_product')
     op.drop_table('order')
+    op.drop_table('message')
     op.drop_table('user')
     op.drop_table('product')
     op.drop_table('extra')

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 // import 'react-multi-carousel/lib/styles.css';
 // import "../../styles/Stylecard.css";
-import InputRange from 'react-input-range';
+// import InputRange from 'react-input-range';
 
 import "./App.css";
 import { useNavigate } from "react-router-dom";
