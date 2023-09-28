@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../store/appContext';
 
 export const EditProduct = ({ productId, onClose }) => {
   const [productData, setProductData] = useState(null);
@@ -11,7 +12,7 @@ export const EditProduct = ({ productId, onClose }) => {
     const productToEdit = storedProducts.find(product => product.id === productId);
     if (productToEdit) {
       setProductData(productToEdit);
-      setItsPromo(productToEdit.promo);
+      setItsPromo(productToEdit.promo || false);  // Asegúrate de que siempre tenga un valor booleano
     }
   }, [productId]);
 
@@ -26,11 +27,16 @@ export const EditProduct = ({ productId, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (productData) {
-      await actions.updateProduct(productId, productData); // Llama a la función updateProduct
+      // Actualizar productData con el valor de itsPromo
+      const updatedProductData = {
+        ...productData,
+        promo: itsPromo
+      };
+
+      await actions.updateProduct(productId, updatedProductData); // Llama a la función updateProduct
       setSuccessMessage('Producto editado exitosamente.');
     }
   };
-
   const modalBackdropStyle = {
     position: 'fixed',
     top: 0,
@@ -84,11 +90,11 @@ export const EditProduct = ({ productId, onClose }) => {
           <div className="form-group mb-4">
             <label>Es Promo</label>
             <div className="form-check form-check-inline">
-              <input type="radio" name="promo" className="form-check-input" checked={itsPromo} onChange={() => setItsPromo(true)} />
+              <input type="radio" name="promo" className="form-check-input" checked={itsPromo === true} onChange={() => setItsPromo(true)} />
               <label className="form-check-label">Sí</label>
             </div>
             <div className="form-check form-check-inline">
-              <input type="radio" name="promo" className="form-check-input" checked={!itsPromo} onChange={() => setItsPromo(false)} />
+              <input type="radio" name="promo" className="form-check-input" checked={itsPromo === false} onChange={() => setItsPromo(false)} />
               <label className="form-check-label">No</label>
             </div>
           </div>

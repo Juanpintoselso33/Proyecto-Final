@@ -8,6 +8,9 @@ export const UsuarioEstandar = () => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Perfil');
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [emailConfirmationMessage, setEmailConfirmationMessage] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,17 +18,19 @@ export const UsuarioEstandar = () => {
   const [isCurrentPasswordValid, setIsCurrentPasswordValid] = useState(true);
   const [showPasswordAlert, setShowPasswordAlert] = useState(false);
   const [userOrders, setUserOrders] = useState([]);
-  const [userId, setUserId] = useState(store.userId); // Agrega el estado para almacenar el userId
+  const userId = JSON.parse(localStorage.getItem('userId')); // Agrega el estado para almacenar el userId
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
-  // Inicializa el estado con la contraseña del Local Storage
   useEffect(() => {
-    const storedPassword = localStorage.getItem('userPassword');
-    if (storedPassword) {
-      setCurrentPassword(storedPassword);
+    const storedEmail = localStorage.getItem('email');
+    if (storedEmail) {
+      setUserEmail(storedEmail);
     }
   }, []);
 
-  const initial = store.email ? store.email.charAt(0).toUpperCase() : '';
+  const initial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
 
   const handleCategoriaSeleccionada = (categoria) => {
     setCategoriaSeleccionada(categoria);
@@ -34,6 +39,12 @@ export const UsuarioEstandar = () => {
   const handleEditClick = () => {
     setShowModal(true);
   };
+
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -47,31 +58,52 @@ export const UsuarioEstandar = () => {
 
   const handleCurrentPasswordChange = (e) => {
     setCurrentPassword(e.target.value);
+    setIsCurrentPasswordValid(true);  // Restablecer a verdadero
   };
 
   const handlePasswordChange = (e) => {
     setNewPassword(e.target.value);
+    setPasswordMatch(true);  // Restablecer a verdadero
   };
 
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
+    setPasswordMatch(true);  // Restablecer a verdadero
   };
 
-  const handleSaveChanges = () => {
-    if (currentPassword !== store.password) {
-      setIsCurrentPasswordValid(false);
-      setShowPasswordAlert(true);
+  const handleSaveChanges = async () => {
+    // Validación de longitud de contraseña
+    if (newPassword.length < 8) {
+      setConfirmationMessage('La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
-    // Actualiza la contraseña en el estado local
-    actions.updatePassword(newPassword);
+    // Verificación de coincidencia de contraseñas
+    if (newPassword !== confirmPassword) {
+      setPasswordMatch(false);
+      setConfirmationMessage('Las contraseñas no coinciden.');
+      return;
+    }
 
-    // Guarda la nueva contraseña en el Local Storage
-    localStorage.setItem('userPassword', newPassword);
+    const esContrasenaValida = await actions.validarContrasena(currentPassword);
 
-    setShowPasswordAlert(false);
-    handleCloseModal();
+    if (esContrasenaValida) {
+      const result = await actions.updatePassword(newPassword, userId); // Suponiendo que updatePassword devuelve un resultado
+
+      if (result.success) {
+        setConfirmationMessage('Contraseña actualizada con éxito.');
+      } else {
+        setConfirmationMessage('Error al actualizar la contraseña.');
+      }
+
+      setShowPasswordAlert(false);
+      // Eliminado para que el modal no se cierre
+      // handleCloseModal();
+    } else {
+      setIsCurrentPasswordValid(false);
+      setShowPasswordAlert(true);
+      setConfirmationMessage('La contraseña actual es incorrecta.');
+    }
   };
 
   useEffect(() => {
@@ -95,6 +127,21 @@ export const UsuarioEstandar = () => {
 
   const getProductNameById = (productId) => {
     return store.productos.find(item => item.id === productId) || null;
+  };
+
+  const handleSaveEmailChanges = async () => {
+    if (!validateEmail(newEmail)) {
+      setEmailError('Correo electrónico inválido');
+      return;
+    }
+
+    const result = await actions.updateEmail(newEmail, userId);
+
+    if (result.success) {
+      setEmailConfirmationMessage('Correo electrónico actualizado con éxito.');
+    } else {
+      setEmailConfirmationMessage('Error al actualizar el correo electrónico.');
+    }
   };
 
   const getProductExtras = (extras) => {
@@ -150,13 +197,16 @@ export const UsuarioEstandar = () => {
               <tbody>
                 <tr>
                   <td>Email:</td>
-                  <td>{store.email}</td>
+                  <td>{userEmail}</td>
+                  <td>
+                    <button className="btn btn-dark mt-3" onClick={() => setShowEmailModal(true)}>Editar</button>
+                  </td>
                 </tr>
                 <tr>
                   <td>Contraseña:</td>
                   <td></td>
                   <td>
-                    <button onClick={handleEditClick}>Editar</button>
+                    <button className="btn btn-dark mt-3" onClick={handleEditClick}>Editar</button>
                   </td>
                 </tr>
               </tbody>
@@ -254,12 +304,43 @@ export const UsuarioEstandar = () => {
               />
               {!passwordMatch && <div className="invalid-feedback">Las contraseñas no coinciden.</div>}
             </div>
-            <Button variant="light mt-3" type="button" onClick={handleSaveChanges} disabled={!isCurrentPasswordValid || !passwordMatch}>
+            <Button className="btn btn-dark mt-3 mb-2" type="button" onClick={handleSaveChanges}>
               Guardar cambios
             </Button>
+            {confirmationMessage && <div className="confirmation-message">{confirmationMessage}</div>}
           </form>
         </Modal.Body>
       </Modal>
+
+      <Modal show={showEmailModal} onHide={() => setShowEmailModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Editar Correo Electrónico</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <div className="form-group">
+              <label htmlFor="newEmail">Nuevo Correo Electrónico</label>
+              <input
+                type="email"
+                className={`form-control ${emailError ? 'is-invalid' : ''}`}
+                id="newEmail"
+                value={newEmail}
+                onChange={(e) => {
+                  setNewEmail(e.target.value);
+                  setEmailError('');  // Limpiar errores previos
+                }}
+              />
+              {emailError && <div className="invalid-feedback">{emailError}</div>}
+            </div>
+            <Button className="btn btn-dark mt-3 mb-2" type="button" onClick={handleSaveEmailChanges}>
+              Guardar cambios
+            </Button>
+            {emailConfirmationMessage && <div className="confirmation-message">{emailConfirmationMessage}</div>}
+          </form>
+        </Modal.Body>
+      </Modal>
+
+
     </div>
   );
 };

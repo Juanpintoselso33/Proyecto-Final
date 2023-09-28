@@ -1,21 +1,56 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../store/appContext';
 import { Link } from 'react-router-dom';
-import {EditProduct} from './EditProduct.jsx'
+import { EditProduct } from './EditProduct.jsx'
+import { RegisterModal } from './register.js'
 
 export const UsuarioAdmin = () => {
   const { actions, store } = useContext(Context);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Productos');
   const [showModal, setShowModal] = useState(false);
   const [productIdToEdit, setProductIdToEdit] = useState(null);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [mensajes, setMensajes] = useState([]); // Nuevo estado para los mensajes
+  const [recargarDatos, setRecargarDatos] = useState(false);
+
+  useEffect(() => {
+    actions.obtenerAllProducts();
+    actions.obtenerUsuarios();
+    actions.obtenerTodasLasOrdenes();
   
+    const cargarMensajes = async () => {
+      const mensajesObtenidos = await actions.obtenerMensajes();
+      if (mensajesObtenidos) {
+        setMensajes(mensajesObtenidos);
+      }
+    };
+    cargarMensajes();
+  
+    // Restablecer la bandera
+    if (recargarDatos) {
+      setRecargarDatos(false);
+    }
+  }, []);
 
 
   useEffect(() => {
     actions.obtenerAllProducts();
     actions.obtenerUsuarios();
     actions.obtenerTodasLasOrdenes();
-  }, [actions]);
+  
+    const cargarMensajes = async () => {
+      const mensajesObtenidos = await actions.obtenerMensajes();
+      if (mensajesObtenidos) {
+        setMensajes(mensajesObtenidos);
+      }
+    };
+    cargarMensajes();
+  
+    // Restablecer la bandera
+    if (recargarDatos) {
+      setRecargarDatos(false);
+    }
+  }, [recargarDatos]);
 
   const handleCategoriaSeleccionada = (categoria) => {
     setCategoriaSeleccionada(categoria);
@@ -25,23 +60,39 @@ export const UsuarioAdmin = () => {
     const confirmarEliminacion = window.confirm('¿Estás seguro de que deseas eliminar este producto?');
     if (confirmarEliminacion) {
       actions.eliminarProducto(productId);
+      setRecargarDatos(true);
     }
   };
+
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+    setRecargarDatos(true);
+  };
+
+  const handleCloseRegisterModal = () => { // Asegúrate de que esta función esté definida
+    setShowRegisterModal(false);
+    setRecargarDatos(true);
+  };
+
 
   const handleEliminarUsuario = (userId) => {
     const confirmarEliminacion = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
     if (confirmarEliminacion) {
       actions.eliminarUsuario(userId);
+      setRecargarDatos(true);
     }
   };
 
   const handleAbrirModal = (productId) => {
     setProductIdToEdit(productId);
     setShowModal(true);
+    setRecargarDatos(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setRecargarDatos(true);
   };
 
   const renderTablaProductos = () => {
@@ -49,8 +100,14 @@ export const UsuarioAdmin = () => {
       return null;
     }
 
+    // Filtrar productos que están en promoción
+    const productosPromo = store.productos.filter(producto => producto.its_promo === true);
+
+    // Filtrar productos que no están en promoción
+    const productosNoPromo = store.productos.filter(producto => producto.its_promo !== true);
+
     let categoriasConProductos = {};
-    store.productos.forEach((producto) => {
+    productosNoPromo.forEach((producto) => {
       const { category, name, id, img_url, description, cost } = producto;
       if (!categoriasConProductos[category]) {
         categoriasConProductos[category] = [];
@@ -64,6 +121,47 @@ export const UsuarioAdmin = () => {
           Agregar Productos
         </Link>
 
+        {/* Sección para productos en promoción */}
+        <div className="tabla-categoria">
+          <h3>Productos en Promoción</h3>
+          <table className="table" border="1">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>NOMBRE</th>
+                <th>DESCRIPCION</th>
+                <th>PRECIO</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productosPromo.map((producto, index) => (
+                <tr key={index}>
+                  <td>{producto.id}</td>
+                  <td>
+                    <img
+                      src={producto.img_url}
+                      width={60}
+                      height={60}
+                      className="card-img"
+                      alt={producto.name}
+                    />
+                  </td>
+                  <td>{producto.name}</td>
+                  <td>{producto.description}</td>
+                  <td>${producto.cost}</td>
+                  <td>
+                    <button className='btn btn-dark m-1' onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
+                    <button className='btn btn-dark m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Secciones para las demás categorías */}
         {Object.keys(categoriasConProductos).map((categoria, index) => {
           categoriasConProductos[categoria].sort((a, b) => a.id - b.id);
           return (
@@ -107,11 +205,12 @@ export const UsuarioAdmin = () => {
                           checked={localStorage.getItem('dailyMenu') === producto.id.toString()}
                           onChange={() => {
                             actions.cambiarMenuDelDia(producto.id);
+                            setRecargarDatos(true);
                           }}
                         />
                       </td>
                       <td>
-                        <button className='btn btn-dark m-1'onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
+                        <button className='btn btn-dark m-1' onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
                         <button className='btn btn-dark m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
                       </td>
                     </tr>
@@ -124,7 +223,6 @@ export const UsuarioAdmin = () => {
       </div>
     );
   };
-
 
   const renderTablaOrdenes = () => {
     if (!categoriaSeleccionada || categoriaSeleccionada !== 'Órdenes') {
@@ -185,11 +283,17 @@ export const UsuarioAdmin = () => {
       return null;
     }
 
+    const handleCambiarRol = (userId, currentRole) => {
+      const nuevoRol = currentRole === 'admin' ? 'customer' : 'admin';
+      actions.actualizarUsuario(userId, { role: nuevoRol });
+      setRecargarDatos(true);
+    };
+
     return (
       <div className="">
-        <Link to="/addUsuario" className="btn btn-success float-right mt-4 mr-2 mb-3">
+        <button onClick={handleOpenRegisterModal} className="btn btn-success float-right mt-4 mr-2 mb-3">
           Agregar Usuarios
-        </Link>
+        </button>
         <div className={`tabla-categoria ${categoriaSeleccionada === 'Usuarios' ? 'active' : ''}`}>
           <h3 className="pb-2">Información de Usuarios</h3>
           <table className="table">
@@ -209,7 +313,10 @@ export const UsuarioAdmin = () => {
                     <td>{usuario.email}</td>
                     <td>{usuario.role}</td>
                     <td>
-                      <button onClick={() => handleEliminarUsuario(usuario.id)}>Eliminar</button>
+                      <button onClick={() => handleEliminarUsuario(usuario.id)} className="btn btn-dark m-1">Eliminar</button>
+                      <button onClick={() => handleCambiarRol(usuario.id, usuario.role)} className="btn btn-dark m-1">
+                        {usuario.role === 'admin' ? 'Convertir a Customer' : 'Convertir a Admin'}
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -219,6 +326,44 @@ export const UsuarioAdmin = () => {
       </div>
     );
   };
+
+  const renderTablaMensajes = () => {
+    if (!categoriaSeleccionada || categoriaSeleccionada !== 'Mensajes') {
+      return null;
+    }
+
+    return (
+      <div className={`tabla-categoria ${categoriaSeleccionada === 'Mensajes' ? 'active' : ''}`}>
+        <h3 className="pb-2">Mensajes</h3>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Asunto</th>
+              <th>Mensaje</th>
+              <th>Fecha y Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mensajes.map((mensaje, index) => (
+              <tr key={index}>
+                <td>{mensaje.id}</td>
+                <td>{mensaje.name}</td>
+                <td>{mensaje.email}</td>
+                <td>{mensaje.subject}</td>
+                <td>{mensaje.message}</td>
+                <td>{mensaje.timestamp}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+
 
   return (
     <div className="admin-menu">
@@ -252,6 +397,14 @@ export const UsuarioAdmin = () => {
                   Administrar Usuarios
                 </span>
               </li>
+              <li className="nav-item">
+                <span
+                  className="nav-link text-black"
+                  onClick={() => handleCategoriaSeleccionada('Mensajes')}
+                >
+                  Ver Mensajes
+                </span>
+              </li>
             </ul>
             <div className="mt-auto">
               <Link to="/" className="btn btn-secondary">
@@ -263,10 +416,12 @@ export const UsuarioAdmin = () => {
             {renderTablaProductos()}
             {renderTablaUsuarios()}
             {renderTablaOrdenes()}
+            {renderTablaMensajes()}
           </div>
         </div>
-      </div>      
+      </div>
       {showModal && <EditProduct productId={productIdToEdit} onClose={handleCloseModal} />}
+      {showRegisterModal && <RegisterModal show={showRegisterModal} onHide={handleCloseRegisterModal} />}
     </div>
   );
 

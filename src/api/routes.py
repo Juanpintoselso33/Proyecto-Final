@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, Blueprint
 from api.models import db, User, Product, Order, OrderProduct, Extra, Message  
 from api.utils import generate_sitemap, APIException  
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token,  get_jwt_identity
 
 api = Blueprint('api', __name__)
 
@@ -337,7 +337,19 @@ def delete_extra(extra_id):
     db.session.commit()
     return jsonify({"message": "Extra eliminado con éxito"}), 200
 
+@api.route('/validate-password', methods=['POST'])
+@jwt_required()  # Asegura que el usuario esté autenticado
+def validate_password():
+    current_user = get_jwt_identity()  # Obtiene el usuario actual a partir del token
+    data = request.get_json()
+    input_password = data.get('password')  # La contraseña que el usuario ha ingresado
 
+    user = User.query.filter_by(email=current_user).first()
+
+    if user and user.password == input_password:
+        return jsonify({'valid': True}), 200
+    else:
+        return jsonify({'valid': False, 'error': 'Invalid password'}), 401
 
 
 
