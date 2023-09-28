@@ -24,8 +24,8 @@ export const Product = (props) => {
     <div type="button" className="card cartas" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => enviarMensaje()}  >
       <img className="product--image" src={props.url} alt="product image" />
       <h2>{props.name}</h2>
-      <p className="price">{props.price}</p>
       <p>{props.description}</p>
+      <h4 className="price text-dark">${props.price}</h4>
     </div>
   );
 };

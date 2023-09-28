@@ -28,7 +28,7 @@ export default function ItemCarrusel(props) {
             descriptionx: props.descriptioni,
             categoriax: props.categoria
         };
-        actions.DataModalDetalle(data);       
+        actions.DataModalDetalle(data);
     };
 
     const handleMouseDown = () => {
@@ -46,26 +46,10 @@ export default function ItemCarrusel(props) {
     const handleMouseLeave = () => {
         setIsHovered(false);
     };
-
     return (
         <div className={`carousel-item ${props.activei} d-flex align-items-center position-relative`} style={{ width: '100%', height: '100%' }}>
             <div style={backgroundStyle}></div>
-
-            {props.its_daily_menu &&
-                <div style={{
-                    position: 'absolute',
-                    top: '10px',
-                    left: '10px',
-                    background: 'rgba(255,255,255,0.8)',
-                    color: 'black',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                    zIndex: 1
-                }}>
-                    Menú del Día
-                </div>
-            }
-
+    
             <div className="container">
                 <div className="row align-items-center justify-content-center">
                     <div className="col-1"></div>
@@ -73,16 +57,28 @@ export default function ItemCarrusel(props) {
                         <img src={props.img_urli} className="img-fluid rounded shadow" alt={props.namei} />
                     </div>
                     <div className="col-1"></div>
-                    <div className="col-2">
+                    <div className="col-3">
+                        {props.its_daily_menu &&
+                            <div className="mb-3" style={{
+                                background: 'rgba(255,255,255,0.8)',
+                                color: 'black',
+                                padding: '5px 10px',
+                                borderRadius: '5px',
+                                zIndex: 2,
+                                opacity: 0.7  // Añadido el mismo valor de opacity
+                            }}>
+                                <h2>Menú del Día</h2>
+                            </div>
+                        }
                         <div
-                            className="bg-light p-4 rounded shadow"
+                            className="bg-light p-5 rounded shadow text-center wt-auto"
                             style={{
                                 opacity: 0.7,
                                 transform: isPressed ? 'scale(1.1)' : isHovered ? 'scale(1.05)' : 'scale(1)',
                                 transition: 'transform 0.5s ease'
                             }}
-                            data-bs-toggle="modal" 
-                            data-bs-target="#exampleModal" 
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
                             onMouseDown={handleMouseDown}
                             onMouseUp={handleMouseUp}
                             onMouseEnter={handleMouseEnter}
@@ -91,14 +87,15 @@ export default function ItemCarrusel(props) {
                         >
                             <h5>{props.namei}</h5>
                             <p>{props.descriptioni}</p>
-                            <p>{props.costi} $</p>
+                            <h3>${props.costi}</h3>
                         </div>
                     </div>
-                    <div className="col-2"></div>
+                    <div className="col-1"></div>
                 </div>
             </div>
         </div>
     );
+    
 }
 
 
@@ -109,6 +106,6 @@ ItemCarrusel.propTypes = {
     namei: PropTypes.string,
     costi: PropTypes.number,
     descriptioni: PropTypes.string,
-    categoria: PropTypes.string,    
+    categoria: PropTypes.string,
     its_daily_menu: PropTypes.bool
 }
