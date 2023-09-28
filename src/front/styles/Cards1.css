@@ -8,11 +8,11 @@
   
   .card.cartas {
     /* ... tus estilos actuales ... */
-    height: 400px;
+    height: 500px;
   }
   
   .image-container {
-    height: 150px !important; /* Ajusta este valor según tus necesidades */
+    height: 100px !important; /* Ajusta este valor según tus necesidades */
     overflow: hidden;
   }
   
