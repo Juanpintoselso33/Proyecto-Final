@@ -4,7 +4,16 @@
         repeat(auto-fit,
             minmax(200px, 1fr));
     ;
-    gap: 5px;
+    gap: 50px;
 
 
+}
+
+.imagenM {
+    width: 100%;
+    margin: auto;
+}
+
+.textoM {
+    width: 100%;
 }
