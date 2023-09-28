@@ -24,6 +24,7 @@ export default function App() {
   const [total_Presio, setTotal_Presio] = useState();
 
 
+
   function sumarPro() {
     setValor(valor + 1);
   }
@@ -104,7 +105,7 @@ export default function App() {
 
 
         <div className="col-6 text-center">
-          < div className="row  " >
+          < div className="row " >
             {/* <div className="col-6 bg-danger">
               1 of 3
             </div> */}
@@ -116,7 +117,7 @@ export default function App() {
             <div className="col ">
               3 of 3
             </div>
-            <div className="col-12 App">
+            <div className="col-12 App" id="body_prueba">
               {clientSecret && (
                 <Elements options={options} stripe={stripePromise}>
                   <CheckoutForm />

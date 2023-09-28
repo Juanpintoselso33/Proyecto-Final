@@ -70,13 +70,13 @@ export default function CheckoutForm() {
 
     const order = await actions.createOrder();
     console.log("Orden a mandar a localstorage", order);
-    localStorage.setItem("order", JSON.stringify(order));    
+    localStorage.setItem("order", JSON.stringify(order));
     setTimeout(async () => {
       console.log("Orden creada en checkout", order);
       if (order && order.id) {
         setOrderId(order.id);
         console.log("Orden creada en checkout con ID", order.id);
-        localStorage.setItem("order", JSON.stringify(order));    
+        localStorage.setItem("order", JSON.stringify(order));
       } else {
         console.log("La orden no se creó correctamente o no tiene un ID.");
         setIsLoading(false);
@@ -87,7 +87,7 @@ export default function CheckoutForm() {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'https://laughing-space-robot-vgqgpqxx79xcwpq6-3000.app.github.dev/confirmation',
+        return_url: 'https://friendly-winner-x7pwpp555pwcv5q5-3000.app.github.dev/confirmation',
       },
     });
 

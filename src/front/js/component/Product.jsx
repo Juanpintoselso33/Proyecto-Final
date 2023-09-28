@@ -4,7 +4,7 @@ import "../../styles/Cards1.css"
 import { Context } from "../store/appContext";
 
 export const Product = (props) => {
-  const { actions } = useContext(Context);  
+  const { actions } = useContext(Context);
 
   const data = {
     idx: props.id,
@@ -24,7 +24,7 @@ export const Product = (props) => {
     <div type="button" className="card cartas" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => enviarMensaje()}  >
       <img className="product--image" src={props.url} alt="product image" />
       <h2>{props.name}</h2>
-      <p className="price">{props.price}</p>
+      <p className="price">$ {props.price}</p>
       <p>{props.description}</p>
     </div>
   );
