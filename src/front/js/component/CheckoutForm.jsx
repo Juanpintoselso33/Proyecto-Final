@@ -87,7 +87,7 @@ export default function CheckoutForm() {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'https://redesigned-acorn-6r4rv4jjw4j34v6w-3000.app.github.dev/confirmation',
+        return_url: 'https://psychic-sniffle-97994xr7p4jgh9vj5-3000.app.github.dev/confirmation',
       },
     });
 
