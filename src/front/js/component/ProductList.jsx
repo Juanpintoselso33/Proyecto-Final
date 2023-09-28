@@ -16,7 +16,7 @@ export const ProductList = ({ products, category }) => {
       </div>
     );
   };
-  
+
   const CustomLeftArrow = ({ onClick }) => {
     return (
       <div className="custom-arrow left" onMouseOver={onClick}>
@@ -49,29 +49,42 @@ export const ProductList = ({ products, category }) => {
     ? products.filter((product) => product.its_promo)
     : products.filter((product) => product.category === category);
 
-  return (
-    <div className="home">
-      <div className="App apapa">
-        <h1>{category}</h1>
-        <Carousel responsive={responsive}
-          customLeftArrow={<CustomLeftArrow />}
-          customRightArrow={<CustomRightArrow />}>
-          {filteredProducts.map((product, index) => (
-            <Product
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              url={product.img_url}
-              price={product.cost}
-              description={product.description}
-              category={product.category}
-            />
-          ))}
-        </Carousel>
+    return (
+      <div className="bg-light py-4">
+        <div className="App apapa">
+          <h1 className="text-center text-dark display-4">{category}</h1>
+          <Carousel
+            responsive={responsive}
+            customLeftArrow={<CustomLeftArrow />}
+            customRightArrow={<CustomRightArrow />}
+            containerClass="carousel-container"
+            itemClass="carousel-item-padding-40-px"
+          >
+            {filteredProducts.map((product, index) => (
+              <div
+                key={product.id}
+                className="border rounded text-center shadow-sm d-flex align-items-center justify-content-center mb-4"
+                style={{
+                  padding: '15px',
+                  minHeight: '400px',                
+                }}>
+                <Product
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  url={product.img_url}
+                  price={product.cost}
+                  description={product.description}
+                  category={product.category}
+                />
+              </div>
+            ))}
+          </Carousel>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
+
 
 ProductList.propTypes = {
   products: PropTypes.arrayOf(

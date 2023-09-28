@@ -4,6 +4,7 @@
   align-items: center;
 }
 
+<<<<<<< HEAD
 #body_prueba {
   display: none;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -31,6 +32,8 @@ form#payment-form {
   max-width: 100%;
   background: white;
 }
+=======
+>>>>>>> 093a0d7292e252edf45fd5b3cbd0d5350f68d376
 
 
 #payment-message {
@@ -216,6 +219,7 @@ button#submit:disabled {
 
 }
 
+<<<<<<< HEAD
 /* .container { */
 
 /* display: flex; */
@@ -227,6 +231,10 @@ button#submit:disabled {
 /* input[ type="number"] {
 
 
+=======
+
+input[ type="number"]{ 
+>>>>>>> 093a0d7292e252edf45fd5b3cbd0d5350f68d376
   text-align: center;
   font-size: 20px;
   border: none;
@@ -248,8 +256,12 @@ button#submit:disabled {
   text-align: initial;
 }
 
+<<<<<<< HEAD
 button {
 
+=======
+button{
+>>>>>>> 093a0d7292e252edf45fd5b3cbd0d5350f68d376
   color: #3264fe;
   background-color: #d49090;
   border: none;
@@ -372,6 +384,7 @@ button {
 }
 
 
+<<<<<<< HEAD
 .row {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
@@ -381,6 +394,9 @@ button {
   margin-right: calc(-.5 * var(--bs-gutter-x));
   margin-left: 0 !important;
 }
+=======
+
+>>>>>>> 093a0d7292e252edf45fd5b3cbd0d5350f68d376
 
 
 .contenedor_T_izquierda {
