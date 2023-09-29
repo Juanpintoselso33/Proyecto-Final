@@ -12,7 +12,7 @@ export default function CheckoutForm() {
   const elements = useElements();
   const { actions } = useContext(Context);
   const [email, setEmail] = useState('jocady21@gmail.com');
-  const [message, setMessage] = useState("hola mundo");
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [orderId, setOrderId] = useState(null);
 
@@ -87,7 +87,7 @@ export default function CheckoutForm() {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'https://psychic-sniffle-97994xr7p4jgh9vj5-3000.app.github.dev/confirmation',
+        return_url: 'https://friendly-winner-x7pwpp555pwcv5q5-3000.app.github.dev/confirmation',
       },
     });
 
@@ -115,7 +115,7 @@ export default function CheckoutForm() {
         id="link-authentication-element"
       />
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button className="bg-secondary" disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>

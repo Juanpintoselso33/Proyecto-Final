@@ -17,6 +17,7 @@ import { CartView } from "./pages/cart"
 import { UsuarioAdmin } from './component/usuarioAdmin';
 import { UsuarioEstandar } from './component/usuarioEstandar';
 import App from './component/App.jsx'
+import "../styles/footer.css"
 
 
 
@@ -36,20 +37,30 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Routes>
-                        <Route element={<Home />} path="/" />
-                        <Route element={<Demo />} path="/demo" />
-                        <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<h1>Not found!</h1>} />
-                        <Route element={<AddProduct />} path="/addProduct" />
-                        <Route element={<AddUsuario />} path="/addUsuario" />
-                        <Route element={<CartView />} path="/cart" />
-                        <Route element={<UsuarioAdmin />} path="/usuarioAdmin" />
-                        <Route element={<UsuarioEstandar />} path="/usuarioEstandar" />
-                        <Route element={<App />} path="/prueba1122" />
-                        <Route element={<ConfirmationPage />} path="/confirmation" />
-                    </Routes>
-                    <Footer />
+                    <div className="body_prueba">
+
+                        <div className="div_prueba_1">
+                            <Routes>
+                                <Route element={<Home />} path="/" />
+                                <Route element={<Demo />} path="/demo" />
+                                <Route element={<Single />} path="/single/:theid" />
+                                <Route element={<h1>Not found!</h1>} />
+                                <Route element={<AddProduct />} path="/addProduct" />
+                                <Route element={<AddUsuario />} path="/addUsuario" />
+                                <Route element={<CartView />} path="/cart" />
+                                <Route element={<UsuarioAdmin />} path="/usuarioAdmin" />
+                                <Route element={<UsuarioEstandar />} path="/usuarioEstandar" />
+                                <Route element={<App />} path="/prueba1122" />
+                                <Route element={<ConfirmationPage />} path="/confirmation" />
+                            </Routes>
+                        </div>
+                        <div className="div_prueba_f">
+
+                            <Footer />
+                        </div>
+
+
+                    </div>
                 </ScrollToTop>
             </BrowserRouter>
         </div>
