@@ -122,6 +122,15 @@ export const Navbar = ({ setSeccionActiva }) => {
       </Link>
     );
   };
+  // let mql = window.matchMedia("(max-width: 600px)");
+
+  // if (mql == true) {
+
+  //   document.querySelector("cerrar_sesion").innerText = "cerrar"
+  // }
+
+  // document.querySelector("cerrar_sesion").innerHTML = "cerrar"
+
 
   return (
     <>
@@ -131,19 +140,19 @@ export const Navbar = ({ setSeccionActiva }) => {
           <div className="mb-3 d-flex align-items-center justify-content-between w-100 position-relative">
             <div className="d-flex align-items-center">
               <img src={Logo} alt="Logo" className="logo" />
-              <h5>Carrito el tatin</h5>
+              <h5 className="nombre_logo_N">Carrito el tatin</h5>
             </div>
-            <div className="iconos d-flex align-items-center justify-content-center">
-              {store.isAuthenticated && <span className="d-flex align-items-center">Bienvenido/a, {welcomeMessage}</span>}
+            <div className="iconos align-items-center justify-content-center">
+              <p className="parrafo_bienvenida">{store.isAuthenticated && <span className="d-flex align-items-center">Bienvenido/a, {welcomeMessage}</span>}</p>
               <div className="perfil-icon d-flex align-items-center" style={{ marginLeft: '10px' }}>
                 {store.isAuthenticated && renderProfileIcon()}
               </div>
               <Button
                 variant="btn-light"
-                className="btn-secondary"
+                className="btn-secondary boton-C"
                 onClick={store.isAuthenticated ? handleLogout : handleShowModal}
               >
-                <span className="align-self-center">{store.isAuthenticated ? "Cerrar sesión" : "Iniciar sesión"}</span>
+                <span className="align-self-center cerrar_sesion">{store.isAuthenticated ? "Cerrar sesión" : "Iniciar sesión"}</span>
               </Button>
 
               {store.isAuthenticated &&
@@ -196,23 +205,23 @@ export const Navbar = ({ setSeccionActiva }) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav mx-auto">
-              <li className="nav-item">
+              <li className="nav-item navbgg">
                 <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Inicio")}>
                   Inicio
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item navbgg">
                 <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Catalogo")}>
                   Catálogo
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item navbgg">
                 <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Contacto")}>
                   Contacto
                 </Link>
               </li>
               {isAdmin && (
-                <li className="nav-item">
+                <li className="nav-item navbgg">
                   <Link
                     to="/usuarioAdmin"
                     className="nav-link"

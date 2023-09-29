@@ -55,10 +55,83 @@
 }
 
 
-@media(min-whidth: 600px) {
-  .navdd {
 
-    background: black;
+
+.iconos {
+
+  display: flex;
+
+}
+
+
+@media only screen and (max-device-width: 600px) {
+  .parrafo_bienvenida {
+
+    display: none;
 
   }
+
+  .cerrar_sesion {
+    font-size: 10px;
+  }
+}
+
+
+@media only screen and (max-device-width: 670px) {
+
+
+  .cerrar_sesion {
+    font-size: 15px;
+  }
+}
+
+.navbgg {
+  width: 100%;
+}
+
+
+@media only screen and (max-device-width: 420px) {
+
+
+  .logo {
+
+    margin-left: 5px;
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+
+  }
+
+  .nombre_logo_N {
+    font-size: 15px;
+  }
+
+  .boton-C {
+    font-size: 10px;
+  }
+
+  .cerrar_sesion {
+    font-size: 10px;
+  }
+
+}
+
+
+.navbgg {
+  width: 100%;
+}
+
+
+.from_contacto {
+  width: 50%;
+}
+
+
+@media only screen and (max-device-width: 420px) {
+
+
+  .from_contacto {
+    width: 100%;
+  }
+
 }

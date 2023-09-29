@@ -30,7 +30,7 @@ export const CarruselInicio = () => {
     }, []);
 
     return (
-        <div className="container">
+        <div className="container position-relative">
             <div className="row justify-content-center">
                 <div className="col-12 col-lg-11">
                     <div id="carouselExampleFade" className="carousel slide carousel-fade rounded shadow"
