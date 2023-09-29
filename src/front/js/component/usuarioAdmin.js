@@ -133,7 +133,7 @@ export const UsuarioAdmin = () => {
 
     return (
       <div className="">
-        <Link to="/addProduct" className="btn btn-success float-right mt-4 mr-2 mb-3">
+        <Link to="/addProduct" className="btn btn-secondary float-right mt-4 mr-2 mb-3">
           Agregar Productos
         </Link>
 
@@ -168,8 +168,8 @@ export const UsuarioAdmin = () => {
                   <td>{producto.description}</td>
                   <td>${producto.cost}</td>
                   <td>
-                    <button className='btn btn-dark m-1' onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
-                    <button className='btn btn-dark m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
+                    <button className='btn btn-secondary m-1' onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
+                    <button className='btn btn-secondary m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
                   </td>
                 </tr>
               ))}
@@ -188,14 +188,14 @@ export const UsuarioAdmin = () => {
               <h3>{categoria}</h3>
               <table className="table" border="1">
                 <thead>
-                  <tr>
+                  <tr style={{ textAlign: 'center' }}>
                     <th>ID</th>
                     <th>URL</th>
                     <th>NOMBRE</th>
                     <th>DESCRIPCION</th>
                     <th>PRECIO</th>
-                    <th>Menú del Día</th>
-                    <th>Acciones</th>
+                    <th>MENU DEL DIA</th>
+                    <th>ACCIONES</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -214,7 +214,7 @@ export const UsuarioAdmin = () => {
                       <td>{producto.name}</td>
                       <td>{producto.description}</td>
                       <td>${producto.cost}</td>
-                      <td>
+                      <td style={{ textAlign: 'center' }}>
                         <input
                           type="radio"
                           name="menuDelDia"
@@ -226,8 +226,8 @@ export const UsuarioAdmin = () => {
                         />
                       </td>
                       <td>
-                        <button className='btn btn-dark m-1' onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
-                        <button className='btn btn-dark m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
+                        <button className='btn btn-secondary m-1' onClick={() => handleEliminarProducto(producto.id)}>Eliminar</button>
+                        <button className='btn btn-secondary m-1' onClick={() => handleAbrirModal(producto.id)}>Editar</button>
                       </td>
                     </tr>
                   ))}
@@ -263,13 +263,13 @@ export const UsuarioAdmin = () => {
               <tr key={index}>
                 <td className="text-center">{orden.id}</td>
                 <td className="text-center">{orden.user_id}</td>
-                <td className="text-center">{orden.timestamp}</td>                
+                <td className="text-center">{orden.timestamp}</td>
                 <td className="text-center">
                   <strong>${orden.total_cost_with_extras}</strong>
                 </td>
                 <td className="text-center">
                   {/* Agrega el botón "Detalles" que abre el modal de detalles */}
-                  <button className='btn btn-dark m-1' onClick={() => handleMostrarDetalleOrden(orden)}>Detalles</button>
+                  <button className='btn btn-secondary m-1' onClick={() => handleMostrarDetalleOrden(orden)}>Detalles</button>
                 </td>
               </tr>
             ))}
@@ -296,7 +296,7 @@ export const UsuarioAdmin = () => {
 
     return (
       <div className="">
-        <button onClick={handleOpenRegisterModal} className="btn btn-success float-right mt-4 mr-2 mb-3">
+        <button onClick={handleOpenRegisterModal} className="btn btn-secondary float-right mt-4 mr-2 mb-3">
           Agregar Usuarios
         </button>
         <div className={`tabla-categoria ${categoriaSeleccionada === 'Usuarios' ? 'active' : ''}`}>
@@ -318,8 +318,8 @@ export const UsuarioAdmin = () => {
                     <td>{usuario.email}</td>
                     <td>{usuario.role}</td>
                     <td>
-                      <button onClick={() => handleEliminarUsuario(usuario.id)} className="btn btn-dark m-1">Eliminar</button>
-                      <button onClick={() => handleCambiarRol(usuario.id, usuario.role)} className="btn btn-dark m-1">
+                      <button onClick={() => handleEliminarUsuario(usuario.id)} className="btn btn-secondary m-1">Eliminar</button>
+                      <button onClick={() => handleCambiarRol(usuario.id, usuario.role)} className="btn btn-secondary m-1">
                         {usuario.role === 'admin' ? 'Convertir a Customer' : 'Convertir a Admin'}
                       </button>
                     </td>
