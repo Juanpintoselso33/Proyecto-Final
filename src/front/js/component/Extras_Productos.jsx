@@ -148,19 +148,21 @@ export const Extras_prod = () => {
                             </div>
                         </div>
                         <div className="modal-footer pruebaas">
-                            <div className="wrapper">
-                                <span className="minus" onClick={restarPro}>-</span>
-                                <span className="num">{valor}</span>
-                                <span className="plus" onClick={sumarPro}>+</span>
+                            <div className="wrapper d-flex">
+                                <button className="btn btn-secondary me-2" onClick={restarPro}>-</button>
+                                <span className="align-self-center">{valor}</span>
+                                <button className="btn btn-secondary ms-2" onClick={sumarPro}>+</button>
                             </div>
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => handleAddToCart(store.extrasSeleccionados)}> Agregar y seguir comprando</button>
-                            <button type="button" className="btn btn-primary " onClick={() => { handleAddToCart(store.extrasSeleccionados); mover_carrito(); }} data-bs-dismiss="modal" >Agregar e ir a pagar</button>
+                            <div>
+                                <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal" onClick={() => handleAddToCart(store.extrasSeleccionados)}>Agregar y seguir comprando</button>
+                                <button type="button" className="btn btn-secondary" onClick={() => { handleAddToCart(store.extrasSeleccionados); mover_carrito(); }} data-bs-dismiss="modal">Agregar e ir a pagar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
+    );    
 };
 
 

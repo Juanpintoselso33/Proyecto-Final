@@ -4,11 +4,9 @@ import { Modal, Button } from 'react-bootstrap';
 export const OrderDetailsModal = ({ order, onClose }) => {
   return (
     <Modal show={!!order} onHide={onClose} size="lg">
-      
       <Modal.Header closeButton>
         <Modal.Title>Detalles de la Orden</Modal.Title>
       </Modal.Header>
-
       <Modal.Body>
         <div className="container mt-6 mb-7">
           <div className="row justify-content-center">
@@ -19,11 +17,15 @@ export const OrderDetailsModal = ({ order, onClose }) => {
                     <>
                       <div className="border-top border-gray-200 pt-4 mt-4">
                         <div className="row">
-                          <div className="col-md-6">
+                          <div className="col-md-4">
                             <div className="text-muted mb-2">ID de la Orden</div>
                             <strong>{order.id}</strong>
                           </div>
-                          <div className="col-md-6 text-md-end">
+                          <div className="col-md-4">
+                            <div className="text-muted mb-2">ID de Usuario</div>
+                            <strong>{order.user_id}</strong>
+                          </div>
+                          <div className="col-md-4 text-md-end">
                             <div className="text-muted mb-2">Fecha</div>
                             <strong>{order.timestamp}</strong>
                           </div>

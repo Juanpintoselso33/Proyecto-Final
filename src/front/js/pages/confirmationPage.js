@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import "../../styles/footer.css"
 export const ConfirmationPage = () => {
     const [order, setOrder] = useState(null);
     const [email, setEmail] = useState("");

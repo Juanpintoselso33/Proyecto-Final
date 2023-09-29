@@ -47,7 +47,7 @@ export default function ItemCarrusel(props) {
         setIsHovered(false);
     };
     return (
-        <div className={`carousel-item ${props.activei} d-flex align-items-center position-relative`} style={{ width: '100%', height: '100%' }}>
+        <div className={`carousel-item ${props.activei} d-flex align-items-center position-relative`} >
             <div style={backgroundStyle}></div>
 
             <div className="container">
@@ -55,7 +55,7 @@ export default function ItemCarrusel(props) {
 
                     {/* <div className="col-1"></div> */}
                     <div className="col-6 imagenM">
-                        <img src={props.img_urli} className="img-fluid rounded shadow" alt={props.namei} />
+                        <img src={props.img_urli} className="img-fluid shadow img_Prrr" alt={props.namei} />
                     </div>
                     {/* <div className="col-1"></div> */}
                     <div className="col-6 textoM">

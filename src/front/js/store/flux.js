@@ -98,9 +98,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 			obtenerAllExtras: async function () {
 				try {
 					let response = await fetch(process.env.BACKEND_URL + "api/extras");
+					
+					if (response.status === 404) {
+						// Si el servidor devuelve un 404, guardar un array vacío en localStorage y en la store
+						setStore({ extras: [] });
+						localStorage.setItem("extras", JSON.stringify([]));
+						return;
+					}
+					
 					let data = await response.json();
+					
+					// Si se obtiene una respuesta válida, guardar los datos en la store y en localStorage
 					setStore({ extras: data });
 					localStorage.setItem("extras", JSON.stringify(data));
+					
 				} catch (error) {
 					console.log(error);
 				}

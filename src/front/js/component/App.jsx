@@ -6,6 +6,9 @@ import { Context } from "../store/appContext";
 import { Pruebas } from "./Prueba.jsx"
 
 
+
+
+
 import CheckoutForm from "./CheckoutForm.jsx";
 import "./App.css";
 import { Navigate } from "react-router-dom";
@@ -187,7 +190,7 @@ export default function App() {
               <div className="col-12 cont_total">
                 <div className="row">
 
-                  <div className="col-6 title_T">Totall</div>
+                  <div className="col-6 title_T">Total</div>
                   <div className="col-6 price_Sub">
                     <div className="input-group ">
                       <span className="input-group-text">$</span>

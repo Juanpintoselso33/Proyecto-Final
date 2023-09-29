@@ -22,7 +22,7 @@ export const Navbar = ({ setSeccionActiva }) => {
 
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
-  
+
   const [successMessage, setSuccessMessage] = useState("");
 
   let navigate = useNavigate();
@@ -73,8 +73,8 @@ export const Navbar = ({ setSeccionActiva }) => {
       }, 2000);
     }
   };
-  
-  
+
+
 
   const handleLogout = () => {
     actions.logout();
@@ -145,7 +145,7 @@ export const Navbar = ({ setSeccionActiva }) => {
               >
                 <span className="align-self-center">{store.isAuthenticated ? "Cerrar sesión" : "Iniciar sesión"}</span>
               </Button>
-             
+
               {store.isAuthenticated &&
                 <div
                   className="cart-container"
@@ -184,7 +184,7 @@ export const Navbar = ({ setSeccionActiva }) => {
             </div>
           </div>
           <button
-            className="navbar-toggler"
+            className="navbar-toggler navdd"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
@@ -226,13 +226,13 @@ export const Navbar = ({ setSeccionActiva }) => {
           </div>
         </div>
       </nav>
-      <Login 
+      <Login
         showModal={showModal}
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmit}
         successMessage={successMessage}
-        loginError={handleLoginError} 
-        
+        loginError={handleLoginError}
+
       />
     </>
   );
