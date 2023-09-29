@@ -55,10 +55,36 @@
 }
 
 
-@media(min-whidth: 600px) {
-  .navdd {
 
-    background: black;
+
+.iconos {
+
+  display: flex;
+
+}
+
+
+@media only screen and (max-device-width: 600px) {
+  .parrafo_bienvenida {
+
+    display: none;
 
   }
+
+  .cerrar_sesion {
+    font-size: 10px;
+  }
+}
+
+
+@media only screen and (max-device-width: 670px) {
+
+
+  .cerrar_sesion {
+    font-size: 15px;
+  }
+}
+
+.navbgg {
+  width: 100%;
 }
