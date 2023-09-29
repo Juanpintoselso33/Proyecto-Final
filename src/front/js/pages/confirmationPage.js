@@ -24,7 +24,7 @@ export const ConfirmationPage = () => {
             <div className="row justify-content-center">
                 <div className="col-lg-9 col-md-10 col-sm-12">
                     <div style={{ border: '1px solid rgba(30,46,80,.09)', boxShadow: '0 20px 27px 0 rgb(0 0 0 / 5%)' }}>
-                        <div style={{ padding: '3rem' }}>
+                        <div className="contenedor_Conf_pago">
                             <h2>{email ? `Esta es tu factura, ${email}` : "Página de Confirmación"}</h2>
                             {order ? (
                                 <div>
