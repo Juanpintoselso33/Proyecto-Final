@@ -122,6 +122,15 @@ export const Navbar = ({ setSeccionActiva }) => {
       </Link>
     );
   };
+  // let mql = window.matchMedia("(max-width: 600px)");
+
+  // if (mql == true) {
+
+  //   document.querySelector("cerrar_sesion").innerText = "cerrar"
+  // }
+
+  // document.querySelector("cerrar_sesion").innerHTML = "cerrar"
+
 
   return (
     <>
@@ -131,7 +140,7 @@ export const Navbar = ({ setSeccionActiva }) => {
           <div className="mb-3 d-flex align-items-center justify-content-between w-100 position-relative">
             <div className="d-flex align-items-center">
               <img src={Logo} alt="Logo" className="logo" />
-              <h5>Carrito el tatin</h5>
+              <h5 className="nombre_logo_N">Carrito el tatin</h5>
             </div>
             <div className="iconos align-items-center justify-content-center">
               <p className="parrafo_bienvenida">{store.isAuthenticated && <span className="d-flex align-items-center">Bienvenido/a, {welcomeMessage}</span>}</p>
@@ -140,7 +149,7 @@ export const Navbar = ({ setSeccionActiva }) => {
               </div>
               <Button
                 variant="btn-light"
-                className="btn-secondary"
+                className="btn-secondary boton-C"
                 onClick={store.isAuthenticated ? handleLogout : handleShowModal}
               >
                 <span className="align-self-center cerrar_sesion">{store.isAuthenticated ? "Cerrar sesión" : "Iniciar sesión"}</span>

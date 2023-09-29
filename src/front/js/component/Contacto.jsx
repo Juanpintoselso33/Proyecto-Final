@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../store/appContext';
-
+import "../../styles/cartDropdown.css"
 export const Contacto = () => {
     const { actions, store } = useContext(Context);
     const [nombre, setNombre] = useState("");
@@ -40,7 +40,7 @@ export const Contacto = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 'calc(100vh - 60px)', marginTop: '-30px' }}>
-            <form className="text-center border p-5 rounded shadow" style={{ width: '50%' }} onSubmit={handleSubmit}>
+            <form className="text-center border p-5 rounded shadow from_contacto"  onSubmit={handleSubmit}>
                 <p className="h4 mb-5">Contáctanos</p>
 
                 {/* Nombre */}
