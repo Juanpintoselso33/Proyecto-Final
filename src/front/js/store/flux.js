@@ -58,36 +58,62 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			preloadDataIfNeeded: async function () {
-				const store = getStore(); // Obtener el estado actual del flux
-
+				const store = getStore();
+			  
+				// Obtener los productos y extras del backend
+				await getActions().obtenerAllProducts();
+				await getActions().obtenerAllExtras();
+			  
+				// Verificar si el backend devolvió datos válidos
+				const existingBackendProducts = store.productos || [];
+				const existingBackendExtras = store.extras || [];
+			  
 				// Obtener los productos del localStorage si existen
 				const localStorageProductos = JSON.parse(localStorage.getItem('productos') || '[]');
 				const localStorageExtras = JSON.parse(localStorage.getItem('extras') || '[]');
-
+			  
 				if (store.productos.length === 0 && localStorageProductos.length === 0) {
-					// Si no hay datos de productos, cargarlos desde el componente PreloadComponent
-					preloadHamburgers(this)
-					preloadMilanesas(this)
-					preloadPromociones(this)
-
-					// Después de cargar los datos, actualiza el estado del flux
-					const updatedStore = getStore(); // Obtener el estado actualizado
-					setStore(updatedStore); // Actualizar el estado del flux con los datos de productos cargados
-
-					// Guardar los datos de productos en el localStorage
-					localStorage.setItem('productos', JSON.stringify(updatedStore.productos));
+				  // Asegurarse de que existingBackendProducts esté definido antes de pasarlo
+				  preloadHamburgers(this, existingBackendProducts);
+				  preloadMilanesas(this, existingBackendProducts);
+				  preloadPromociones(this, existingBackendProducts);
+			  
+				  const updatedStore = getStore();
+				  setStore(updatedStore);
+			  
+				  localStorage.setItem('productos', JSON.stringify(updatedStore.productos));
 				}
-
+			  
 				if (store.extras.length === 0 && localStorageExtras.length === 0) {
-					// Si no hay datos de extras, cargarlos desde el componente PreloadComponent
-					preloadExtras(this);
+				  // Asegurarse de que existingBackendExtras esté definido antes de pasarlo
+				  preloadExtras(this, existingBackendExtras);
+			  
+				  const updatedStore = getStore();
+				  setStore(updatedStore);
+			  
+				  localStorage.setItem('extras', JSON.stringify(updatedStore.extras));
+				}
+			},
 
-					// Después de cargar los datos, actualiza el estado del flux
-					const updatedStore = getStore(); // Obtener el estado actualizado
-					setStore(updatedStore); // Actualizar el estado del flux con los datos de extras cargados
-
-					// Guardar los datos de extras en el localStorage
-					localStorage.setItem('extras', JSON.stringify(updatedStore.extras));
+			obtenerAllExtras: async function () {
+				try {
+					let response = await fetch(process.env.BACKEND_URL + "api/extras");
+					
+					if (response.status === 404) {
+						// Si el servidor devuelve un 404, guardar un array vacío en localStorage y en la store
+						setStore({ extras: [] });
+						localStorage.setItem("extras", JSON.stringify([]));
+						return;
+					}
+					
+					let data = await response.json();
+					
+					// Si se obtiene una respuesta válida, guardar los datos en la store y en localStorage
+					setStore({ extras: data });
+					localStorage.setItem("extras", JSON.stringify(data));
+					
+				} catch (error) {
+					console.log(error);
 				}
 			},
 

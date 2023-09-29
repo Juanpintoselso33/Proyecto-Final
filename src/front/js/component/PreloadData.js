@@ -1,4 +1,4 @@
-export const preloadHamburgers = (actions) => {
+export const preloadHamburgers = (actions, existingBackendProducts ) => {
     const hamburgers = [
         {
             cost: 100,
@@ -33,13 +33,16 @@ export const preloadHamburgers = (actions) => {
             category: 'Hamburguesas'
         },
     ];
+    const filteredHamburgers = hamburgers.filter(product => {
+        return !existingBackendProducts.some(existingProduct => existingProduct.name === product.name);
+    });
 
-    for (const product of hamburgers) {
+    for (const product of filteredHamburgers) {
         actions.addProduct(product);
     }
 };
 
-export const preloadPromociones = (actions) => {
+export const preloadPromociones = (actions, existingBackendProducts) => {
     const promociones = [
         {
             cost: 180,
@@ -87,12 +90,15 @@ export const preloadPromociones = (actions) => {
             promo: true
         },
     ];
+    const filteredPromociones = promociones.filter(promo => {
+        return !existingBackendProducts.some(existingProduct => existingProduct.name === promo.name && existingProduct.its_promo === true);
+    });
 
-    for (const promo of promociones) {
+    for (const promo of filteredPromociones) {
         actions.addProduct(promo);
     }
 };
-export const preloadMilanesas = (actions) => {
+export const preloadMilanesas = (actions, existingBackendProducts) => {
     const milanesas = [
         {
             cost: 80,
@@ -128,12 +134,17 @@ export const preloadMilanesas = (actions) => {
         },
     ];
 
-    for (const product of milanesas) {
+    const filteredMilanesas = milanesas.filter(product => {
+        return !existingBackendProducts.some(existingProduct => existingProduct.name === product.name);
+    });
+
+    for (const product of filteredMilanesas) {
         actions.addProduct(product);
     }
 };
 
-export const preloadExtras = (actions) => {
+
+export const preloadExtras = (actions, existingBackendExtras) => {
     const preloadExtras = [
         { id: 1, name: 'Ketchup', price: 20, type: 'Salsa', categories: ['Hamburguesas', 'Milanesas'] },
         { id: 2, name: 'Mayonesa', price: 20, type: 'Salsa', categories: ['Hamburguesas', 'Milanesas'] },
@@ -227,8 +238,11 @@ export const preloadExtras = (actions) => {
             categories: ['Hamburguesas', 'Milanesas']
         }
     ];
-    for (const extra of preloadExtras) {
+    const filteredExtras = preloadExtras.filter(extra => {
+        return !existingBackendExtras.some(existingExtra => existingExtra.name === extra.name);
+    });
+
+    for (const extra of filteredExtras) {
         actions.addExtra(extra);
     }
 };
-
