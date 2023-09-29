@@ -3,48 +3,62 @@
     position: relative;
     display: inline-block;
   } */
-  
-  /* Estilos para el dropdown del carrito */
-  .cart-dropdown {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 300px;
-    background-color: white;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 9999 !important;
+
+/* Estilos para el dropdown del carrito */
+.cart-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 9999 !important;
+}
+
+/* Estilos cuando el dropdown del carrito está visible */
+.cart-dropdown.show {
+  max-height: 500px;
+  /* Ajusta este valor según el contenido de tu dropdown */
+  opacity: 1;
+}
+
+/* Estilos para cada elemento dentro del dropdown del carrito */
+.cart-item {
+  padding: 8px 16px;
+}
+
+/* Estilos para el nombre del item, la cantidad y el costo dentro del dropdown del carrito */
+.item-name,
+.item-quantity,
+.item-cost {
+  margin: 0 4px;
+}
+
+.item-increment,
+.item-decrement {
+  background-color: #f1f1f1;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+  margin: 0 2px;
+}
+
+.item-increment:hover,
+.item-decrement:hover {
+  background-color: #ddd;
+}
+
+
+@media(min-whidth: 600px) {
+  .navdd {
+
+    background: black;
+
   }
-  
-  /* Estilos cuando el dropdown del carrito está visible */
-  .cart-dropdown.show {
-    max-height: 500px;  /* Ajusta este valor según el contenido de tu dropdown */
-    opacity: 1;
-  }
-  
-  /* Estilos para cada elemento dentro del dropdown del carrito */
-  .cart-item {
-    padding: 8px 16px;
-  }
-  
-  /* Estilos para el nombre del item, la cantidad y el costo dentro del dropdown del carrito */
-  .item-name, .item-quantity, .item-cost {
-    margin: 0 4px;
-  }
-  
-  .item-increment, .item-decrement {
-    background-color: #f1f1f1;
-    border: none;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    font-size: 16px;
-    margin: 0 2px;
-  }
-  
-  .item-increment:hover, .item-decrement:hover {
-    background-color: #ddd;
-  }
+}
