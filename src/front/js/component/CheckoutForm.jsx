@@ -87,7 +87,7 @@ export default function CheckoutForm() {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'https://fuzzy-space-halibut-9qjq6jppwx4h7x9q-3000.app.github.dev/confirmation',
+        return_url: 'https://shiny-funicular-644vq6xgwghr7g6-3000.app.github.dev/confirmation',
       },
     });
 

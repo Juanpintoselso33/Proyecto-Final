@@ -92,8 +92,16 @@ export const Extras_prod = () => {
                 <div className="modal-dialog pepesq1">
                     <div className="modal-content pruebasss">
                         <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="exampleModalLabel"> <strong> {dataDetalle.name}</strong></h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div className="row w-100">
+                                <div className="col-4">
+                                    <h1 className="modal-title fs-2 text-end" id="exampleModalLabel"> <strong> {dataDetalle.name}</strong></h1>
+                                </div>
+                                <div className="col-6">
+                                </div>
+                                <div className="col-2 text-end">
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            </div>
                         </div>
                         <div className="modal-body contenedorImg_Data">
                             <div className="row">
@@ -148,22 +156,54 @@ export const Extras_prod = () => {
                             </div>
                         </div>
                         <div className="modal-footer pruebaas">
-                            <div className="wrapper d-flex">
-                                <button className="btn btn-secondary me-2" onClick={restarPro}>-</button>
-                                <span className="align-self-center">{valor}</span>
-                                <button className="btn btn-secondary ms-2" onClick={sumarPro}>+</button>
-                            </div>
-                            <div>
-                                <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal" onClick={() => handleAddToCart(store.extrasSeleccionados)}>Agregar y seguir comprando</button>
-                                <button type="button" className="btn btn-secondary" onClick={() => { handleAddToCart(store.extrasSeleccionados); mover_carrito(); }} data-bs-dismiss="modal">Agregar e ir a pagar</button>
+                            <div className="row w-100">
+                                <div className="col-3 text-end align-self-center">
+                                    <i
+                                        className="fas fa-minus text-secondary"
+                                        style={{
+                                            cursor: 'pointer',
+                                            fontSize: '2rem',
+                                            transition: 'font-size 0.3s ease'
+                                        }}
+                                        onMouseOver={(e) => e.target.style.fontSize = '2.2rem'}
+                                        onMouseOut={(e) => e.target.style.fontSize = '2rem'}
+                                        onMouseDown={(e) => e.target.style.fontSize = '2.4rem'}
+                                        onMouseUp={(e) => e.target.style.fontSize = '2rem'}
+                                        onClick={restarPro}
+                                    ></i>
+                                    <span
+                                        className="text-secondary align-self-center mx-2"
+                                        style={{ fontSize: '3rem' }}
+                                    >
+                                        {valor}
+                                    </span>
+                                    <i
+                                        className="fas fa-plus text-secondary"
+                                        style={{
+                                            cursor: 'pointer',
+                                            fontSize: '2rem',
+                                            transition: 'font-size 0.3s ease'
+                                        }}
+                                        onMouseOver={(e) => e.target.style.fontSize = '2.2rem'}
+                                        onMouseOut={(e) => e.target.style.fontSize = '2rem'}
+                                        onMouseDown={(e) => e.target.style.fontSize = '2.4rem'}
+                                        onMouseUp={(e) => e.target.style.fontSize = '2rem'}
+                                        onClick={sumarPro}
+                                    ></i>
+                                </div>
+                                <div className="col-9 text-end">
+                                    <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal" onClick={() => handleAddToCart(store.extrasSeleccionados)}>Agregar y seguir comprando</button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => { handleAddToCart(store.extrasSeleccionados); mover_carrito(); }} data-bs-dismiss="modal">Agregar e ir a pagar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    );    
+    );
 };
+
 
 
 
