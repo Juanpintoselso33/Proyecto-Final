@@ -45,50 +45,50 @@ export const CartView = () => {
   return (
     <section className="vh-100 bg-image d-flex justify-content-center align-items-center" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(10, 10, 10, 1)), url(${Logo})`, backgroundSize: 'cover', backgroundPosition: 'center center' }}>
       <div className="container d-flex justify-content-center" style={{ maxWidth: '800px', width: '100%' }}>
-        <div style={{ border: '2px solid #aaa', borderRadius: '30px', padding: '30px', backgroundColor: '#fff', overflowX: 'auto' }}>
-          <div className="d-flex justify-content-end">
-            <button className="hoverEffect" style={{ backgroundColor: '#000', border: 'none', borderRadius: '50%', color: '#fff', transition: '0.3s' }} onClick={() => navigate('/')}>
+        <div style={{ border: '2px solid #aaa', borderRadius: '30px', padding: '60px', backgroundColor: '#fff', overflowX: 'auto' }}>
+          <div className="d-flex justify-content-end mb-4">
+            <button className="hoverEffect bg-secondary" style={{ border: 'none', borderRadius: '50%', color: '#fff', transition: '0.3s' }} onClick={() => navigate('/')}>
               <FontAwesomeIcon icon={faArrowLeft} style={{ color: '#fff' }} />
             </button>
           </div>
-          <div className="text-center mb-4">
+          <div className="text-center mb-5">
             <h2 style={{ fontWeight: 'bolder', color: '#000' }}>Mi Carrito</h2>
           </div>
-          <table className="table" style={{ width: '100%', margin: 'auto' }}>
-            <thead style={{ backgroundColor: '#000' }}>
+          <table className="table bg-secondary" style={{ width: '100%', margin: 'auto' }}>
+            <thead className="bg-secondary">
               <tr>
-                <th scope="col" style={{ backgroundColor: '#000', color: '#fff' }}>#</th>
-                <th scope="col" style={{ backgroundColor: '#000', color: '#fff' }}>Productos</th>
-                <th scope="col" style={{ backgroundColor: '#000', color: '#fff' }}>Precio</th>
-                <th scope="col" style={{ backgroundColor: '#000', color: '#fff' }}>Cantidad</th>
-                <th scope="col" style={{ backgroundColor: '#000', color: '#fff' }}>Extras</th>
-                <th scope="col" style={{ backgroundColor: '#000', color: '#fff' }}>Eliminar</th>
+                <th scope="col" className="text-white bg-secondary" style={{ padding: '20px' }}>#</th>
+                <th scope="col" className="text-white bg-secondary" style={{ padding: '20px' }}>Productos</th>
+                <th scope="col" className="text-white bg-secondary" style={{ padding: '20px' }}>Precio</th>
+                <th scope="col" className="text-white bg-secondary" style={{ padding: '20px' }}>Cantidad</th>
+                <th scope="col" className="text-white bg-secondary" style={{ padding: '20px' }}>Extras</th>
+                <th scope="col" className="text-white bg-secondary" style={{ padding: '20px' }}>Eliminar</th>
               </tr>
             </thead>
             <tbody>
               {cart.items.map((item, index) => (
-                <tr key={item.order_id} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                  <th scope="row" style={{ color: '#fff', backgroundColor: '#000' }}>{index + 1}</th>
-                  <td>{item.name}</td>
-                  <td>${parseFloat(item.cost).toFixed(2)}</td>
-                  <td>
+                <tr key={item.order_id} style={{ textAlign: 'center', verticalAlign: 'middle', padding: '30px' }}>
+                  <th scope="row" className="bg-secondary text-white" style={{ padding: '20px' }}>{index + 1}</th>
+                  <td style={{ padding: '20px' }}>{item.name}</td>
+                  <td style={{ padding: '20px' }}>${parseFloat(item.cost).toFixed(2)}</td>
+                  <td style={{ padding: '20px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '50%', color: '#fff', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: '0.3s' }} onClick={() => handleIncrement(item.order_id)}>
+                      <button className="hoverEffect bg-secondary" style={{ borderRadius: '50%', color: '#fff', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: '0.3s' }} onClick={() => handleIncrement(item.order_id)}>
                         <FontAwesomeIcon icon={faPlus} />
                       </button>
-                      <span style={{ margin: '0 10px' }}>{item.quantity}</span>
-                      <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '50%', color: '#fff', width: '30px', height: '30px', transition: '0.3s', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleDecrement(item.order_id)}>
+                      <span style={{ margin: '0 15px' }}>{item.quantity}</span>
+                      <button className="hoverEffect bg-secondary" style={{ borderRadius: '50%', color: '#fff', width: '30px', height: '30px', transition: '0.3s', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleDecrement(item.order_id)}>
                         <FontAwesomeIcon icon={faMinus} />
                       </button>
                     </div>
                   </td>
-                  <td>
+                  <td style={{ padding: '20px' }}>
                     {item.extras && item.extras.map((extra, idx) => (
-                      <span key={idx} style={{ margin: '3px', padding: '3px', backgroundColor: '#fff', borderRadius: '5px' }}>{extra.name}{idx < item.extras.length - 1 ? ', ' : ''}</span>
+                      <span key={idx} style={{ margin: '5px', padding: '5px', backgroundColor: '#fff', borderRadius: '5px' }}>{extra.name}{idx < item.extras.length - 1 ? ', ' : ''}</span>
                     ))}
                   </td>
-                  <td>
-                    <button className="hoverEffectDelete" style={{ backgroundColor: '#000', border: 'none', borderRadius: '50%', color: '#fff', width: '35px', height: '35px', transition: '0.3s' }} onClick={() => removeFromCart(item.order_id)}>
+                  <td style={{ padding: '20px' }}>
+                    <button className="hoverEffectDelete bg-secondary text-align-center" style={{ border: 'none', borderRadius: '50%', color: '#fff', width: '35px', height: '35px', transition: '0.3s' }} onClick={() => removeFromCart(item.order_id)}>
                       <FontAwesomeIcon icon={faTrashAlt} />
                     </button>
                   </td>
@@ -96,9 +96,9 @@ export const CartView = () => {
               ))}
             </tbody>
           </table>
-          <div className="text-center">
+          <div className="text-center mb-3 mt-4">
             <h2 style={{ fontWeight: 'bolder', color: '#000' }}>Costo Total: ${totalCost.toFixed(2)}</h2>
-            <button className="hoverEffect" style={{ backgroundColor: '#000', borderRadius: '30px', color: '#fff', padding: '15px 30px', fontSize: '20px', transition: '0.3s' }}  onClick={() => {  mover_carrito() }}>Comprar</button>
+            <button className="hoverEffect bg-secondary" style={{  borderRadius: '30px', color: '#fff', padding: '20px 40px', fontSize: '20px', transition: '0.3s' }}  onClick={() => {  mover_carrito() }}>Comprar</button>
           </div>
         </div>
       </div>
@@ -132,4 +132,4 @@ export const CartView = () => {
       `}</style>
     </section>
   );
-};
+}

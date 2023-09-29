@@ -12,7 +12,7 @@ export const EditProduct = ({ productId, onClose }) => {
     const productToEdit = storedProducts.find(product => product.id === productId);
     if (productToEdit) {
       setProductData(productToEdit);
-      setItsPromo(productToEdit.promo || false);  // Asegúrate de que siempre tenga un valor booleano
+      setItsPromo(productToEdit.promo || false);
     }
   }, [productId]);
 
@@ -27,35 +27,14 @@ export const EditProduct = ({ productId, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (productData) {
-      // Actualizar productData con el valor de itsPromo
       const updatedProductData = {
         ...productData,
         promo: itsPromo
       };
 
-      await actions.updateProduct(productId, updatedProductData); // Llama a la función updateProduct
+      await actions.updateProduct(productId, updatedProductData);
       setSuccessMessage('Producto editado exitosamente.');
     }
-  };
-  const modalBackdropStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000
-  };
-
-  const modalContentStyle = {
-    backgroundColor: 'white',
-    padding: '40px',
-    borderRadius: '8px',
-    width: '50%',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
   };
 
   if (!productData) {
@@ -63,45 +42,49 @@ export const EditProduct = ({ productId, onClose }) => {
   }
 
   return (
-    <div style={modalBackdropStyle}>
-      <div style={modalContentStyle}>
-        <button onClick={onClose} className="btn-close btn-close-white position-absolute top-0 end-0 m-2"></button>
-        <form onSubmit={handleSubmit} className="text-center">
-          <div className="form-group mb-4">
-            <label>Nombre del producto</label>
-            <input type="text" name="name" value={productData.name} onChange={handleChange} className="form-control" />
+  <div className="modal-backdrop show" style={{ backgroundColor: 'grey', opacity: '0.9' }}>
+    <div className="modal d-block">
+      <div className="modal-dialog">
+        <div className="modal-content p-4" style={{ backgroundColor: 'white' }}>
+          <button onClick={onClose} className="position-absolute bg-secondary top-0 end-0 m-2" style={{ color: 'white', fontSize: '18px', fontWeight: 'bold', border: 'none', opacity: '0.9' }}>X</button>
+          <form onSubmit={handleSubmit} className="text-center">
+              <div className="form-group mb-4">
+                <label>Nombre del producto</label>
+                <input type="text" name="name" value={productData.name} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group mb-4">
+                <label>Costo</label>
+                <input type="number" name="cost" value={productData.cost} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group mb-4">
+                <label>Descripción</label>
+                <input type="text" name="description" value={productData.description} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group mb-4">
+                <label>Categoría</label>
+                <input type="text" name="category" value={productData.category} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group mb-4">
+                <label>URL de la imagen</label>
+                <input type="text" name="img_url" value={productData.img_url} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group mb-4">
+                <label>Es Promo</label>
+                <div className="form-check form-check-inline">
+                  <input type="radio" name="promo" className="form-check-input" checked={itsPromo === true} onChange={() => setItsPromo(true)} />
+                  <label className="form-check-label">Sí</label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input type="radio" name="promo" className="form-check-input" checked={itsPromo === false} onChange={() => setItsPromo(false)} />
+                  <label className="form-check-label">No</label>
+                </div>
+              </div>
+              <button type="submit" className="btn btn-secondary">Guardar cambios</button>
+            </form>
+            {successMessage && <p className="text-success mt-4">{successMessage}</p>}
           </div>
-          <div className="form-group mb-4">
-            <label>Costo</label>
-            <input type="number" name="cost" value={productData.cost} onChange={handleChange} className="form-control" />
-          </div>
-          <div className="form-group mb-4">
-            <label>Descripción</label>
-            <input type="text" name="description" value={productData.description} onChange={handleChange} className="form-control" />
-          </div>
-          <div className="form-group mb-4">
-            <label>Categoría</label>
-            <input type="text" name="category" value={productData.category} onChange={handleChange} className="form-control" />
-          </div>
-          <div className="form-group mb-4">
-            <label>URL de la imagen</label>
-            <input type="text" name="img_url" value={productData.img_url} onChange={handleChange} className="form-control" />
-          </div>
-          <div className="form-group mb-4">
-            <label>Es Promo</label>
-            <div className="form-check form-check-inline">
-              <input type="radio" name="promo" className="form-check-input" checked={itsPromo === true} onChange={() => setItsPromo(true)} />
-              <label className="form-check-label">Sí</label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input type="radio" name="promo" className="form-check-input" checked={itsPromo === false} onChange={() => setItsPromo(false)} />
-              <label className="form-check-label">No</label>
-            </div>
-          </div>
-          <button type="submit" className="btn btn-dark">Guardar cambios</button>
-        </form>
-        {successMessage && <p className="text-success mt-4">{successMessage}</p>}
+        </div>
       </div>
     </div>
   );
-};
+}

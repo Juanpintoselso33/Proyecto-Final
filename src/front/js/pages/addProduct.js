@@ -5,7 +5,6 @@ import { Context } from '../store/appContext';
 export const AddProduct = () => {
   const { actions } = useContext(Context);
 
-  // Estado para los datos del producto
   const [productData, setProductData] = useState({
     cost: '',
     name: '',
@@ -15,17 +14,21 @@ export const AddProduct = () => {
     category: ''
   });
 
-  // Estado para el mensaje de éxito
   const [successMessage, setSuccessMessage] = useState('');
-
-  // Estado para its_promo 
   const [its_promo, setItsPromo] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    let formattedValue = value;
+
+    // Si el campo es 'category', formateamos la cadena para que la primera letra sea mayúscula y el resto minúsculas
+    if (name === 'category') {
+      formattedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    }
+
     setProductData({
       ...productData,
-      [name]: value
+      [name]: formattedValue
     });
   };
 
@@ -60,14 +63,13 @@ export const AddProduct = () => {
 
     const finalProductData = {
       ...productData,
-      promo: its_promo  // Ahora es un booleano
+      promo: its_promo
     };
 
     actions.addProduct(finalProductData);
 
     setSuccessMessage('Producto agregado exitosamente.');
   };
-  
 
   return (
     <section className="vh-100 bg-image bg-light">
@@ -77,38 +79,36 @@ export const AddProduct = () => {
             <div className="col-12 col-md-9 col-lg-9 col-xl-6">
               <div style={{ borderRadius: '15px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                 <div className="p-5">
-                  <h2 className="text-uppercase text-center mb-5">Add a Product</h2>
+                  <h2 className="text-uppercase text-center mb-5">Agregar Producto</h2>
                   <form onSubmit={handleSubmit}>
                     <div className="form-outline mb-4">
                       <Link to="/usuarioAdmin" style={{ position: 'absolute', top: '20px', left: '20px' }}>
-                        <button>Cerrar</button>
+                        <button className="btn btn-secondary">
+                          <i className="fas fa-arrow-left"></i>
+                        </button>
                       </Link>
-                      <input type="number" name="cost" placeholder="Cost" onChange={handleChange} required className="form-control form-control-lg" />
-                      <label className="form-label">Cost</label>
+                      <input type="number" name="cost" placeholder="Costo" onChange={handleChange} required className="form-control form-control-lg" />
+                      <label className="form-label">Costo</label>
                     </div>
                     <div className="form-outline mb-4">
-                      <input type="text" name="name" placeholder="Name" onChange={handleChange} required className="form-control form-control-lg" />
-                      <label className="form-label">Name</label>
+                      <input type="text" name="name" placeholder="Nombre" onChange={handleChange} required className="form-control form-control-lg" />
+                      <label className="form-label">Nombre</label>
                     </div>
                     <div className="form-outline mb-4">
-                      <input type="text" name="description" placeholder="Description" onChange={handleChange} required className="form-control form-control-lg" />
-                      <label className="form-label">Description</label>
+                      <input type="text" name="description" placeholder="Descripción" onChange={handleChange} required className="form-control form-control-lg" />
+                      <label className="form-label">Descripción</label>
                     </div>
                     <div className="form-outline mb-4">
-                      <input type="number" name="stars" placeholder="Stars" onChange={handleChange} className="form-control form-control-lg" />
-                      <label className="form-label">Stars</label>
+                      <input type="number" name="stars" placeholder="Estrellas" onChange={handleChange} className="form-control form-control-lg" />
+                      <label className="form-label">Estrellas</label>
                     </div>
                     <div className="form-outline mb-4">
-                      <input type="text" name="img_url" placeholder="Or Image URL" onChange={handleChange} className="form-control form-control-lg" />
-                      <label className="form-label">Or Image URL</label>
+                      <input type="text" name="img_url" placeholder="O URL de la imagen" onChange={handleChange} className="form-control form-control-lg" />
+                      <label className="form-label">O URL de la imagen</label>
                     </div>
                     <div className="form-outline mb-4">
-                      <select name="category" onChange={handleChange} required className="form-control form-control-lg">
-                        <option value="">Select Category</option>
-                        <option value="Hamburguesas">Hamburguesas</option>
-                        <option value="Milanesas">Milanesas</option>
-                      </select>
-                      <label className="form-label">Category</label>
+                      <input type="text" name="category" placeholder="Categoría" onChange={handleChange} required className="form-control form-control-lg" />
+                      <label className="form-label">Categoría</label>
                     </div>
                     <div className="form-outline mb-4">
                       <div className="form-check form-check-inline">
@@ -121,9 +121,9 @@ export const AddProduct = () => {
                       </div>
                     </div>
                     <div className="d-flex justify-content-center">
-                      <button type="submit" className="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Add Product</button>
+                      <button type="submit" className="btn btn-secondary btn-block btn-lg">Agregar Producto</button>
                     </div>
-                    {successMessage && <p className="text-success text-center">{successMessage}</p>} {/* Muestra el mensaje de éxito si existe */}
+                    {successMessage && <p className="text-success text-center">{successMessage}</p>}
                   </form>
                 </div>
               </div>
@@ -133,7 +133,6 @@ export const AddProduct = () => {
       </div>
     </section>
   );
-
 };
 
 export default AddProduct;

@@ -87,7 +87,7 @@ export default function CheckoutForm() {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'https://psychic-sniffle-97994xr7p4jgh9vj5-3000.app.github.dev/confirmation',
+        return_url: 'https://fuzzy-space-halibut-9qjq6jppwx4h7x9q-3000.app.github.dev/confirmation',
       },
     });
 

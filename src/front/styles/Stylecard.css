@@ -9,6 +9,12 @@ h1 {
   margin: 1rem auto 4rem;
 }
 
+.modal-content-custom {
+  background-color: white !important;
+  opacity: 1 !important;
+}
+
+
 .product--image {
   width: 100%;
   height: 16em;
