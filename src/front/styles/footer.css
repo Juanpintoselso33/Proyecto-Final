@@ -22,3 +22,15 @@
 .parrafoP {
     padding-bottom: 30px;
 }
+
+.contenedor_Conf_pago {
+    padding: 3rem
+}
+
+@media only screen and (max-device-width: 600px) {
+    .contenedor_Conf_pago {
+
+        padding: 20px;
+
+    }
+}
