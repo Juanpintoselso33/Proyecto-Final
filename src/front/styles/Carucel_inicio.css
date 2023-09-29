@@ -1,0 +1,36 @@
+.contenedor_image {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,
+            minmax(300px, 1fr));
+    ;
+    gap: 5px;
+
+
+}
+
+.imagenM {
+    width: 100%;
+    margin: auto;
+    border-radius: 50%;
+}
+
+.textoM {
+    width: 100%;
+}
+
+.img_Prrr {
+    width: 80%;
+    margin: auto;
+    border-radius: 10%;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .img_Prrr {
+
+        /* width: 60%; */
+        border-radius: 50%;
+
+    }
+}
+

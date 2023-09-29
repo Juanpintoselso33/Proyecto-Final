@@ -47,6 +47,272 @@
     text-decoration: none;   
 }
 
+.card {
+    position: relative;
+    width: 300px; 
+    padding: 10px;
+    
+  }
+  
+  .card-img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .card-text {
+    position: absolute;
+    top: 70%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white; 
+    z-index: 1; 
+  }
 
+  .admin-menu {
+    display: flex;
+  }
+  
+  .menu {
+    padding: 10px;
+    background: #b5b3b3;
+    display: flex;
+    
+    flex-direction: column; /* Esto establece la disposición vertical */
+  }
+  
+  .menu button {
+    margin-bottom: 10px; /* Espacio entre cada botón */
+  }
+  
+  .info {
+    margin-left: 20px; /* Espacio entre el menú y la información */
+  }
+/* Estilos para la tabla */
+.table {
+    width: 80%; /* Ajusta el ancho de la tabla según tus preferencias */
+    margin: 0 auto; /* Agrega margen automático */
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .table th, .table td {
+    padding: 8px; /* Reduce el espaciado dentro de las celdas */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Estilos para la imagen en la tabla */
+  .table img {
+    width: 40px; /* Ajusta el tamaño de la imagen */
+    height: 40px;
+    object-fit: cover;
+  }
+  
+  /* Estilos para la tabla activa */
+  .tabla-categoria.active {
+   margin-bottom: 20px;
+    padding: 20px; 
+    margin-top: 20px;
+  }
+
+  .tabla-categoria {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .tabla-categoria h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .tabla-categoria table {
+    width: 100%;
+  }
+  
+  .tabla-categoria table th, .tabla-categoria table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .tabla-categoria table th {
+    font-weight: bold;
+  }
+  
+  /* Estilos para los botones de eliminar */
+  button {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  
+  /* Estilos para el menú de navegación */
+  .navbar-nav .nav-item {
+    margin-bottom: 10px;
+  }
+  
+  .navbar-nav .nav-link {
+    cursor: pointer;
+  }
+
+  no-padding{
+    padding: 0;
+  }
+
+  .form-control {
+    width: 100%; /* Otra opción es especificar un porcentaje según tu preferencia */
+    max-width: 400px; /* Ajusta el ancho máximo según tus preferencias */
+  }
+
+  .nav-item {
+    margin-bottom: 10px;
+  }
+  
+  .nav-item span {
+    cursor: pointer;
+    padding: 5px;
+    display: block;
+  }
+  
+  .nav-item.active span {
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
 
   
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .admin-menu {
+    padding: 20px;
+  }
+  /* UsuarioEstandar.css */
+
+.usuario-estandar {
+  display: flex;
+  align-items: flex-start; /* Alinea los elementos a la izquierda */
+  padding: 20px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea los elementos a la izquierda */
+  margin-right: 20px;
+}
+
+.perfil {
+  background-color: #7a7a7a;
+  border-radius: 50%;
+  width: 128px;
+  height: 128px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  color: #ffffff;
+  margin-bottom: 20px;
+  overflow: hidden; /* Oculta cualquier contenido que desborde el borde redondeado */
+  border: 4px solid #555555; /* Borde redondeado mejorado */
+}
+
+.opciones {
+  display: flex;
+  flex-direction: column;
+}
+
+.opcion {
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
+  text-align: left; /* Alinea el texto a la izquierda */
+}
+
+.perfil-detalle {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-detalle h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+.costo-total {
+  font-weight: bold;
+}
+/* Estilos para todas las opciones y el enlace "Volver al inicio" */
+.opcion-perfil,
+.opcion-ordenes,
+.volver-inicio {
+  display: block;
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #979798; 
+  color: #262525;
+  text-decoration: none; 
+  border-radius: 5px; 
+  transition: background-color 0.3s ease, color 0.3s ease; 
+  cursor: pointer; 
+}
+
+/* Cambiar el color de fondo y el texto al pasar el mouse por encima */
+.opcion-perfil:hover,
+.opcion-ordenes:hover,
+.volver-inicio:hover {
+  background-color: #290d0da3; /* Nuevo color de fondo al pasar el mouse */
+  color: #fff; /* Nuevo color del texto al pasar el mouse */
+ }
+ 
+
+
+
+
+
+
+
+
+
+
+ 

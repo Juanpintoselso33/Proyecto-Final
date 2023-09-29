@@ -1,0 +1,75 @@
+.sub_header {
+    justify-content: space-between;
+}
+
+.div_img_comida img {
+    height: 65vh;
+    max-width: 90%;
+    border-radius: 10%;
+    max-height: 100%;
+}
+
+.nombre_modal {
+    width: 60%;
+}
+
+@media only screen and (max-device-width: 600px) {
+
+    .header_Mod {
+        height: 50px;
+        padding: 0px;
+    }
+
+    .sub_header {
+        margin: auto;
+        justify-content: space-between;
+    }
+
+    .div_boton_x {
+        display: flex;
+        align-items: center;
+
+    }
+
+    .DetallesAgregados {
+        overflow: visible;
+        height: 100vh;
+    }
+
+    .div_img_comida img {
+        height: auto;
+    }
+
+    .contenedorImg_Data {
+        overflow-y: scroll;
+    }
+
+    .nombre_modal {
+        width: 83%;
+    }
+
+
+}
+
+
+.img_y_extras {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,
+            minmax(300px, 1fr));
+    ;
+    gap: 5px;
+
+
+}
+
+.CN_P1 {
+    display: flex;
+    justify-content: center;
+}
+
+.CN_P2 {
+    display: flex;
+    justify-content: center;
+    justify-content: center;
+}

@@ -1,0 +1,24 @@
+
+.cartas:hover{
+
+    object-fit: cover;
+    transition: transform 0.3s ease-out;
+    transform: scale(1.05);
+  }
+  
+  .card.cartas {
+    /* ... tus estilos actuales ... */
+    height: 500px;
+  }
+  
+  .image-container {
+    height: 100px !important; /* Ajusta este valor según tus necesidades */
+    overflow: hidden;
+  }
+  
+  .product--image {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+  }
+  

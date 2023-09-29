@@ -1,50 +1,137 @@
 /* Estilos generales para el contenedor del carrito en la navbar */
-.cart-container {
+/* .cart-container {
     position: relative;
     display: inline-block;
+  } */
+
+/* Estilos para el dropdown del carrito */
+.cart-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 9999 !important;
+}
+
+/* Estilos cuando el dropdown del carrito está visible */
+.cart-dropdown.show {
+  max-height: 500px;
+  /* Ajusta este valor según el contenido de tu dropdown */
+  opacity: 1;
+}
+
+/* Estilos para cada elemento dentro del dropdown del carrito */
+.cart-item {
+  padding: 8px 16px;
+}
+
+/* Estilos para el nombre del item, la cantidad y el costo dentro del dropdown del carrito */
+.item-name,
+.item-quantity,
+.item-cost {
+  margin: 0 4px;
+}
+
+.item-increment,
+.item-decrement {
+  background-color: #f1f1f1;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+  margin: 0 2px;
+}
+
+.item-increment:hover,
+.item-decrement:hover {
+  background-color: #ddd;
+}
+
+
+
+
+.iconos {
+
+  display: flex;
+
+}
+
+
+@media only screen and (max-device-width: 600px) {
+  .parrafo_bienvenida {
+
+    display: none;
+
   }
-  
-  /* Estilos para el dropdown del carrito */
-  .cart-dropdown {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 300px;
-    background-color: white;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 9999 !important;
+
+  .cerrar_sesion {
+    font-size: 10px;
   }
-  
-  /* Estilos cuando el dropdown del carrito está visible */
-  .cart-dropdown.show {
-    max-height: 500px;  /* Ajusta este valor según el contenido de tu dropdown */
-    opacity: 1;
+}
+
+
+@media only screen and (max-device-width: 670px) {
+
+
+  .cerrar_sesion {
+    font-size: 15px;
   }
-  
-  /* Estilos para cada elemento dentro del dropdown del carrito */
-  .cart-item {
-    padding: 8px 16px;
+}
+
+.navbgg {
+  width: 100%;
+}
+
+
+@media only screen and (max-device-width: 420px) {
+
+
+  .logo {
+
+    margin-left: 5px;
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+
   }
-  
-  /* Estilos para el nombre del item, la cantidad y el costo dentro del dropdown del carrito */
-  .item-name, .item-quantity, .item-cost {
-    margin: 0 4px;
+
+  .nombre_logo_N {
+    font-size: 15px;
   }
-  
-  .item-increment, .item-decrement {
-    background-color: #f1f1f1;
-    border: none;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    font-size: 16px;
-    margin: 0 2px;
+
+  .boton-C {
+    font-size: 10px;
   }
-  
-  .item-increment:hover, .item-decrement:hover {
-    background-color: #ddd;
+
+  .cerrar_sesion {
+    font-size: 10px;
   }
+
+}
+
+
+.navbgg {
+  width: 100%;
+}
+
+
+.from_contacto {
+  width: 50%;
+}
+
+
+@media only screen and (max-device-width: 420px) {
+
+
+  .from_contacto {
+    width: 100%;
+  }
+
+}

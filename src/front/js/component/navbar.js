@@ -2,31 +2,44 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../img/carrito.jpg";
-import Favorito from "../../img/favorito.png";
+import Login from './login';
 import login from "../../img/login.png";
 import cartIcon from "../../img/cart.png";
-import lupa from "../../img/lupa.png";
 import { Modal, Button } from "react-bootstrap";
 import "../../styles/cartDropdown.css";
-import RegisterModal from './register';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-export const Navbar = () => {
+const getIsAdminFromLocalStorage = () => {
+  const isAdmin = localStorage.getItem('isAdmin');
+  return isAdmin === 'true';
+};
+
+export const Navbar = ({ setSeccionActiva }) => {
+
+  const [isAdmin, setIsAdmin] = useState(getIsAdminFromLocalStorage());
+  const [forceUpdate, setForceUpdate] = useState(false);
+
   const { store, actions } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState("");
 
   let navigate = useNavigate();
   const [showCartDropdown, setShowCartDropdown] = useState(false);
   const [cart, setCart] = useState({ items: [], totalCost: 0 });
-  const [cartTotal, setCartTotal] = useState(0);
+
+  const handleLoginError = (errorMessage) => {
+    console.error(errorMessage);
+  };
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalCost: 0 };
-    setCart(storedCart);
-  }, []);
+    setIsAdmin(getIsAdminFromLocalStorage());
+  }, [store.isAuthenticated, forceUpdate]);
+
+  useEffect(() => {
+    setCart(store.cart);
+  }, [store.cart]);
 
 
   const [formData, setFormData] = useState({
@@ -40,14 +53,6 @@ export const Navbar = () => {
 
   const { email, password } = formData;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
   const handleShowModal = () => {
     setShowModal(true);
   };
@@ -56,18 +61,10 @@ export const Navbar = () => {
     setShowModal(false);
   };
 
-  const handleShowRegisterModal = () => {
-    setShowRegisterModal(true);
-  };
-
-  const handleCloseRegisterModal = () => {
-    setShowRegisterModal(false);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (email, password) => {
     let logged = await actions.login(email, password);
     if (logged) {
+      setIsAdmin(getIsAdminFromLocalStorage()); // Aquí actualizamos el estado isAdmin
       setSuccessMessage("Login exitoso, cerrando ventana...");
       setTimeout(() => {
         navigate('/');
@@ -77,8 +74,11 @@ export const Navbar = () => {
     }
   };
 
+
+
   const handleLogout = () => {
     actions.logout();
+    setForceUpdate(!forceUpdate);
   };
 
   const welcomeMessage = store.email ? store.email.split("@")[0] : "";
@@ -91,46 +91,46 @@ export const Navbar = () => {
     setShowCartDropdown(false);
   };
 
-
-  const handleIncrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity + 1 };
-        console.log(`Incrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
-        return updatedItem;
-      }
-      return item;
-    });
-
-    // Calcula el precio total del carrito y actualiza el estado local
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-
-    // Actualiza el carrito en localStorage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const handleIncrementNavbar = (order_id) => {
+    actions.handleIncrement(order_id);
   };
 
-  const handleDecrement = (order_id) => {
-    const updatedCartItems = cart.items.map(item => {
-      if (item.order_id === order_id) {
-        const updatedItem = { ...item, quantity: item.quantity - 1 };
-        console.log(`Decrementing quantity for item ${item.order_id}: ${item.name} to ${updatedItem.quantity}`);
-        return updatedItem;
-      }
-      return item;
-    }).filter(item => item.quantity > 0);
-
-    // Calcula el precio total del carrito y actualiza el estado local
-    const updatedCart = { ...cart, items: updatedCartItems };
-    const total = updatedCart.items.reduce((acc, item) => acc + item.cost * item.quantity, 0);
-    updatedCart.totalCost = total;
-    setCart(updatedCart);
-
-    // Actualiza el carrito en localStorage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const handleDecrementNavbar = (order_id) => {
+    actions.handleDecrement(order_id);
   };
+
+  const renderProfileIcon = () => {
+    const initial = store.email ? store.email.charAt(0).toUpperCase() : '';
+    return (
+      <Link to="/usuarioEstandar" className="nav-link">
+        <span
+          className="perfil-inicial"
+          style={{
+            backgroundColor: '#7a7a7a',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#ffffff',
+            fontSize: '24px'
+          }}
+        >
+          {initial}
+        </span>
+      </Link>
+    );
+  };
+  // let mql = window.matchMedia("(max-width: 600px)");
+
+  // if (mql == true) {
+
+  //   document.querySelector("cerrar_sesion").innerText = "cerrar"
+  // }
+
+  // document.querySelector("cerrar_sesion").innerHTML = "cerrar"
+
 
   return (
     <>
@@ -140,39 +140,31 @@ export const Navbar = () => {
           <div className="mb-3 d-flex align-items-center justify-content-between w-100 position-relative">
             <div className="d-flex align-items-center">
               <img src={Logo} alt="Logo" className="logo" />
-              <h5>Carrito el tatin</h5>
+              <h5 className="nombre_logo_N">Carrito el tatin</h5>
             </div>
-            <div className="w-40 position-relative">
-              <input
-                type="text"
-                className="form-control rounded-pill pr-5"
-                placeholder="Search products..."
-                aria-label="Buscar productos"
-                aria-describedby="basic-addon1"
-                style={{ paddingLeft: '40px', backgroundImage: `url(${lupa})`, backgroundPosition: '10px center', backgroundRepeat: 'no-repeat' }}
-              />
-            </div>
-
-            <div className="iconos" style={{ display: 'flex', alignItems: 'center' }}>
-              {store.isAuthenticated && <span>Bienvenido/a, {welcomeMessage}</span>}
-              <img src={Favorito} alt="Favoritos" className="decora" width={30} />
-              <Button variant="link" className="login" onClick={store.isAuthenticated ? handleLogout : handleShowModal}>
-                <img src={login} alt="login" className="icono-login" width={30} />
-                {store.isAuthenticated ? "Cerrar sesión" : "Login"}
+            <div className="iconos align-items-center justify-content-center">
+              <p className="parrafo_bienvenida">{store.isAuthenticated && <span className="d-flex align-items-center">Bienvenido/a, {welcomeMessage}</span>}</p>
+              <div className="perfil-icon d-flex align-items-center" style={{ marginLeft: '10px' }}>
+                {store.isAuthenticated && renderProfileIcon()}
+              </div>
+              <Button
+                variant="btn-light"
+                className="btn-secondary boton-C"
+                onClick={store.isAuthenticated ? handleLogout : handleShowModal}
+              >
+                <span className="align-self-center cerrar_sesion">{store.isAuthenticated ? "Cerrar sesión" : "Iniciar sesión"}</span>
               </Button>
-              {!store.isAuthenticated && <Button variant="link" className="register" onClick={handleShowRegisterModal}>
-                Register
-              </Button>}
+
               {store.isAuthenticated &&
                 <div
                   className="cart-container"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <Button variant="link" onClick={() => navigate('/cart')}>
-                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} /> {/* Icono de carrito restaurado */}
+                  <Button variant="link hoverEffect" onClick={() => navigate('/cart')}>
+                    <img src={cartIcon} alt="cart" className="border-dark ms-2" width={30} />
                   </Button>
-                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <div className={`cart-dropdown ${showCartDropdown ? 'show' : ''}`}>
                     {cart && cart.items && cart.items.length > 0 ? (
                       cart.items.map((item, index) => (
                         <div className="cart-item" key={item.order_id}>
@@ -181,11 +173,15 @@ export const Navbar = () => {
                             {' x '}
                             {item.quantity}
                           </span>
-                          <button className="item-increment" onClick={() => handleIncrement(item.order_id)}>+</button>
-                          <button className="item-decrement" onClick={() => handleDecrement(item.order_id)}>-</button>
+                          <button className="item-increment" onClick={() => handleIncrementNavbar(item.order_id)}>
+                            <FontAwesomeIcon icon={faPlus} />
+                          </button>
+                          <button className="item-decrement" onClick={() => handleDecrementNavbar(item.order_id)}>
+                            <FontAwesomeIcon icon={faMinus} />
+                          </button>
                         </div>
                       ))
-                    ) : null} 
+                    ) : <div className="cart-empty">El carrito está vacío.</div>}
                     {cart && cart.items && cart.items.length > 0 && (
                       <div className="cart-total">
                         Total: ${cart.totalCost}
@@ -197,7 +193,7 @@ export const Navbar = () => {
             </div>
           </div>
           <button
-            className="navbar-toggler"
+            className="navbar-toggler navdd"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
@@ -209,82 +205,44 @@ export const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav mx-auto">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
+              <li className="nav-item navbgg">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Inicio")}>
                   Inicio
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/catalogo" className="nav-link">
+              <li className="nav-item navbgg">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Catalogo")}>
                   Catálogo
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/contacto" className="nav-link">
+              <li className="nav-item navbgg">
+                <Link to="/" className="nav-link" onClick={() => setSeccionActiva("Contacto")}>
                   Contacto
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/comentarios" className="nav-link comentarios">
-                  Comentarios
-                </Link>
-              </li>
+              {isAdmin && (
+                <li className="nav-item navbgg">
+                  <Link
+                    to="/usuarioAdmin"
+                    className="nav-link"
+                    onClick={() => setSeccionActiva("Administrar")}
+                  >
+                    Administrar
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
       </nav>
+      <Login
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        handleSubmit={handleSubmit}
+        successMessage={successMessage}
+        loginError={handleLoginError}
 
-
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Log in</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <div className="form-outline mb-4">
-              <input
-                type="email"
-                id="form2Example18"
-                name="email"
-                className="form-control form-control-lg"
-                value={email}
-                onChange={handleChange}
-              />
-              <label className="form-label" htmlFor="form2Example18">
-                Email address
-              </label>
-            </div>
-            <div className="form-outline mb-4">
-              <input
-                type="password"
-                id="form2Example28"
-                name="password"
-                className="form-control form-control-lg"
-                value={password}
-                onChange={handleChange}
-              />
-              <label className="form-label" htmlFor="form2Example28">
-                Password
-              </label>
-            </div>
-            <div className="pt-1 mb-4">
-              <button className="btn btn-info btn-lg btn-block" type="submit">
-                Login
-              </button>
-            </div>
-            {successMessage && <p>{successMessage}</p>}
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <RegisterModal show={showRegisterModal} onHide={handleCloseRegisterModal} />
-
+      />
     </>
   );
-
 };
